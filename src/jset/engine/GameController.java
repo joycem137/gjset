@@ -1,6 +1,7 @@
 package jset.engine;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Vector;
 
 import jset.gui.Card;
@@ -100,28 +101,42 @@ public class GameController
 	//This function checks a vector of cards to determine if they are a set.
 	private boolean checkForSet(Vector<Card> cards)
 	{
+//		System.out.println("Comparing the following cards:");
+//		for(int i = 0; i < cards.size(); i++)
+//		{
+//			System.out.println(cards.get(i).toString());
+//		}
+		
 		//Check each property
 		for(int property = 1; property <= 4; property++)
 		{
+			//System.out.println("Checking property " + property);
+			
 			//Check the first two cards against each other.
 			if(cards.get(0).getProperty(property) == cards.get(1).getProperty(property))
 			{
+				//System.out.println("The first two cards match in this property!");
 				//The first two cards match.  The next two should match as well.
 				if(cards.get(1).getProperty(property) != cards.get(2).getProperty(property))
 				{
+					System.out.println("But the second two do not.  This is not a set.");
 					return false;
 				}
 			}
 			else
 			{
+				//System.out.println("The first two cards do not match in this property!");
 				//The first two cards do not match.  The next two should not match either.
-				if(cards.get(1).getProperty(property) == cards.get(2).getProperty(property))
+				if(cards.get(1).getProperty(property) == cards.get(2).getProperty(property) ||
+					cards.get(0).getProperty(property) == cards.get(2).getProperty(property)  )
 				{
+					//System.out.println("But there are two that do.  This is not a set.");
 					return false;
 				}
 			}
 		}
 		
+		System.out.println("Well, we ran the gauntlet.  This is definitely a set.");
 		//We managed to make it through the gauntlet!  This REALLY IS A SET!!!
 		return true;
 	}
