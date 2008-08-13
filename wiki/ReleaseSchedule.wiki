@@ -1,0 +1,66 @@
+#summary list of releases, and required features of each.
+
+= Release 0.1 - Single Player =
+
+This will be a rudimentary single player version of the software.
+
+Requirements
+* Player will be able to select cards
+* System will determine if selected cards are a set and react accordingly.
+* When there are no more sets remaining, the program will indicate that the game is over.
+* The player will be able to indicate that they want more cards, as they cannot find a set.
+
+= Release 0.2 - Multi Player features in single player mode =
+
+This release will add various features to the single player experience that are necessary for properly handling multiple players.
+
+Requirements
+* The player's current score will be displayed
+* The number of cards remaining in the deck will be displayed.
+* Player will be able to call set by clicking cards or clicking a "Call set" button.
+* If the player begins clicking, or clicks set, the player will have a limited time to select cards.
+* If the player selects something that is not a set, or does not select cards in time, their score will be penalized.
+* The score change will be indicated graphically.
+
+= Release 0.3 - Multi Player capabilities =
+
+This version will allow players to play together over the internet.
+
+Requirements
+* Software will permit a player to host a game.
+* Software will permit other players to join a hosted game.
+* Each player's name will be displayed
+* Each player's score will be displayed
+* When a player has called set, this will be indicated on the other players' screens.
+* When a player has called set, no other player may do so.
+
+= Release 0.4 - Multi Player enhancements =
+
+This version will enhance the multi-player experience by providing socialization tools.
+
+Requirements
+* Software will support a chat log
+* Software will support user portraits
+* User portraits will be displayed for each player
+* All systems will store a local copy of the score board.
+* Score tracking will display win/loss ratios for each individual player, and each player matchup.
+
+= Release 0.5 - Graphical enhancements =
+
+This version should be the prettified version of the rest of the system.  This will basically be the second version of the program, tearing down what came before it and replacing it with a whole new skin.
+
+Requirements
+* Software should appear attractive on all points.
+* Software should provide easy-to-use menus and options.
+
+= Release 1.0 - Actual release =
+
+This should be the first fully realized version of the software.
+
+Requirements
+* Software successfully provides users with a Set experience that is similar to playing the game in person.
+
+= Future Ideas =
+* Create a central server for finding players.
+* Add a "speed run" mode for single players.
+* Create a computer player for single player mode.
