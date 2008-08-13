@@ -333,11 +333,71 @@ public class Card
 		}
 	}
 
-	//Reset the card to its original position and state.
+	/**
+	 * Reset the card to its original position and state.
+	 */
 	public void reset()
 	{
 		highlighted = false;
 		x = 0;
 		y = 0;
+	}
+	
+	/**
+	 * This method returns a plaintext description of the card.
+	 */
+	public String toString()
+	{
+		String s = new String();
+		
+		//Indicate the number of items.
+		s += number + " ";
+		
+		//Indicate the color
+		switch (color)
+		{
+			case COLOR_RED:
+				s += "red ";
+				break;
+			case COLOR_BLUE:
+				s += "blue ";
+				break;
+			case COLOR_GREEN:
+				s += "green ";
+				break;
+		}
+		
+		//Indicate the shading
+		switch (shading)
+		{
+			case SHADING_NONE:
+				s += "unshaded ";
+				break;
+			case SHADING_FULL:
+				s += "shaded ";
+				break;
+			case SHADING_STRIPED:
+				s += "striped ";
+				break;
+		}
+		
+		//Handle the shapes.
+		switch(shape)
+		{
+			case SHAPE_OVAL:
+				s += "oval";
+				break;
+			case SHAPE_SQUIGGLE:
+				s += "squiggle";
+				break;
+			case SHAPE_DIAMOND:
+				s += "diamond";
+				break;
+		}
+		
+		//Pluralize the shape name.
+		if(number > 1) s += "s";
+		
+		return s;
 	}
 }
