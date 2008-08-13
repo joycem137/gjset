@@ -1,4 +1,5 @@
 #summary List of releases, and required features of each.
+#labels Featured,Phase-Requirements
 
 = Release 0.1 - Single Player =
 
