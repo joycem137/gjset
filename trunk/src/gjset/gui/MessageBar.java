@@ -1,4 +1,4 @@
-package jset.gui;
+package gjset.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;

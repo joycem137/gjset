@@ -1,16 +1,16 @@
-package jset.engine;
+package gjset.engine;
 
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import jset.gui.Card;
-import jset.gui.JSetGUI;
+import gjset.gui.Card;
+import gjset.gui.GjSetGUI;
 
 public class GameController
 {
 	private Deck		deck; //Stores the deck of cards.
-	private JSetGUI		gui; //The gui interface.
+	private GjSetGUI		gui; //The gui interface.
 	
 	private Vector<Card> selectedCards; //Stores the current set of selected cards.
 
@@ -21,7 +21,7 @@ public class GameController
 	}
 	
 	//Link the GUI object to the game controller.
-	public void linkGUI(JSetGUI gui)
+	public void linkGUI(GjSetGUI gui)
 	{
 		this.gui = gui;
 	}
@@ -119,7 +119,7 @@ public class GameController
 				//The first two cards match.  The next two should match as well.
 				if(cards.get(1).getProperty(property) != cards.get(2).getProperty(property))
 				{
-					System.out.println("But the second two do not.  This is not a set.");
+					//System.out.println("But the second two do not.  This is not a set.");
 					return false;
 				}
 			}
@@ -136,7 +136,7 @@ public class GameController
 			}
 		}
 		
-		System.out.println("Well, we ran the gauntlet.  This is definitely a set.");
+		//System.out.println("Well, we ran the gauntlet.  This is definitely a set.");
 		//We managed to make it through the gauntlet!  This REALLY IS A SET!!!
 		return true;
 	}

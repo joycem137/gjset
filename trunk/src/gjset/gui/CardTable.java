@@ -1,4 +1,4 @@
-package jset.gui;
+package gjset.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,7 +15,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
-import jset.engine.GameController;
+import gjset.engine.GameController;
 
 public class CardTable extends JComponent
 {

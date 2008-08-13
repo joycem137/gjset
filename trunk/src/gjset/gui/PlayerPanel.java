@@ -1,4 +1,4 @@
-package jset.gui;
+package gjset.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -11,7 +11,7 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
 
-import jset.engine.GameController;
+import gjset.engine.GameController;
 
 public class PlayerPanel extends JComponent
 {
