@@ -19,6 +19,7 @@ public class JSetGUI
 	private CardTable cardTable;
 	private GameController	gameController;
 	private MessageBar messageBar;
+	private PlayerPanel playerPanel;
 
 	public JSetGUI(GameController gameController)
 	{
@@ -41,6 +42,7 @@ public class JSetGUI
 
 		createMenu();
 		createCardTable();
+		createPlayerPanel();
 		createMessageBar();
 
 		topFrame.pack();
@@ -57,6 +59,12 @@ public class JSetGUI
 	{		
 		cardTable = new CardTable(gameController);
 		topFrame.add(cardTable, BorderLayout.CENTER);
+	}
+	
+	private void createPlayerPanel()
+	{
+		playerPanel = new PlayerPanel(cardTable, gameController);
+		topFrame.add(playerPanel, BorderLayout.SOUTH);
 	}
 
 	private void createMenu()
