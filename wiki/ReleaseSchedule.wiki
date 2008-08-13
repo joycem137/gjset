@@ -1,4 +1,4 @@
-#summary list of releases, and required features of each.
+#summary List of releases, and required features of each.
 
 = Release 0.1 - Single Player =
 
