@@ -44,7 +44,15 @@ public class MessageBar extends JComponent
 		super.paintComponent(g);
 		if(image == null)
 		{
+			//Create the image to store the message to be displayed.
 			image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+
+			//Create our graphics object for the off screen image.
+			Graphics2D g2 = image.createGraphics();
+			
+			//Create the basic rectangle.
+			g2.setColor(getBackground());
+			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 		g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
 	}
