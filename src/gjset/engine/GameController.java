@@ -140,4 +140,16 @@ public class GameController
 		//We managed to make it through the gauntlet!  This REALLY IS A SET!!!
 		return true;
 	}
+
+	public void callSet()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void noMoreSets()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

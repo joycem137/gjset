@@ -1,19 +1,24 @@
 package gjset.gui;
 
+import gjset.engine.GameController;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-import gjset.engine.GameController;
-
-public class PlayerPanel extends JComponent
+public class PlayerPanel extends JPanel
 {
 	/**
 	 * 
@@ -28,7 +33,7 @@ public class PlayerPanel extends JComponent
 	
 	private static final Color panelColor = new Color(204, 255, 255);
 	
-	public PlayerPanel(CardTable table, GameController gameController)
+	public PlayerPanel(CardTable table, final GameController gameController)
 	{
 		super();
 		
@@ -55,6 +60,30 @@ public class PlayerPanel extends JComponent
 				drawPanel();
 			}
 		});
+		
+		setLayout(new FlowLayout());
+		
+		JButton setButton = new JButton(new AbstractAction("No more sets.")
+		{
+			/**
+			 * 
+			 */
+			private static final long	serialVersionUID	= -1742911717343411450L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				gameController.noMoreSets();
+			}
+		});
+		
+		//Set the button's size.
+		setButton.setPreferredSize(new Dimension(80,30));
+		setButton.setMaximumSize(new Dimension(80,30));
+		setButton.setMinimumSize(new Dimension(80,30));
+		
+		//Add the button to the screen.
+		add(setButton);
 	}
 
 	public void drawPanel()
