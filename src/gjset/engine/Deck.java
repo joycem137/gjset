@@ -1,9 +1,9 @@
-package jset.engine;
+package gjset.engine;
 
 import java.awt.BorderLayout;
 import java.util.Vector;
 
-import jset.gui.Card;
+import gjset.gui.Card;
 
 
 public class Deck

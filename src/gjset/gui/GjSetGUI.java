@@ -1,4 +1,4 @@
-package jset.gui;
+package gjset.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -11,9 +11,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
-import jset.engine.GameController;
+import gjset.engine.GameController;
 
-public class JSetGUI
+public class GjSetGUI
 {
 	private JFrame topFrame;
 	private CardTable cardTable;
@@ -21,7 +21,7 @@ public class JSetGUI
 	private MessageBar messageBar;
 	private PlayerPanel playerPanel;
 
-	public JSetGUI(GameController gameController)
+	public GjSetGUI(GameController gameController)
 	{
 		this.gameController = gameController;
 		gameController.linkGUI(this);
