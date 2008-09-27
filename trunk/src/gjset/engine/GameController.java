@@ -72,8 +72,23 @@ public class GameController
 					gui.getMessageBar().displayMessage("That's a set!");
 					
 					//TODO The following process should be animated.
+					
+					//Remove the existing cards from the table.					
+					
 					//Draw 3 new cards to replace the existing ones.
-					gui.getCardTable().replaceCards(selectedCards, deck.drawCards(3));
+					if(deck.remainingCards() == 0)
+					{
+						gui.getCardTable().removeCards(selectedCards);
+						gui.getMessageBar().displayMessage("That's all the cards we've got!");
+					}
+					else if(gui.getCardTable().getNumCards() <= 12)
+					{
+						gui.getCardTable().replaceCards(selectedCards, deck.drawCards(3));
+					}
+					else
+					{
+						gui.getCardTable().removeCards(selectedCards);
+					}
 					selectedCards.removeAllElements();
 				}
 				else
@@ -147,9 +162,27 @@ public class GameController
 		
 	}
 
+	/**
+	 * Handle the situation where the user believes there are no more sets available.
+	 */
 	public void noMoreSets()
 	{
-		// TODO Auto-generated method stub
-		
+		if(gui.getCardTable().getNumCards() < 18)
+		{
+			//Unselect all selected cards.
+			Iterator<Card> iterator = selectedCards.iterator();
+			while(iterator.hasNext())
+			{
+				iterator.next().setHighlight(false);						
+			}
+			selectedCards.removeAllElements();
+			
+			//Draw 3 new cards to add to the table.
+			gui.getCardTable().addCards(deck.drawCards(3));
+		}
+		else
+		{
+			gui.getMessageBar().displayMessage("You don't need to draw more cards.");
+		}
 	}
 }

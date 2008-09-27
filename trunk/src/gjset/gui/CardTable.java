@@ -219,4 +219,23 @@ public class CardTable extends JComponent
 		cards.clear();
 		drawTable();
 	}
+
+	public void removeCards(Vector<Card> selectedCards)
+	{
+		//Remove all the cards that have been selected
+		cards.removeAll(selectedCards);
+		
+		//Redraw the table.
+		updateLayout();
+		drawTable();
+	}
+
+	/**
+	 * 
+	 * @return numCards - The number of cards currently on the table.
+	 */
+	public int getNumCards()
+	{
+		return cards.size();
+	}
 }

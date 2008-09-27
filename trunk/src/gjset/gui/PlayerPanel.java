@@ -78,9 +78,9 @@ public class PlayerPanel extends JPanel
 		});
 		
 		//Set the button's size.
-		setButton.setPreferredSize(new Dimension(80,30));
-		setButton.setMaximumSize(new Dimension(80,30));
-		setButton.setMinimumSize(new Dimension(80,30));
+		setButton.setPreferredSize(new Dimension(120,30));
+		setButton.setMaximumSize(new Dimension(120,30));
+		setButton.setMinimumSize(new Dimension(120,30));
 		
 		//Add the button to the screen.
 		add(setButton);
