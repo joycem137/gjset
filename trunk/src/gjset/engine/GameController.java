@@ -71,19 +71,16 @@ public class GameController
 					//Display a message indicating that this is a set.
 					gui.getMessageBar().displayMessage("That's a set!");
 					
-					//TODO The following process should be animated.
+					//TODO The following process should be animated.					
 					
-					//Remove the existing cards from the table.					
-					
-					//Draw 3 new cards to replace the existing ones.
-					if(deck.remainingCards() == 0)
-					{
-						gui.getCardTable().removeCards(selectedCards);
-						gui.getMessageBar().displayMessage("That's all the cards we've got!");
-					}
-					else if(gui.getCardTable().getNumCards() <= 12)
+					//Draw the new cards and place them on the table.
+					if(deck.remainingCards() > 0 && gui.getCardTable().getNumCards() <= 12)
 					{
 						gui.getCardTable().replaceCards(selectedCards, deck.drawCards(3));
+						if(deck.remainingCards() == 0)
+						{
+							gui.getMessageBar().displayMessage("That's all the cards we've got!");
+						}
 					}
 					else
 					{
