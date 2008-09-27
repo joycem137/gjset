@@ -83,4 +83,9 @@ public class Deck
 		}
 		return vector;
 	}
+
+	public int remainingCards()
+	{
+		return shuffledDeck.size();
+	}
 }
