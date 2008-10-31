@@ -238,6 +238,9 @@ public class GameController
 	 */
 	public void noMoreSets()
 	{
+		//If the game is not active, do nothing.
+		if(!gameActive) return;
+		
 		if(gui.getCardTable().getNumCards() < 18)
 		{
 			//Unselect all selected cards.
