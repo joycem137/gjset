@@ -1,21 +1,26 @@
 package gjset.engine;
 
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import gjset.gui.Card;
 import gjset.gui.GjSetGUI;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 public class GameController
 {
 	private Deck		deck; //Stores the deck of cards.
-	private GjSetGUI		gui; //The gui interface.
+	private GjSetGUI	gui; //The gui interface.
+	private boolean 	gameActive; //Indicates whether there is an active game or not.
 	
 	private Vector<Card> selectedCards; //Stores the current set of selected cards.
 
 	public GameController()
 	{
+		//There is no active game at this time.
+		gameActive = false;
+		
+		//Create the deck.
 		this.deck = new Deck();
 		selectedCards = new Vector<Card>();
 	}
@@ -40,11 +45,16 @@ public class GameController
 		
 		//Show a message indicating that the game has begun.
 		gui.getMessageBar().displayMessage("Welcome to jSet!");
+		
+		//Set the game active flag to true.
+		gameActive = true;
 	}
 
-	//Handles the act of selecting the card passed in as an objecct.
+	//Handles the act of selecting the card passed in as an object.
 	public void selectCard(Card card)
 	{
+		if(!gameActive) return; //Do nothing if the game isn't running.
+		
 		//Check to see if the indicated card has already been highlighted.
 		if(card.isHighlighted())
 		{
@@ -71,11 +81,10 @@ public class GameController
 					//Display a message indicating that this is a set.
 					gui.getMessageBar().displayMessage("That's a set!");
 					
-					//TODO The following process should be animated.					
-					
-					//Draw the new cards and place them on the table.
+					//Check to see if we can draw more cards.
 					if(deck.remainingCards() > 0 && gui.getCardTable().getNumCards() <= 12)
 					{
+						//Draw the new cards and place them on the table.
 						gui.getCardTable().replaceCards(selectedCards, deck.drawCards(3));
 						if(deck.remainingCards() == 0)
 						{
@@ -84,9 +93,12 @@ public class GameController
 					}
 					else
 					{
+						//There are no cards left to draw.  Just remove the selected ones.
 						gui.getCardTable().removeCards(selectedCards);
 					}
 					selectedCards.removeAllElements();
+					
+					checkForEndofGame();
 				}
 				else
 				{
@@ -108,6 +120,68 @@ public class GameController
 		
 		//Once we've finished selecting the card, redraw the table.
 		gui.getCardTable().drawTable();
+	}
+
+	private void checkForEndofGame()
+	{
+		//If there are still cards in the deck, the game is not yet over.
+		if(deck.remainingCards() > 0) return;
+		
+		//Now check all the cards to see if there are any sets there.
+		List<Card> cards = gui.getCardTable().getCards();
+		for(int i = 0; i < cards.size(); i++)
+		{
+			Card card1 = cards.get(i);
+			for(int j = i + 1; j < cards.size(); j++)
+			{
+				Card card2 = cards.get(j);
+				//System.out.println("Checking " + card1 + " and " + card2);
+				Card testCard = finishSet(card1, card2);
+				//System.out.println("Found " + testCard);
+				
+				//If the remaining cards contains the test card, the game is still on.
+				if(gui.getCardTable().contains(testCard)) return;
+				//System.out.println("But the card was not on the table.");
+			}
+		}
+		
+		//We made it this far, there are no sets remaining.
+		gameActive = false;
+		gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
+	}
+	
+	/**
+	 * This function takes two cards and provides the system with the only possible
+	 * card that would make the two cards part of a set.
+	 * 
+	 * @param card1
+	 * @param card2
+	 * @return
+	 */
+	private Card finishSet(Card card1, Card card2)
+	{
+		Card card3 = new Card();
+		//Generate each property on the card.
+		for(int property = 1; property <= 4; property++)
+		{
+			//Check if the first two cards match.  If they do, then the third card will also match.
+			if(card1.getProperty(property) == card2.getProperty(property))
+			{
+				card3.setProperty(property, card1.getProperty(property));
+			}
+			else
+			{
+				//The cards differ.  Find out which value they are not using.
+				for(int value = 1; value < 4; value++)
+				{
+					if(card1.getProperty(property) != value && card2.getProperty(property) != value)
+					{
+						card3.setProperty(property, value);
+					}
+				}
+			}
+		}
+		return card3;
 	}
 
 	//This function checks a vector of cards to determine if they are a set.
