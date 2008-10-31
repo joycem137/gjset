@@ -124,6 +124,8 @@ public class GameController
 
 	private void checkForEndofGame()
 	{
+		//System.out.println("Checking for end of game.");
+		
 		//If there are still cards in the deck, the game is not yet over.
 		if(deck.remainingCards() > 0) return;
 		
@@ -257,6 +259,12 @@ public class GameController
 			
 			//Draw 3 new cards to add to the table.
 			gui.getCardTable().addCards(deck.drawCards(3));
+			
+			//Check to see if the game might be over.
+			if(deck.remainingCards() == 0)
+			{
+				checkForEndofGame();
+			}
 		}
 		else
 		{
