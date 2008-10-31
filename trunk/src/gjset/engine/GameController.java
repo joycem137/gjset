@@ -241,7 +241,11 @@ public class GameController
 		//If the game is not active, do nothing.
 		if(!gameActive) return;
 		
-		if(gui.getCardTable().getNumCards() < 18)
+		if(deck.remainingCards() < 3)
+		{
+			gui.getMessageBar().displayMessage("There are no more cards to draw.");
+		}
+		else if(gui.getCardTable().getNumCards() < 18)
 		{
 			//Unselect all selected cards.
 			Iterator<Card> iterator = selectedCards.iterator();
