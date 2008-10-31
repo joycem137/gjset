@@ -46,20 +46,33 @@ public class Card
 	//Store the various properties of this card.
 	private int number, color, shading, shape;
 
+	//Create a basic blank card.
+	public Card()
+	{
+		//Clear the values for all cards.
+		this.number = 0;
+		this.color = 0;
+		this.shading = 0;
+		this.shape = 0;
+		
+		//When they are created, cards are not highlighted.
+		highlighted = false;
+	}
+	
 	//The basic card constructor
 	public Card(int number, int color, int shading, int shape)
 	{
+		//Call the blank constructor.
+		this();
+		
 		//Store the card properties.
 		this.number = number;
 		this.color = color;
 		this.shading = shading;
 		this.shape = shape;
 		
-		//Generate the actual card
+		//Generate the actual card image.
 		generateCardImage();
-		
-		//When they are created, cards not not highlighted.
-		highlighted = false;
 	}
 
 	//Draws the image of the card for use later.
@@ -332,6 +345,28 @@ public class Card
 			default: return 0;
 		}
 	}
+	
+	public void setProperty(int property, int value)
+	{
+		//Set the property
+		switch(property)
+		{
+			case PROP_NUMBER: number = value; break;
+			case PROP_COLOR: color = value; break;
+			case PROP_SHADING: shading = value; break;
+			case PROP_SHAPE: shape = value; break;
+		}
+		
+		//Check to see if the card can be redrawn
+		for(int p2 = 0; p2 <= 4; p2++)
+		{
+			//Abort if we come across an unfulfilled value.
+			if(getProperty(p2) == 0) return;
+		}
+		
+		//Generate the card image.
+		generateCardImage();
+	}
 
 	/**
 	 * Reset the card to its original position and state.
@@ -399,5 +434,10 @@ public class Card
 		if(number > 1) s += "s";
 		
 		return s;
+	}
+	
+	public boolean equals(Card card)
+	{
+		return card.color == color && card.shading == shading && card.shape == shape && card.number == number;
 	}
 }

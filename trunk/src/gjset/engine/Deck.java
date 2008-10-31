@@ -71,7 +71,7 @@ public class Deck
 	{
 		Card card = shuffledDeck.firstElement();
 		shuffledDeck.remove(0);
-		System.out.println(remainingCards() + " cards remaining");
+		//System.out.println(remainingCards() + " cards remaining");
 		return card;
 	}
 	

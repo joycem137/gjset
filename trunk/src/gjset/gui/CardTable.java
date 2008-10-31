@@ -238,4 +238,27 @@ public class CardTable extends JComponent
 	{
 		return cards.size();
 	}
+	
+	public List<Card> getCards()
+	{
+		return cards;
+	}
+
+	/**
+	 * Search through all of the cards for the indicated test card.
+	 * 
+	 * @param testCard
+	 * @return true if card is present.  False otherwise.
+	 */
+	public boolean contains(Card testCard) {
+		Iterator<Card> iterator = cards.iterator();
+		{
+			while(iterator.hasNext())
+			{
+				//If we find the card, abort and send it out.
+				if(iterator.next().equals(testCard)) return true;
+			}
+		}
+		return false;
+	}
 }
