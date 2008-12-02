@@ -48,6 +48,9 @@ public class GameController
 		
 		//Set the game active flag to true.
 		gameActive = true;
+		
+		//Show the player panel
+		gui.showPlayerPanel();
 	}
 
 	//Handles the act of selecting the card passed in as an object.
@@ -149,6 +152,7 @@ public class GameController
 		
 		//We made it this far, there are no sets remaining.
 		gameActive = false;
+		gui.hidePlayerPanel();
 		gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
 	}
 	

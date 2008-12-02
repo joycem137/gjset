@@ -63,8 +63,7 @@ public class GjSetGUI
 	
 	private void createPlayerPanel()
 	{
-		playerPanel = new PlayerPanel(cardTable, gameController);
-		topFrame.add(playerPanel, BorderLayout.SOUTH);
+		playerPanel = new PlayerPanel(cardTable, gameController);		
 	}
 
 	private void createMenu()
@@ -111,5 +110,19 @@ public class GjSetGUI
 	public MessageBar getMessageBar()
 	{
 		return messageBar;
+	}
+
+	public void showPlayerPanel()
+	{
+		topFrame.add(playerPanel, BorderLayout.SOUTH);
+		topFrame.pack();
+		topFrame.repaint();
+	}
+
+	public void hidePlayerPanel()
+	{
+		topFrame.remove(playerPanel);
+		topFrame.pack();
+		topFrame.repaint();
 	}
 }
