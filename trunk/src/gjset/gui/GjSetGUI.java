@@ -35,7 +35,7 @@ public class GjSetGUI
 	
 	private void createGUI()
 	{
-		topFrame = new JFrame("jSet");
+		topFrame = new JFrame("gJSet");
 		topFrame.getContentPane().setLayout(new BorderLayout());
 		topFrame.setSize(1024, 768);
 		topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
