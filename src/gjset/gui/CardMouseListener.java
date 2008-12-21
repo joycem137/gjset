@@ -3,6 +3,7 @@ package gjset.gui;
 import gjset.engine.GameController;
 
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CardMouseListener extends MouseAdapter
 {
@@ -15,7 +16,7 @@ public class CardMouseListener extends MouseAdapter
 		this.gameController = gameController;
 	}
 
-	public void mouseClicked()
+	public void mouseClicked(MouseEvent me)
 	{
 		gameController.onCardClicked(card);
 	}
