@@ -1,6 +1,6 @@
 package gjset.engine;
 
-import gjset.gui.Card;
+import gjset.gui.CardComponent;
 import gjset.gui.GjSetGUI;
 
 import java.util.Iterator;
@@ -9,24 +9,24 @@ import java.util.Vector;
 
 public class GameController
 {
-	private Deck		deck; //Stores the deck of cards.
-	private GjSetGUI	gui; //The gui interface.
-	private boolean 	gameActive; //Indicates whether there is an active game or not.
-	
-	private Vector<Card> selectedCards; //Stores the current set of selected cards.
+	private Deck					deck;			//Stores the deck of cards.
+	private GjSetGUI				gui;			//The gui interface.
+	private boolean					gameActive;	//Indicates whether there is an active game or not.
+
+	private Vector<CardComponent>	selectedCards;	//Stores the current set of selected cards.
 
 	public GameController()
 	{
 		//There is no active game at this time.
 		gameActive = false;
-		
+
 		//Create the deck.
 		this.deck = new Deck();
-		selectedCards = new Vector<Card>();
+		selectedCards = new Vector<CardComponent>();
 	}
-	
+
 	//Link the GUI object to the game controller.
-	public void linkGUI(GjSetGUI gui)
+	public void linkGUI( GjSetGUI gui )
 	{
 		this.gui = gui;
 	}
@@ -36,34 +36,35 @@ public class GameController
 	{
 		//Shuffle the cards
 		deck.shuffle();
-		
+
 		//Remove any cards that were previously on the table.
 		gui.getCardTable().removeCards();
-		
+
 		//Draw 12 new cards to add to the table.
 		gui.getCardTable().addCards(deck.drawCards(12));
-		
+
 		//Show a message indicating that the game has begun.
 		gui.getMessageBar().displayMessage("Welcome to jSet!");
-		
+
 		//Set the game active flag to true.
 		gameActive = true;
-		
+
 		//Show the player panel
 		gui.showPlayerPanel();
 	}
 
 	//Handles the act of selecting the card passed in as an object.
-	public void selectCard(Card card)
+	public void onCardClicked( CardComponent card )
 	{
-		if(!gameActive) return; //Do nothing if the game isn't running.
-		
+		if (!gameActive)
+			return; //Do nothing if the game isn't running.
+
 		//Check to see if the indicated card has already been highlighted.
-		if(card.isHighlighted())
+		if (card.isHighlighted())
 		{
 			//Remove the highlight
 			card.setHighlight(false);
-			
+
 			//Remove the card from the vector of selected cards.
 			selectedCards.remove(card);
 		}
@@ -71,25 +72,25 @@ public class GameController
 		{
 			//Add the card to the list of selected cards.
 			selectedCards.add(card);
-			
+
 			//Display the highlight on the card.
 			card.setHighlight(true);
-			
+
 			//Check to see if sufficient cards have been selected.
-			if(selectedCards.size() == 3)
+			if (selectedCards.size() == 3)
 			{
 				//Determine if the set of cards is a set.
-				if( checkForSet(selectedCards))
-				{			
+				if (checkForSet(convertCardComponentVectorToCardVector(selectedCards)))
+				{
 					//Display a message indicating that this is a set.
 					gui.getMessageBar().displayMessage("That's a set!");
-					
+
 					//Check to see if we can draw more cards.
-					if(deck.remainingCards() > 0 && gui.getCardTable().getNumCards() <= 12)
+					if (deck.remainingCards() > 0 && gui.getCardTable().getNumCards() <= 12)
 					{
 						//Draw the new cards and place them on the table.
 						gui.getCardTable().replaceCards(selectedCards, deck.drawCards(3));
-						if(deck.remainingCards() == 0)
+						if (deck.remainingCards() == 0)
 						{
 							gui.getMessageBar().displayMessage("That's all the cards we've got!");
 						}
@@ -100,87 +101,85 @@ public class GameController
 						gui.getCardTable().removeCards(selectedCards);
 					}
 					selectedCards.removeAllElements();
-					
+
 					checkForEndofGame();
 				}
 				else
 				{
 					//Display a message on the gui.
 					gui.getMessageBar().displayMessage("That's not a set!");
-					
+
 					//That wasn't a set...  Remove the highlight on these cards.					
-					Iterator<Card> iterator = selectedCards.iterator();
-					while(iterator.hasNext())
+					Iterator<CardComponent> iterator = selectedCards.iterator();
+					while (iterator.hasNext())
 					{
-						iterator.next().setHighlight(false);						
+						iterator.next().setHighlight(false);
 					}
-					
+
 					//Deselect the cards.
 					selectedCards.removeAllElements();
 				}
 			}
 		}
-		
-		//Once we've finished selecting the card, redraw the table.
-		gui.getCardTable().drawTable();
 	}
 
 	private void checkForEndofGame()
 	{
 		//System.out.println("Checking for end of game.");
-		
+
 		//If there are still cards in the deck, the game is not yet over.
-		if(deck.remainingCards() > 0) return;
-		
+		if (deck.remainingCards() > 0)
+			return;
+
 		//Now check all the cards to see if there are any sets there.
-		List<Card> cards = gui.getCardTable().getCards();
-		for(int i = 0; i < cards.size(); i++)
+		List<Card> cards = convertCardComponentVectorToCardVector(gui.getCardTable().getCards());
+		for (int i = 0; i < cards.size(); i++)
 		{
 			Card card1 = cards.get(i);
-			for(int j = i + 1; j < cards.size(); j++)
+			for (int j = i + 1; j < cards.size(); j++)
 			{
 				Card card2 = cards.get(j);
 				//System.out.println("Checking " + card1 + " and " + card2);
 				Card testCard = finishSet(card1, card2);
 				//System.out.println("Found " + testCard);
-				
+
 				//If the remaining cards contains the test card, the game is still on.
-				if(gui.getCardTable().contains(testCard)) return;
+				if (cards.contains(testCard))
+					return;
 				//System.out.println("But the card was not on the table.");
 			}
 		}
-		
+
 		//We made it this far, there are no sets remaining.
 		gameActive = false;
 		gui.hidePlayerPanel();
 		gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
 	}
-	
+
 	/**
-	 * This function takes two cards and provides the system with the only possible
-	 * card that would make the two cards part of a set.
+	 * This function takes two cards and provides the system with the only possible card that would make the two cards part of a set.
 	 * 
 	 * @param card1
 	 * @param card2
 	 * @return
 	 */
-	private Card finishSet(Card card1, Card card2)
+	private Card finishSet( Card card1, Card card2 )
 	{
 		Card card3 = new Card();
 		//Generate each property on the card.
-		for(int property = 1; property <= 4; property++)
+		for (int property = 1; property <= 4; property++)
 		{
 			//Check if the first two cards match.  If they do, then the third card will also match.
-			if(card1.getProperty(property) == card2.getProperty(property))
+			if (card1.getProperty(property) == card2.getProperty(property))
 			{
 				card3.setProperty(property, card1.getProperty(property));
 			}
 			else
 			{
 				//The cards differ.  Find out which value they are not using.
-				for(int value = 1; value < 4; value++)
+				for (int value = 1; value < 4; value++)
 				{
-					if(card1.getProperty(property) != value && card2.getProperty(property) != value)
+					if (card1.getProperty(property) != value && card2.getProperty(property) != value)
 					{
 						card3.setProperty(property, value);
 					}
@@ -190,26 +189,37 @@ public class GameController
 		return card3;
 	}
 
-	//This function checks a vector of cards to determine if they are a set.
-	private boolean checkForSet(Vector<Card> cards)
+	private Vector<Card> convertCardComponentVectorToCardVector( List<CardComponent> cardComponents )
 	{
-//		System.out.println("Comparing the following cards:");
-//		for(int i = 0; i < cards.size(); i++)
-//		{
-//			System.out.println(cards.get(i).toString());
-//		}
-		
+		Vector<Card> cards = new Vector<Card>();
+		Iterator<CardComponent> iterator = cardComponents.iterator();
+		while (iterator.hasNext())
+		{
+			cards.add(iterator.next().getCard());
+		}
+		return cards;
+	}
+
+	//This function checks a vector of cards to determine if they are a set.
+	private boolean checkForSet( Vector<Card> cards )
+	{
+		//		System.out.println("Comparing the following cards:");
+		//		for(int i = 0; i < cards.size(); i++)
+		//		{
+		//			System.out.println(cards.get(i).toString());
+		//		}
+
 		//Check each property
-		for(int property = 1; property <= 4; property++)
+		for (int property = 1; property <= 4; property++)
 		{
 			//System.out.println("Checking property " + property);
-			
+
 			//Check the first two cards against each other.
-			if(cards.get(0).getProperty(property) == cards.get(1).getProperty(property))
+			if (cards.get(0).getProperty(property) == cards.get(1).getProperty(property))
 			{
 				//System.out.println("The first two cards match in this property!");
 				//The first two cards match.  The next two should match as well.
-				if(cards.get(1).getProperty(property) != cards.get(2).getProperty(property))
+				if (cards.get(1).getProperty(property) != cards.get(2).getProperty(property))
 				{
 					//System.out.println("But the second two do not.  This is not a set.");
 					return false;
@@ -219,15 +229,15 @@ public class GameController
 			{
 				//System.out.println("The first two cards do not match in this property!");
 				//The first two cards do not match.  The next two should not match either.
-				if(cards.get(1).getProperty(property) == cards.get(2).getProperty(property) ||
-					cards.get(0).getProperty(property) == cards.get(2).getProperty(property)  )
+				if (cards.get(1).getProperty(property) == cards.get(2).getProperty(property)
+						|| cards.get(0).getProperty(property) == cards.get(2).getProperty(property))
 				{
 					//System.out.println("But there are two that do.  This is not a set.");
 					return false;
 				}
 			}
 		}
-		
+
 		//System.out.println("Well, we ran the gauntlet.  This is definitely a set.");
 		//We managed to make it through the gauntlet!  This REALLY IS A SET!!!
 		return true;
@@ -236,7 +246,7 @@ public class GameController
 	public void callSet()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -245,27 +255,28 @@ public class GameController
 	public void noMoreSets()
 	{
 		//If the game is not active, do nothing.
-		if(!gameActive) return;
-		
-		if(deck.remainingCards() < 3)
+		if (!gameActive)
+			return;
+
+		if (deck.remainingCards() < 3)
 		{
 			gui.getMessageBar().displayMessage("There are no more cards to draw.");
 		}
-		else if(gui.getCardTable().getNumCards() < 18)
+		else if (gui.getCardTable().getNumCards() < 18)
 		{
 			//Unselect all selected cards.
-			Iterator<Card> iterator = selectedCards.iterator();
-			while(iterator.hasNext())
+			Iterator<CardComponent> iterator = selectedCards.iterator();
+			while (iterator.hasNext())
 			{
-				iterator.next().setHighlight(false);						
+				iterator.next().setHighlight(false);
 			}
 			selectedCards.removeAllElements();
-			
+
 			//Draw 3 new cards to add to the table.
 			gui.getCardTable().addCards(deck.drawCards(3));
-			
+
 			//Check to see if the game might be over.
-			if(deck.remainingCards() == 0)
+			if (deck.remainingCards() == 0)
 			{
 				checkForEndofGame();
 			}

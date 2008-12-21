@@ -1,32 +1,32 @@
 package gjset.gui;
 
+import gjset.engine.Card;
 import gjset.engine.GameController;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-public class CardTable extends JComponent
+public class CardTable extends JPanel
 {
 	private static final long	serialVersionUID	= 1L;
 
 	private final Color			backgroundColor		= new Color(0, 102, 0);
-	private List<Card>			cards;
-	protected Image				offScreenImage;
-	protected Graphics			offScreenGraphics;
-
+	private List<CardComponent>	cardsOnTable;
+	private GridLayout layout;
+	
 	private GameController		gameController;
+
+	// Set our parameters
+	private final int CARD_BUFFER = 20; //The minimum distance between cards.
+
+	private JPanel	cardPane;
 
 	public CardTable(GameController gameController)
 	{
@@ -34,7 +34,7 @@ public class CardTable extends JComponent
 
 		//Obtain the game controller
 		this.gameController = gameController;
-		
+
 		//Set the size of the card table.
 		setPreferredSize(new Dimension(720, 497));
 		setMinimumSize(new Dimension(720, 497));
@@ -42,192 +42,124 @@ public class CardTable extends JComponent
 
 		//Give the card table a border
 		setBorder(BorderFactory.createLineBorder(Color.black));
-		
+
 		//Give the card table a background color.
 		setBackground(backgroundColor);
 
-		// Create the vector for holding cards.
-		cards = new Vector<Card>();
+		// Create the vectors for holding cards.
+		cardsOnTable = new Vector<CardComponent>();
 
-		//Handle resizing the table.
-		addComponentListener(new ComponentAdapter()
-		{
-			public void componentResized(ComponentEvent e)
-			{
-				JComponent component = (JComponent) e.getSource();
-
-				int width = component.getWidth();
-				int height = component.getHeight();
-
-				offScreenImage = component.createImage(width, height);
-				offScreenGraphics = offScreenImage.getGraphics();
-				updateLayout();
-				drawTable();
-			}
-		});
-
-		//Handle Card selection
-		addMouseListener(new MouseAdapter()
-		{
-			public void mousePressed(MouseEvent e)
-			{
-				// Determine what we clicked on
-				Card newCard = identifyCard(e.getX(), e.getY());
-				if (newCard != null)
-				{
-					selectCard(newCard);
-				}
-			}
-		});
+		//Create the card pane
+		cardPane = new JPanel();
+		cardPane.setBackground(backgroundColor);
+		
+		//Set up the layout
+		layout = new GridLayout(3, 4, CARD_BUFFER, CARD_BUFFER);
+		cardPane.setLayout(layout);
+		
+		//Add the card pane to the panel.
+		setLayout(null);
+		add(cardPane);
 	}
 	
-	protected void selectCard(Card card)
-	{
-		gameController.selectCard(card);
-	}
-
-	private Card identifyCard(int x, int y)
-	{
-		Iterator<Card> iterator = cards.iterator();
-		while (iterator.hasNext())
-		{
-			Card card = iterator.next();
-			if (card.contains(x, y))
-			{
-				return card;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Repositions the cards.
 	 */
 	protected void updateLayout()
 	{
-		int rowLength = 0;
-		// Set our layout parameters.
-		switch (cards.size())
+		//Determine the number of rows and columns in the layout.
+		int numCols = 0;
+		int numRows = 0;
+		int numCards = cardsOnTable.size();
+		
+		if(numCards > 6)
 		{
-			case 3:
-				rowLength = 3;
-				break;
-			case 6:
-				rowLength = 3;
-				break;
-			case 9:
-				rowLength = 3;
-				break;
-			case 12:
-				rowLength = 4;
-				break;
-			case 15:
-				rowLength = 5;
-				break;
-			case 18:
-				rowLength = 6;
-				break;
+			numRows = 3;
+			numCols = numCards / numRows;
 		}
+		else
+		{
+			numCols = 3;
+			numRows = numCards / numCols;
+		}
+		
+		//Set the layout with the rows and columns.
+		layout.setRows(numRows);
+		layout.setColumns(numCols);
 
-		// Set our parameters
-		final int CARD_BUFFER = 20;
-
+		//Now set up the position of the card pane, to center it on the screen.
 		// The x coordinate is back a few cards
-		double halfRowCards = (double) rowLength / 2.0;
-		double xStart = getWidth() / 2.0 - halfRowCards * Card.WIDTH
-				- (halfRowCards - 0.50) * CARD_BUFFER;
+		double centerX = getWidth() / 2.0;
+		int rowLength = (int) (numCols * Card.CARD_WIDTH + (numCols - 0.50) * CARD_BUFFER);		
+		int xStart = (int) (centerX - rowLength / 2.0);
 
 		// The y coordinate is up a few cards.
-		double halfColCards = ((double) cards.size() / (double) rowLength) / 2.0;
-		double yStart = getHeight() / 2.0 - halfColCards * Card.HEIGHT
-				- (halfColCards - 0.50) * CARD_BUFFER;
-
-		int x = (int) xStart;
-		int y = (int) yStart;
-		int rowIndex = 0;
-		int colIndex = 0;
-
-		// Now set the positions
-		Iterator<Card> iterator = cards.iterator();
-		while (iterator.hasNext())
-		{
-			Card card = iterator.next();
-			card.setPosition(x, y);
-
-			rowIndex++;
-			if (rowIndex == rowLength)
-			{
-				// Reset the row
-				rowIndex = 0;
-				colIndex++;
-
-				// Now update the x and y values.
-				x = (int) xStart;
-				y = (int) yStart + colIndex * (CARD_BUFFER + Card.HEIGHT);
-			}
-			else
-			{
-				// Just keep on trucking.
-				x += CARD_BUFFER + Card.WIDTH;
-			}
-		}
-	}
-
-	public void drawTable()
-	{
-		// Draw the background.
-		offScreenGraphics.setColor(backgroundColor);
-		offScreenGraphics.fillRect(0, 0, getWidth(), getHeight());
-
-		// Paint the card
-		Iterator<Card> iterator = cards.iterator();
-		while (iterator.hasNext())
-		{
-			Card card = iterator.next();
-			card.paint(offScreenGraphics);
-		}
-		offScreenImage.flush();
-
-		//TODO Only repaint this portion of the screen.
+		double centerY = getHeight() / 2.0;
+		int colHeight = (int) (numRows * Card.CARD_HEIGHT + (numRows - 0.50) * CARD_BUFFER);
+		int yStart = (int) (centerY - colHeight / 2.0);
+		
+		//Relocate the card pane.
+		cardPane.setBounds(xStart, yStart, rowLength, colHeight);
+		
+		//Repaint the component.
 		repaint();
 	}
-
-	public void paintComponent(Graphics g)
+	
+	public void addCards( Vector<Card> cards )
 	{
-		super.paintComponent(g);
-		g.drawImage(offScreenImage, 0, 0, getWidth(), getHeight(), this);
-	}
-
-	public void addCards(Vector<Card> newCards)
-	{
-		cards.addAll(newCards);
-		updateLayout();
-		drawTable();
-	}
-
-	public void replaceCards(Vector<Card> selectedCards, Vector<Card> drawCards)
-	{
-		for(int i = 0; i < selectedCards.size(); i++)
+		Vector<CardComponent> cardComponents = createCardComponents(cards);
+		
+		//Add the cards to the cards array.
+		cardsOnTable.addAll(cardComponents);
+		
+		//Add the cards to the card pane.
+		Iterator<CardComponent> iterator = cardComponents.iterator();
+		while(iterator.hasNext())
 		{
-			cards.set(cards.indexOf(selectedCards.get(i)), drawCards.get(i));
+			cardPane.add(iterator.next());
 		}
+		
+		//Finally, update the layout with the latest data.
 		updateLayout();
+	}
+
+	public void replaceCards( Vector<CardComponent> selectedCards, Vector<Card> newCards )
+	{
+		Vector<CardComponent> newCardComponents = createCardComponents(newCards);
+		
+		for (int i = 0; i < selectedCards.size(); i++)
+		{
+			//Replace the card on the table.
+			cardsOnTable.set(cardsOnTable.indexOf(selectedCards.get(i)), newCardComponents.get(i));
+			
+			//Remove the card from the cardPane.
+			cardPane.remove(selectedCards.get(i));
+			
+			//Add the new card to the cardPane.
+			cardPane.add(newCardComponents.get(i));
+		}
 	}
 	
 	public void removeCards()
 	{
-		cards.clear();
-		drawTable();
+		cardsOnTable.clear();
+		cardPane.removeAll();
 	}
 
-	public void removeCards(Vector<Card> selectedCards)
+	public void removeCards( Vector<CardComponent> selectedCards )
 	{
 		//Remove all the cards that have been selected
-		cards.removeAll(selectedCards);
+		cardsOnTable.removeAll(selectedCards);
 		
+		//Now remove everything from the card pane.
+		Iterator<CardComponent> iterator = selectedCards.iterator();
+		while(iterator.hasNext())
+		{
+			cardPane.remove(iterator.next());
+		}
+
 		//Redraw the table.
 		updateLayout();
-		drawTable();
 	}
 
 	/**
@@ -236,29 +168,26 @@ public class CardTable extends JComponent
 	 */
 	public int getNumCards()
 	{
-		return cards.size();
-	}
-	
-	public List<Card> getCards()
-	{
-		return cards;
+		return cardsOnTable.size();
 	}
 
-	/**
-	 * Search through all of the cards for the indicated test card.
-	 * 
-	 * @param testCard
-	 * @return true if card is present.  False otherwise.
-	 */
-	public boolean contains(Card testCard) {
-		Iterator<Card> iterator = cards.iterator();
-		{
-			while(iterator.hasNext())
-			{
-				//If we find the card, abort and send it out.
-				if(iterator.next().equals(testCard)) return true;
-			}
-		}
-		return false;
+	public List<CardComponent> getCards()
+	{
+		return cardsOnTable;
 	}
+
+	private Vector<CardComponent> createCardComponents( Vector<Card> cards)
+	{
+		//Create our card component vector
+		Vector<CardComponent> cardComponents = new Vector<CardComponent>();
+		
+		Iterator<Card> iterator = cards.iterator();
+		while(iterator.hasNext())
+		{
+			cardComponents.add(new CardComponent(gameController, iterator.next()));
+		}
+		
+		return cardComponents;
+	}
+
 }
