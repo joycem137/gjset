@@ -15,24 +15,26 @@ import gjset.engine.GameController;
 
 public class GjSetGUI
 {
-	private JFrame topFrame;
-	private CardTable cardTable;
+	private JFrame			topFrame;
+	private CardTable		cardTable;
 	private GameController	gameController;
-	private MessageBar messageBar;
-	private PlayerPanel playerPanel;
+	private MessageBar		messageBar;
+	private PlayerPanel		playerPanel;
 
 	public GjSetGUI(GameController gameController)
 	{
 		this.gameController = gameController;
 		gameController.linkGUI(this);
-		
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createGUI(); 
-            }
-        });
+
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				createGUI();
+			}
+		});
 	}
-	
+
 	private void createGUI()
 	{
 		topFrame = new JFrame("gJSet");
@@ -46,7 +48,7 @@ public class GjSetGUI
 		createMessageBar();
 
 		topFrame.pack();
-		topFrame.setVisible(true);		
+		topFrame.setVisible(true);
 	}
 
 	private void createMessageBar()
@@ -56,14 +58,14 @@ public class GjSetGUI
 	}
 
 	private void createCardTable()
-	{		
+	{
 		cardTable = new CardTable(gameController);
 		topFrame.add(cardTable, BorderLayout.CENTER);
 	}
-	
+
 	private void createPlayerPanel()
 	{
-		playerPanel = new PlayerPanel(cardTable, gameController);		
+		playerPanel = new PlayerPanel(cardTable, gameController);
 	}
 
 	private void createMenu()
@@ -80,24 +82,24 @@ public class GjSetGUI
 		fileMenu.add(newGameItem);
 		newGameItem.addActionListener(new ActionListener()
 		{
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed( ActionEvent evt )
 			{
 				gameController.newGame();
 			}
 		});
-		
+
 		//Build the exit item.
 		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_X);
 		fileMenu.add(exitItem);
 
 		exitItem.addActionListener(new ActionListener()
 		{
-			public void actionPerformed(ActionEvent evt)
+			public void actionPerformed( ActionEvent evt )
 			{
 				System.exit(0);
 			}
 		});
-		
+
 		//Add the file menu to the menu bar.
 		jMenuBar.add(fileMenu);
 	}
