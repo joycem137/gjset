@@ -138,12 +138,15 @@ public class CardTable extends JPanel
 			//Add the new card to the cardPane.
 			cardPane.add(newCardComponents.get(i));
 		}
+		
+		repaint();
 	}
 	
 	public void removeCards()
 	{
 		cardsOnTable.clear();
 		cardPane.removeAll();
+		repaint();
 	}
 
 	public void removeCards( Vector<CardComponent> selectedCards )
