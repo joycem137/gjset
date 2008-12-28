@@ -1,5 +1,7 @@
 package gjset.gui;
 
+import gjset.engine.GameController;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,8 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
-import gjset.engine.GameController;
-
 public class GjSetGUI
 {
 	private JFrame			topFrame;
@@ -20,12 +20,19 @@ public class GjSetGUI
 	private GameController	gameController;
 	private MessageBar		messageBar;
 	private PlayerPanel		playerPanel;
+	private KeyStrokeFactory keyStrokeFactory;
 
 	public GjSetGUI(GameController gameController)
 	{
 		this.gameController = gameController;
 		gameController.linkGUI(this);
-
+		
+		//Determine which keystroke factory to grab.
+		if(System.getProperty("os.name").contains("Mac OS X"))
+		{
+			keyStrokeFactory = new MacKeyStrokeFactory();
+		}
+		
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -46,7 +53,7 @@ public class GjSetGUI
 		createCardTable();
 		createPlayerPanel();
 		createMessageBar();
-
+		
 		topFrame.pack();
 		topFrame.setVisible(true);
 	}
@@ -79,6 +86,7 @@ public class GjSetGUI
 
 		//Build the new game option
 		JMenuItem newGameItem = new JMenuItem("New Game", KeyEvent.VK_N);
+		newGameItem.setAccelerator(keyStrokeFactory.getNewGameAcceleratorKeyStroke());
 		fileMenu.add(newGameItem);
 		newGameItem.addActionListener(new ActionListener()
 		{
@@ -90,6 +98,7 @@ public class GjSetGUI
 
 		//Build the exit item.
 		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_X);
+		exitItem.setAccelerator(keyStrokeFactory.getExitGameAcceleratorKeyStroke());
 		fileMenu.add(exitItem);
 
 		exitItem.addActionListener(new ActionListener()
