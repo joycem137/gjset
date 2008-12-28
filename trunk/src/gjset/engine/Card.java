@@ -11,7 +11,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 public class Card
-{
+{ 
 	//Store constants for handling the various properties of the cards.
 	public static final int	COLOR_RED			= 1;
 	public static final int	COLOR_BLUE			= 2;
