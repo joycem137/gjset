@@ -31,7 +31,7 @@ public class PlayerPanel extends JPanel
 	private CardTable			table;
 	private GameController		gameController;
 
-	private static final Color	panelColor			= new Color(204, 255, 255);
+	private static final Color	panelColor			= new Color(0, 51, 0);
 
 	public PlayerPanel(CardTable table, final GameController gameController)
 	{
@@ -78,9 +78,9 @@ public class PlayerPanel extends JPanel
 		});
 
 		//Set the button's size.
-		setButton.setPreferredSize(new Dimension(120, 30));
-		setButton.setMaximumSize(new Dimension(120, 30));
-		setButton.setMinimumSize(new Dimension(120, 30));
+		setButton.setPreferredSize(new Dimension(180, 30));
+		setButton.setMaximumSize(new Dimension(180, 30));
+		setButton.setMinimumSize(new Dimension(180, 30));
 
 		//Add the button to the screen.
 		add(setButton);
