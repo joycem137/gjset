@@ -43,25 +43,25 @@ import javax.swing.SwingUtilities;
 
 public class GjSetGUI
 {
-	private JFrame			topFrame;
-	private CardTable		cardTable;
-	private GameController	gameController;
-	private MessageBar		messageBar;
-	private PlayerPanel		playerPanel;
-	private KeyStrokeFactory keyStrokeFactory;
-	private GPLPopup	gplPopup;
-	
+	private JFrame				topFrame;
+	private CardTable			cardTable;
+	private GameController		gameController;
+	private MessageBar			messageBar;
+	private PlayerPanel			playerPanel;
+	private KeyStrokeFactory	keyStrokeFactory;
+	private GPLPopup			gplPopup;
+
 	public GjSetGUI(GameController gameController)
 	{
 		this.gameController = gameController;
 		gameController.linkGUI(this);
-		
-		//Determine which keystroke factory to grab.
-		if(System.getProperty("os.name").contains("Mac OS X"))
+
+		// Determine which keystroke factory to grab.
+		if (System.getProperty("os.name").contains("Mac OS X"))
 		{
 			keyStrokeFactory = new MacKeyStrokeFactory();
 		}
-		
+
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -82,7 +82,7 @@ public class GjSetGUI
 		createCardTable();
 		createPlayerPanel();
 		createMessageBar();
-		
+
 		topFrame.pack();
 		topFrame.setVisible(true);
 	}
@@ -109,61 +109,61 @@ public class GjSetGUI
 		JMenuBar jMenuBar = new JMenuBar();
 		topFrame.setJMenuBar(jMenuBar);
 
-		//Build the file menu
+		// Build the file menu
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 
-		//Build the new game option
+		// Build the new game option
 		JMenuItem newGameItem = new JMenuItem("New Game", KeyEvent.VK_N);
 		newGameItem.setAccelerator(keyStrokeFactory.getNewGameAcceleratorKeyStroke());
 		fileMenu.add(newGameItem);
 		newGameItem.addActionListener(new ActionListener()
 		{
-			public void actionPerformed( ActionEvent evt )
+			public void actionPerformed(ActionEvent evt)
 			{
 				gameController.newGame();
 			}
 		});
 
-		//Build the exit item.
+		// Build the exit item.
 		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_X);
 		exitItem.setAccelerator(keyStrokeFactory.getExitGameAcceleratorKeyStroke());
 		fileMenu.add(exitItem);
 
 		exitItem.addActionListener(new ActionListener()
 		{
-			public void actionPerformed( ActionEvent evt )
+			public void actionPerformed(ActionEvent evt)
 			{
 				System.exit(0);
 			}
 		});
 
-		//Add the file menu to the menu bar.
+		// Add the file menu to the menu bar.
 		jMenuBar.add(fileMenu);
-		
-		//Create the help menu for the GNU stuff.
+
+		// Create the help menu for the GNU stuff.
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
-		
-		//Create the "GPL Text" item.
+
+		// Create the "GPL Text" item.
 		JMenuItem gplItem = new JMenuItem("About GPL", KeyEvent.VK_G);
 		helpMenu.add(gplItem);
-		
-		//Create the gplPopup
+
+		// Create the gplPopup
 		gplPopup = new GPLPopup();
-		
-		//Add the GPL text to the gplItem
+
+		// Add the GPL text to the gplItem
 		gplItem.addActionListener(new ActionListener()
 		{
-			public void actionPerformed( ActionEvent evt )
+			public void actionPerformed(ActionEvent evt)
 			{
 				gplPopup.displayPopup(topFrame);
 			}
 		});
-		
-		//Add the help menu to the menu bar.
+
+		// Add the help menu to the menu bar.
 		jMenuBar.add(helpMenu);
-		
+
 	}
 
 	public CardTable getCardTable()

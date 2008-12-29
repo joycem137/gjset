@@ -39,8 +39,8 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 public class Card
-{ 
-	//Store constants for handling the various properties of the cards.
+{
+	// Store constants for handling the various properties of the cards.
 	public static final int	COLOR_RED			= 1;
 	public static final int	COLOR_BLUE			= 2;
 	public static final int	COLOR_GREEN			= 3;
@@ -53,59 +53,60 @@ public class Card
 	public static final int	SHADING_FULL		= 2;
 	public static final int	SHADING_STRIPED		= 3;
 
-	//Store constant indices for the various properties that exist.
+	// Store constant indices for the various properties that exist.
 	public static final int	PROP_NUMBER			= 1;
 	public static final int	PROP_COLOR			= 2;
 	public static final int	PROP_SHADING		= 3;
 	public static final int	PROP_SHAPE			= 4;
 
-	private Image			image;						//The card's image.
+	private Image			image;						// The card's image.
 
-	//The width and height of the cards are currently fixed.  This may be changed later.
+	// The width and height of the cards are currently fixed. This may be changed later.
 	public static final int	CARD_WIDTH			= 100;
 	public static final int	CARD_HEIGHT			= 139;
 
-	//Symbol sizes are currently set statically.
+	// Symbol sizes are currently set statically.
 	private final int		SHAPE_WIDTH			= 70;
 	private final int		SHAPE_HEIGHT		= 30;
 
-	//Set the shadow offset.
+	// Set the shadow offset.
 	private final int		CARD_SHADOW_OFFSET	= 3;
 	private final int		SHAPE_SHADOW_OFFSET	= 2;
 
-	//Store the various properties of this card.
+	// Store the various properties of this card.
 	private int				number, color, shading, shape;
 
-	//Create a basic blank card.
+	// Create a basic blank card.
 	public Card()
 	{
-		//Clear the values for all cards.
+		// Clear the values for all cards.
 		this.number = 0;
 		this.color = 0;
 		this.shading = 0;
 		this.shape = 0;
 	}
 
-	//The basic card constructor
+	// The basic card constructor
 	public Card(int number, int color, int shading, int shape)
 	{
-		//Store the card properties.
+		// Store the card properties.
 		this.number = number;
 		this.color = color;
 		this.shading = shading;
 		this.shape = shape;
 
-		//Generate the actual card image.
+		// Generate the actual card image.
 		generateCardImage();
 	}
 
-	//Draws the image of the card for use later.
+	// Draws the image of the card for use later.
 	public void generateCardImage()
 	{
-		//Create the image object to store the drawing of the card.
-		image = new BufferedImage(CARD_WIDTH + CARD_SHADOW_OFFSET, CARD_HEIGHT + CARD_SHADOW_OFFSET, BufferedImage.TYPE_INT_ARGB_PRE);
+		// Create the image object to store the drawing of the card.
+		image = new BufferedImage(CARD_WIDTH + CARD_SHADOW_OFFSET, CARD_HEIGHT + CARD_SHADOW_OFFSET,
+				BufferedImage.TYPE_INT_ARGB_PRE);
 
-		//Get the image's graphics context.
+		// Get the image's graphics context.
 		Graphics2D g = ((BufferedImage) image).createGraphics();
 
 		// Draw card shadow
@@ -121,10 +122,10 @@ public class Card
 		g.setStroke(new BasicStroke(1.0f));
 		g.drawRoundRect(0, 0, CARD_WIDTH, CARD_HEIGHT, 15, 15);
 
-		//Determine where the first symbol should start, based on the number of symbols.
+		// Determine where the first symbol should start, based on the number of symbols.
 		int topSymbolY = getTopYPosition();
 
-		//Draw each symbol.
+		// Draw each symbol.
 		for (int i = 0; i < number; i++)
 		{
 			// Draw the shadow
@@ -136,20 +137,20 @@ public class Card
 			drawSymbol(g, 15, topSymbolY + i * 44);
 		}
 
-		//Flush the image drawing.
+		// Flush the image drawing.
 		image.flush();
 	}
 
-	//Draws the symbol at the currently specified location.
-	private void drawSymbol( Graphics2D g, int x, int y )
+	// Draws the symbol at the currently specified location.
+	private void drawSymbol(Graphics2D g, int x, int y)
 	{
 		Shape drawingShape = null;
 
-		//Determine which shape we're going to draw.
+		// Determine which shape we're going to draw.
 		switch (shape)
 		{
 			case SHAPE_OVAL:
-				//The oval is a simple round rectangle.
+				// The oval is a simple round rectangle.
 				drawingShape = new RoundRectangle2D.Double(x, y, SHAPE_WIDTH, SHAPE_HEIGHT, 25.0, 25.0);
 				break;
 			case SHAPE_SQUIGGLE:
@@ -159,14 +160,15 @@ public class Card
 				Path2D.Double squiggle = new Path2D.Double();
 				squiggle.moveTo(x, y);
 				squiggle.lineTo(x, y + SHAPE_HEIGHT - 5);
-				squiggle.curveTo(x + 23, y + SHAPE_HEIGHT + 20, x + 46, y + SHAPE_HEIGHT - 30, x + SHAPE_WIDTH, y + SHAPE_HEIGHT);
+				squiggle.curveTo(x + 23, y + SHAPE_HEIGHT + 20, x + 46, y + SHAPE_HEIGHT - 30, x + SHAPE_WIDTH, y
+						+ SHAPE_HEIGHT);
 				squiggle.lineTo(x + SHAPE_WIDTH, y + 5);
 				squiggle.curveTo(x + 46, y - 20, x + 23, y + 30, x, y);
 
 				drawingShape = squiggle;
 				break;
 			case SHAPE_DIAMOND:
-				//The diamond is a simple polygon.
+				// The diamond is a simple polygon.
 				Polygon diamond = new Polygon();
 				diamond.addPoint(x, y + SHAPE_HEIGHT / 2);
 				diamond.addPoint(x + SHAPE_WIDTH / 2, y);
@@ -177,32 +179,32 @@ public class Card
 				break;
 		}
 
-		//Actually draw the shape.
+		// Actually draw the shape.
 		g.setStroke(new BasicStroke(4.0f));
 		g.draw(drawingShape);
 
-		//Now handle shading the shape.
+		// Now handle shading the shape.
 		if (shading == SHADING_FULL)
 		{
-			//Fill the entire shape.
+			// Fill the entire shape.
 			g.fill(drawingShape);
 		}
 		else if (shading == SHADING_STRIPED)
 		{
-			//Set the width of the lines to be drawn.
+			// Set the width of the lines to be drawn.
 			g.setStroke(new BasicStroke(2.0f));
 
-			//Move across the object, left to right.
+			// Move across the object, left to right.
 			for (int xPos = x + 6; xPos < x + SHAPE_WIDTH; xPos += 6)
 			{
-				//Identify the top and bottom of the shape.
+				// Identify the top and bottom of the shape.
 				int topY = -1;
 				int bottomY = -1;
 
-				//Crawl along each pixel to determine if it is inside the shape or not.
+				// Crawl along each pixel to determine if it is inside the shape or not.
 				for (int yPos = y; yPos < y + SHAPE_HEIGHT; yPos++)
 				{
-					//Check to see if this is above our current estimate for the top.
+					// Check to see if this is above our current estimate for the top.
 					if (topY < 0)
 					{
 						if (drawingShape.contains(xPos, yPos))
@@ -210,7 +212,7 @@ public class Card
 							topY = yPos;
 						}
 					}
-					else if (bottomY < 0) //Do the same for the bottom.
+					else if (bottomY < 0) // Do the same for the bottom.
 					{
 						if (!drawingShape.contains(xPos, yPos))
 						{
@@ -219,22 +221,22 @@ public class Card
 					}
 				}
 
-				//Now draw the line
+				// Now draw the line
 				if (bottomY > 0)
 				{
-					//If we found the bottom, draw from the top to the bottom.
+					// If we found the bottom, draw from the top to the bottom.
 					g.drawLine(xPos, topY, xPos, bottomY);
 				}
 				else if (topY > 0)
 				{
-					//Sometimes the bottom IS the bottom of the object.  Draw to there.
+					// Sometimes the bottom IS the bottom of the object. Draw to there.
 					g.drawLine(xPos, topY, xPos, y + SHAPE_HEIGHT);
 				}
 			}
 		}
 	}
 
-	//Identify the y position of the top symbol, based on the number of symbols to be drawn.
+	// Identify the y position of the top symbol, based on the number of symbols to be drawn.
 	private int getTopYPosition()
 	{
 		switch (number)
@@ -250,7 +252,7 @@ public class Card
 		}
 	}
 
-	//Convert the color property to a Color object.
+	// Convert the color property to a Color object.
 	private Color getDrawingColor()
 	{
 		switch (color)
@@ -286,7 +288,7 @@ public class Card
 		return shading;
 	}
 
-	public int getProperty( int property )
+	public int getProperty(int property)
 	{
 		switch (property)
 		{
@@ -303,9 +305,9 @@ public class Card
 		}
 	}
 
-	public void setProperty( int property, int value )
+	public void setProperty(int property, int value)
 	{
-		//Set the property
+		// Set the property
 		switch (property)
 		{
 			case PROP_NUMBER:
@@ -322,15 +324,14 @@ public class Card
 				break;
 		}
 
-		//Check to see if the card can be redrawn
+		// Check to see if the card can be redrawn
 		for (int p2 = 0; p2 <= 4; p2++)
 		{
-			//Abort if we come across an unfulfilled value.
-			if (getProperty(p2) == 0)
-				return;
+			// Abort if we come across an unfulfilled value.
+			if (getProperty(p2) == 0) return;
 		}
 
-		//Generate the card image.
+		// Generate the card image.
 		generateCardImage();
 	}
 
@@ -341,10 +342,10 @@ public class Card
 	{
 		String s = new String();
 
-		//Indicate the number of items.
+		// Indicate the number of items.
 		s += number + " ";
 
-		//Indicate the color
+		// Indicate the color
 		switch (color)
 		{
 			case COLOR_RED:
@@ -358,7 +359,7 @@ public class Card
 				break;
 		}
 
-		//Indicate the shading
+		// Indicate the shading
 		switch (shading)
 		{
 			case SHADING_NONE:
@@ -372,7 +373,7 @@ public class Card
 				break;
 		}
 
-		//Handle the shapes.
+		// Handle the shapes.
 		switch (shape)
 		{
 			case SHAPE_OVAL:
@@ -386,16 +387,18 @@ public class Card
 				break;
 		}
 
-		//Pluralize the shape name.
-		if (number > 1)
-			s += "s";
+		// Pluralize the shape name.
+		if (number > 1) s += "s";
 
 		return s;
 	}
 
-	public boolean equals( Card card )
+	public boolean equals(Object o)
 	{
-		return card.color == color && card.shading == shading && card.shape == shape && card.number == number;
+		Card card = (Card)o;
+		boolean result = (card.color == color && card.shading == shading && card.shape == shape && card.number == number);
+		//System.out.println("Comparing " + this.toString() + " with " + card.toString() + ": " + result);
+		return result; 
 	}
 
 	public Image getImage()

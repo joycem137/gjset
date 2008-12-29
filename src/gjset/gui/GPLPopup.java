@@ -44,12 +44,12 @@ import javax.swing.JTextArea;
 
 public class GPLPopup
 {
-	private final String gplTextString;
-	private JDialog	gplDialog;
-	
+	private final String	gplTextString;
+	private JDialog			gplDialog;
+
 	public GPLPopup()
 	{
-		//Load the GPL text from memory.
+		// Load the GPL text from memory.
 		String gplFilename = "resources/COPYING";
 		FileReader reader = null;
 		try
@@ -70,33 +70,33 @@ public class GPLPopup
 			e.printStackTrace();
 		}
 		System.out.println("Read " + charsRead + " bytes from GPL.");
-		
+
 		gplTextString = new String(gplTextChars);
 	}
 
 	public void displayPopup(JFrame parentFrame)
 	{
-		//Create the basic dialog
+		// Create the basic dialog
 		gplDialog = new JDialog(parentFrame, "GNU Public License", true);
 		gplDialog.setSize(new Dimension(600, 600));
 		gplDialog.setLayout(new BorderLayout());
-		
-		//Create the text area for the GPL
+
+		// Create the text area for the GPL
 		JTextArea textPane = new JTextArea();
 		textPane.setText(gplTextString);
 		textPane.setEditable(false);
-		
-		//Create a scroll pane to allow the text to be scrolled.
+
+		// Create a scroll pane to allow the text to be scrolled.
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		//Ensure that we're scrolled to the top of the pane.
+
+		// Ensure that we're scrolled to the top of the pane.
 		textPane.setCaretPosition(0);
-		
-		//Add the text area to the dialog
+
+		// Add the text area to the dialog
 		gplDialog.add(scrollPane, BorderLayout.CENTER);
-		
-		//Create a button for the dialog
+
+		// Create a button for the dialog
 		JButton button = new JButton("OK");
 		button.addActionListener(new ActionListener()
 		{
@@ -106,8 +106,8 @@ public class GPLPopup
 			}
 		});
 		gplDialog.add(button, BorderLayout.SOUTH);
-		
-		//Show the dialog.
+
+		// Show the dialog.
 		gplDialog.setVisible(true);
 	}
 }

@@ -42,7 +42,7 @@ public class Deck
 		cards = new Vector<Card>(81);
 		shuffledDeck = new Vector<Card>(81);
 
-		//Create all of the various cards.
+		// Create all of the various cards.
 		for (int n = 1; n <= 3; n++)
 			for (int c = 1; c <= 3; c++)
 				for (int s = 1; s <= 3; s++)
@@ -54,21 +54,21 @@ public class Deck
 
 	public void shuffle()
 	{
-		//Create our companion array that we will shuffle.
+		// Create our companion array that we will shuffle.
 		double arr[] = new double[81];
 		for (int i = 0; i < 81; i++)
 		{
 			arr[i] = Math.random();
 		}
 
-		//Get a copy of the other deck
+		// Get a copy of the other deck
 		shuffledDeck.removeAllElements();
 		for (int i = 0; i < 81; i++)
 		{
 			shuffledDeck.add(cards.get(i));
 		}
 
-		//Now sort both arrays together.		
+		// Now sort both arrays together.
 		for (int i = 0; i < 81; i++)
 		{
 			for (int j = 80; j > 0; j--)
@@ -91,11 +91,11 @@ public class Deck
 	{
 		Card card = shuffledDeck.firstElement();
 		shuffledDeck.remove(0);
-		//System.out.println(remainingCards() + " cards remaining");
+		// System.out.println(remainingCards() + " cards remaining");
 		return card;
 	}
 
-	public Vector<Card> drawCards( int number )
+	public Vector<Card> drawCards(int number)
 	{
 		Vector<Card> vector = new Vector<Card>(number);
 		for (int i = 0; i < number; i++)

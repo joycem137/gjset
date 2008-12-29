@@ -38,7 +38,7 @@ public class MacKeyStrokeFactory implements KeyStrokeFactory
 
 	@Override
 	public KeyStroke getNewGameAcceleratorKeyStroke()
-	{	
+	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.META_MASK);
 	}
 

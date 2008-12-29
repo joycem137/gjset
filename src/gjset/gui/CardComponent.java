@@ -47,28 +47,28 @@ public class CardComponent extends JComponent
 	 */
 	private static final long	serialVersionUID	= 1L;
 
-	private boolean				highlighted;				//Indicates whether this card is highlighted.
+	private boolean				highlighted;				// Indicates whether this card is highlighted.
 
-	private Card				card;						//Stores the card data for this card.
+	private Card				card;						// Stores the card data for this card.
 
-	//Create a basic blank card.
+	// Create a basic blank card.
 	public CardComponent(GameController gameController, Card card)
 	{
 		this.card = card;
 
-		//Create the mouse listener for this object
+		// Create the mouse listener for this object
 		addMouseListener(new CardMouseListener(this, gameController));
 
-		//When they are created, cards are not highlighted.
+		// When they are created, cards are not highlighted.
 		highlighted = false;
 
-		//Set the height and width of the card.
+		// Set the height and width of the card.
 		setMaximumSize(new Dimension(card.getImage().getWidth(this), card.getImage().getHeight(this)));
 		setMinimumSize(new Dimension(card.getImage().getWidth(this), card.getImage().getHeight(this)));
 	}
 
-	//Actually paint the card.
-	protected void paintComponent( Graphics g )
+	// Actually paint the card.
+	protected void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -85,8 +85,8 @@ public class CardComponent extends JComponent
 		}
 	}
 
-	//Set the highlight on the card.
-	public void setHighlight( boolean highlightValue )
+	// Set the highlight on the card.
+	public void setHighlight(boolean highlightValue)
 	{
 		highlighted = highlightValue;
 		repaint();
@@ -113,7 +113,7 @@ public class CardComponent extends JComponent
 		return card.toString();
 	}
 
-	public boolean equals( CardComponent cardComponent )
+	public boolean equals(CardComponent cardComponent)
 	{
 		return card.equals(cardComponent.card);
 	}
