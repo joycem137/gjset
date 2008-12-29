@@ -36,7 +36,7 @@ import java.awt.event.MouseEvent;
 public class CardMouseListener extends MouseAdapter
 {
 	private CardComponent	card;
-	private GameController		gameController;
+	private GameController	gameController;
 
 	public CardMouseListener(CardComponent card, GameController gameController)
 	{

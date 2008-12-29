@@ -161,7 +161,7 @@ public class CardTable extends JPanel
 		while (iterator.hasNext() && cardsOnTable.size() < 9)
 		{
 			// Verify that the space is not in use.
-			//System.out.println("Checking grid at " + row + ", " + col + " with " + cardsOnTable.size() + " cards.");
+			// System.out.println("Checking grid at " + row + ", " + col + " with " + cardsOnTable.size() + " cards.");
 			if (grid[row][col] == null)
 			{
 				dealCardToTable(iterator.next(), new Point(row, col));
@@ -183,7 +183,7 @@ public class CardTable extends JPanel
 		col = gridCols;
 		while (iterator.hasNext())
 		{
-			//System.out.println("Checking grid at " + row + ", " + col + " with " + cardsOnTable.size() + " cards.");
+			// System.out.println("Checking grid at " + row + ", " + col + " with " + cardsOnTable.size() + " cards.");
 			// Verify that the space is not in use.
 			if (grid[row][col] == null)
 			{
@@ -279,55 +279,55 @@ public class CardTable extends JPanel
 			// Remove the card from the table.
 			removeCardFromTable(iterator.next());
 		}
-		
-		//We're going to create a new grid and add the information to it.
-		if(cardsOnTable.size() > 9)
+
+		// We're going to create a new grid and add the information to it.
+		if (cardsOnTable.size() > 9)
 		{
-			//Update the gridRow and gridCol values for the size of the new grid.
+			// Update the gridRow and gridCol values for the size of the new grid.
 			gridRows = 3;
-			gridCols =  cardsOnTable.size() / gridRows;
+			gridCols = cardsOnTable.size() / gridRows;
 		}
 		else
 		{
-			//Update the size of the grid
+			// Update the size of the grid
 			gridCols = 3;
 			gridRows = cardsOnTable.size() / gridCols;
 		}
-		
-		//Create a new grid to drop everything into.
+
+		// Create a new grid to drop everything into.
 		CardComponent newGrid[][] = new CardComponent[3][6];
-		
-		//Grab an iterator for the two lists that we care about
+
+		// Grab an iterator for the two lists that we care about
 		Iterator<Point> locationIterator = cardPositions.iterator();
 		List<Point> newPositions = new Vector<Point>();
-		
-		//Drop the cards into position.
-		for(int row = 0; row < gridRows; row++)
+
+		// Drop the cards into position.
+		for (int row = 0; row < gridRows; row++)
 		{
-			for(int col = 0; col < gridCols; col++)
+			for (int col = 0; col < gridCols; col++)
 			{
 				Point point = locationIterator.next();
 				moveCard(newGrid, point.x, point.y, row, col);
 				newPositions.add(new Point(row, col));
 			}
 		}
-		
-		//Put the new grid over the old grid.
+
+		// Put the new grid over the old grid.
 		grid = newGrid;
 		cardPositions.clear();
 		cardPositions = newPositions;
-		
+
 		// Redraw the table.
 		updateLayout();
 	}
 
 	private void moveCard(CardComponent[][] newGrid, int row, int col, int newRow, int newCol)
 	{
-		//System.out.println("Moving card from " + row + ", " + col + " to " + newRow + ", " + newCol);
-		
+		// System.out.println("Moving card from " + row + ", " + col + " to " + newRow + ", " + newCol);
+
 		assert grid[row][col] != null;
-		
-		//For now, this is very simple:
+
+		// For now, this is very simple:
 		newGrid[newRow][newCol] = grid[row][col];
 	}
 
@@ -370,7 +370,7 @@ public class CardTable extends JPanel
 		gridRows = Math.max(row + 1, gridRows);
 		gridCols = Math.max(col + 1, gridCols);
 
-		System.out.println("Added card to " + row + ", " + col + ".  Grid size is " + gridRows + ", " + gridCols);
+		//System.out.println("Added card to " + row + ", " + col + ".  Grid size is " + gridRows + ", " + gridCols);
 	}
 
 	/**
