@@ -1,5 +1,33 @@
 package gjset.gui;
 
+/* 
+ *  LEGAL STUFF
+ * 
+ *  This file is part of gjSet.
+ *  
+ *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  
+ *  The Set Game, card design, and basic game mechanics of the Set Game are
+ *  registered trademarks of Set Enterprises. 
+ *  
+ *  This project is in no way affiliated with Set Enterprises, 
+ *  but the authors of gjSet are very grateful for
+ *  them creating such an excellent card game.
+ *  
+ *  gjSet is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *   
+ *  gjSet is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details
+ *   
+ *  You should have received a copy of the GNU General Public License
+ *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import gjset.engine.GameController;
 
 import java.awt.BorderLayout;
@@ -21,7 +49,8 @@ public class GjSetGUI
 	private MessageBar		messageBar;
 	private PlayerPanel		playerPanel;
 	private KeyStrokeFactory keyStrokeFactory;
-
+	private GPLPopup	gplPopup;
+	
 	public GjSetGUI(GameController gameController)
 	{
 		this.gameController = gameController;
@@ -111,6 +140,30 @@ public class GjSetGUI
 
 		//Add the file menu to the menu bar.
 		jMenuBar.add(fileMenu);
+		
+		//Create the help menu for the GNU stuff.
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+		
+		//Create the "GPL Text" item.
+		JMenuItem gplItem = new JMenuItem("About GPL", KeyEvent.VK_G);
+		helpMenu.add(gplItem);
+		
+		//Create the gplPopup
+		gplPopup = new GPLPopup();
+		
+		//Add the GPL text to the gplItem
+		gplItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed( ActionEvent evt )
+			{
+				gplPopup.displayPopup(topFrame);
+			}
+		});
+		
+		//Add the help menu to the menu bar.
+		jMenuBar.add(helpMenu);
+		
 	}
 
 	public CardTable getCardTable()

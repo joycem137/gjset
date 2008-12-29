@@ -1,5 +1,33 @@
 package gjset.gui;
 
+/* 
+ *  LEGAL STUFF
+ * 
+ *  This file is part of gjSet.
+ *  
+ *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  
+ *  The Set Game, card design, and basic game mechanics of the Set Game are
+ *  registered trademarks of Set Enterprises. 
+ *  
+ *  This project is in no way affiliated with Set Enterprises, 
+ *  but the authors of gjSet are very grateful for
+ *  them creating such an excellent card game.
+ *  
+ *  gjSet is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *   
+ *  gjSet is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details
+ *   
+ *  You should have received a copy of the GNU General Public License
+ *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import gjset.engine.GameController;
 
 import java.awt.BasicStroke;
@@ -40,15 +68,15 @@ public class PlayerPanel extends JPanel
 		this.table = table;
 		this.gameController = gameController;
 
-		//Set the size of the card table.
+		// Set the size of the card table.
 		setPreferredSize(new Dimension(720, 200));
 		setMinimumSize(new Dimension(720, 200));
 		setMaximumSize(new Dimension(720, 200));
 
-		//Handle resizing the player panel.
+		// Handle resizing the player panel.
 		addComponentListener(new ComponentAdapter()
 		{
-			public void componentResized( ComponentEvent e )
+			public void componentResized(ComponentEvent e)
 			{
 				JComponent component = (JComponent) e.getSource();
 
@@ -71,54 +99,54 @@ public class PlayerPanel extends JPanel
 			private static final long	serialVersionUID	= -1742911717343411450L;
 
 			@Override
-			public void actionPerformed( ActionEvent arg0 )
+			public void actionPerformed(ActionEvent arg0)
 			{
 				gameController.noMoreSets();
 			}
 		});
 
-		//Set the button's size.
+		// Set the button's size.
 		setButton.setPreferredSize(new Dimension(180, 30));
 		setButton.setMaximumSize(new Dimension(180, 30));
 		setButton.setMinimumSize(new Dimension(180, 30));
 
-		//Add the button to the screen.
+		// Add the button to the screen.
 		add(setButton);
 	}
 
 	public void drawPanel()
 	{
-		//Draw the background
+		// Draw the background
 		offScreenGraphics.setColor(table.getBackground());
 		offScreenGraphics.fillRect(0, 0, getWidth(), getHeight());
 
-		//Draw the bottom half of the panel.
+		// Draw the bottom half of the panel.
 		offScreenGraphics.setColor(panelColor);
 		offScreenGraphics.fillRoundRect(15, getHeight() - 80, getWidth() - 30, 50, 15, 15);
 
-		//Draw the bottom of the border of the panel.
+		// Draw the bottom of the border of the panel.
 		offScreenGraphics.setColor(Color.black);
 		offScreenGraphics.setStroke(new BasicStroke(3.0f));
 		offScreenGraphics.drawRoundRect(15, 0, getWidth() - 30, getHeight() - 30, 15, 15);
 
-		//Draw the top half of the panel.
+		// Draw the top half of the panel.
 		offScreenGraphics.setColor(panelColor);
 		offScreenGraphics.fillRect(15, 0, getWidth() - 30, getHeight() - 60);
 
-		//Draw the border of the bottom of the panel.
+		// Draw the border of the bottom of the panel.
 		offScreenGraphics.setColor(Color.black);
 		offScreenGraphics.setStroke(new BasicStroke(3.0f));
 		offScreenGraphics.drawLine(15, 0, 15, getHeight() - 60);
 		offScreenGraphics.drawLine(getWidth() - 15, 0, getWidth() - 15, getHeight() - 60);
 
-		//Flush the image.
+		// Flush the image.
 		offScreenImage.flush();
 
-		//Repaint the screen.
+		// Repaint the screen.
 		repaint();
 	}
 
-	public void paintComponent( Graphics g )
+	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
 		g.drawImage(offScreenImage, 0, 0, getWidth(), getHeight(), this);
