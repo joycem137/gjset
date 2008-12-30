@@ -4,9 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -50,15 +51,20 @@ public class GPLPopup
 	public GPLPopup()
 	{
 		// Load the GPL text from memory.
-		String gplFilename = "resources/COPYING";
-		FileReader reader = null;
+		URL gplURL = this.getClass().getResource("/resources/COPYING");
+		
+		System.out.println("Got URL: " + gplURL);
+		
+		InputStream inputStream = null;
 		try
 		{
-			reader = new FileReader(gplFilename);
-		} catch (FileNotFoundException e)
+			inputStream = gplURL.openStream();
+		} catch (IOException e1)
 		{
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+		
+		InputStreamReader reader = new InputStreamReader(inputStream);
 
 		char gplTextChars[] = new char[36000];
 		int charsRead = 0;

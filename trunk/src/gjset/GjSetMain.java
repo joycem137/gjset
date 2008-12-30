@@ -36,7 +36,7 @@ public class GjSetMain
 	public static void main(String[] args)
 	{
 		GameController gc = new GameController();
-		GjSetGUI gui = new GjSetGUI(gc);
+		new GjSetGUI(gc);
 	}
 
 }
