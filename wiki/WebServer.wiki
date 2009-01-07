@@ -1,0 +1,14 @@
+#summary This page explains the basic design of the web server.
+
+= Variables to be tracked =
+  * General
+    * Game IDs
+    * Player IDs and what games they are in.
+  * Per game
+    * Game active
+    * Deck
+    * Current cards on table
+    * Who is calling set
+  * Per Player
+    * Score
+    * Set call
