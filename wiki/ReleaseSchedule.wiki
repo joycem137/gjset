@@ -11,29 +11,42 @@ Requirements
   * When there are no more sets remaining, the program will indicate that the game is over.
   * The player will be able to indicate that they want more cards, as they cannot find a set.
 
-= Release 0.2 - Multi Player features in single player mode =
+= Release 0.2 - Rudimentary Online Play =
 
-This release will add various features to the single player experience that are necessary for properly handling multiple players.
-
-Requirements
-  * The player's current score will be displayed
-  * The number of cards remaining in the deck will be displayed.
-  * Player will be able to call set by clicking cards or clicking a "Call set" button.
-  * If the player begins clicking, or clicks set, the player will have a limited time to select cards.
-  * If the player selects something that is not a set, or does not select cards in time, their score will be penalized.
-  * The score change will be indicated graphically.
-
-= Release 0.3 - Multi Player capabilities =
-
-This version will allow players to play together over the internet.
+This release will take the basic capabilities of the single player mode and extend them to support multi player capabilities.
 
 Requirements
-  * Software will permit a player to host a game.
-  * Software will permit other players to join a hosted game.
-  * Each player's name will be displayed
-  * Each player's score will be displayed
-  * When a player has called set, this will be indicated on the other players' screens.
-  * When a player has called set, no other player may do so.
+  * Server
+    * Must be client-platform agnostic
+    * Must handle deck delivery
+    * Must handle identifying that players want more cards.
+    * Must handle situation where no sets remain.
+    * Must handle player adding and drop outs.  I'm thinking of using game ids to start with.
+    * Must handle calling of set.
+    * Must maintain player scores.
+    * Must validate set selections
+  * Client
+    * The player's current score will be displayed
+    * The number of cards remaining in the deck will be displayed.
+    * Player will be able to call set by clicking cards or clicking a "Call set" button.
+    * If the player begins clicking, or clicks set, the player will have a limited time to select cards.
+    * If the player selects something that is not a set, or does not select cards in time, their score will be penalized.
+    * The score change will be indicated graphically.
+
+= Release 0.3 - UX Improvements =
+
+Okay, I'm really not very happy with the UX of the system.  We're going to need to do some major improvements to fix the issues we have before moving on.
+
+Requirements
+  * Client
+    * System must display splash screen on start up to allow selection of single or multi player.
+    * Add animation to the cards.
+    * Improve the look of the highlighting
+    * Add a mouse-over highlighting.
+    * Change the player panels to actually look half-way decent, instead of looking like crap.
+    * Use a photorealistic background.
+    * Investigate ways of improving the look of the cards themselves.
+    * Display all open game ids on the server.
 
 = Release 0.4 - Multi Player enhancements =
 
@@ -45,6 +58,7 @@ Requirements
   * User portraits will be displayed for each player
   * All systems will store a local copy of the score board.
   * Score tracking will display win/loss ratios for each individual player, and each player matchup.
+  * Server chat room for pre-game configuration
 
 = Release 0.5 - Graphical enhancements =
 
