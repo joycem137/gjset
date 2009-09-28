@@ -28,8 +28,8 @@ package gjset.engine;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.gui.CardComponent;
-import gjset.gui.GjSetGUI;
+import gjset.client.gui.CardComponent;
+import gjset.client.gui.GjSetGUI;
 
 import java.util.Iterator;
 import java.util.List;
