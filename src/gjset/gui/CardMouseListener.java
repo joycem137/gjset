@@ -1,4 +1,4 @@
-package gjset;
+package gjset.gui;
 
 /* 
  *  LEGAL STUFF
@@ -29,14 +29,23 @@ package gjset;
  */
 
 import gjset.engine.GameController;
-import gjset.gui.GjSetGUI;
 
-public class GjSetMain
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class CardMouseListener extends MouseAdapter
 {
-	public static void main(String[] args)
+	private CardComponent	card;
+	private GameController	gameController;
+
+	public CardMouseListener(CardComponent card, GameController gameController)
 	{
-		GameController gc = new GameController();
-		new GjSetGUI(gc);
+		this.card = card;
+		this.gameController = gameController;
 	}
 
+	public void mouseClicked(MouseEvent me)
+	{
+		gameController.onCardClicked(card);
+	}
 }
