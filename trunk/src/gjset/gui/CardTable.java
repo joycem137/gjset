@@ -132,12 +132,12 @@ public class CardTable extends JPanel
 		// Now set up the position of the card pane, to center it on the screen.
 		// The x coordinate is back a few cards
 		double centerX = getWidth() / 2.0;
-		int rowLength = (int) (gridCols * Card.CARD_WIDTH + (gridCols - 0.50) * CARD_BUFFER);
+		int rowLength = (int) (gridCols * CardComponent.CARD_WIDTH + (gridCols - 0.50) * CARD_BUFFER);
 		int xStart = (int) (centerX - rowLength / 2.0);
 
 		// The y coordinate is up a few cards.
 		double centerY = getHeight() / 2.0;
-		int colHeight = (int) (gridRows * Card.CARD_HEIGHT + (gridRows - 0.50) * CARD_BUFFER);
+		int colHeight = (int) (gridRows * CardComponent.CARD_HEIGHT + (gridRows - 0.50) * CARD_BUFFER);
 		int yStart = (int) (centerY - colHeight / 2.0);
 
 		// Relocate the card pane.
