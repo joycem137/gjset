@@ -29,14 +29,22 @@ package gjset;
  */
 
 import gjset.engine.GameController;
+import gjset.engine.LocalPlayer;
 import gjset.gui.GjSetGUI;
+import gjset.gui.LocalEngine;
 
 public class GjSetMain
 {
 	public static void main(String[] args)
 	{
-		GameController gc = new GameController();
-		new GjSetGUI(gc);
+		LocalPlayer player = new LocalPlayer();
+		LocalEngine engine = new LocalEngine();
+		
+		GameController gc = new GameController(player);
+		GjSetGUI gui = new GjSetGUI(engine);
+		
+		player.setGUI(gui);
+		engine.setEngine(gc);
 	}
 
 }

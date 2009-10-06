@@ -1,4 +1,4 @@
-package gjset.engine;
+package gjset.data;
 
 /* 
  *  LEGAL STUFF

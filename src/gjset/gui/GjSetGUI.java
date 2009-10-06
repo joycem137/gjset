@@ -28,8 +28,6 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.engine.GameController;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,19 +41,23 @@ import javax.swing.SwingUtilities;
 
 public class GjSetGUI
 {
+	//UI Components
 	private JFrame				topFrame;
-	private CardTable			cardTable;
-	private GameController		gameController;
+	private CardTableComponent	cardTable;
 	private MessageBar			messageBar;
 	private PlayerPanel			playerPanel;
-	private KeyStrokeFactory	keyStrokeFactory;
 	private GPLPopup			gplPopup;
+	
+	//Keyboard components
+	private KeyStrokeFactory	keyStrokeFactory;
+	
+	//Engine interface
+	private EngineInterface		engine;
 
-	public GjSetGUI(GameController gameController)
+	public GjSetGUI(EngineInterface engine)
 	{
-		this.gameController = gameController;
-		gameController.linkGUI(this);
-
+		this.engine = engine;
+		
 		// Determine which keystroke factory to grab.
 		if (System.getProperty("os.name").contains("Mac OS X"))
 		{
@@ -103,13 +105,13 @@ public class GjSetGUI
 
 	private void createCardTable()
 	{
-		cardTable = new CardTable(gameController);
+		cardTable = new CardTableComponent(engine);
 		topFrame.add(cardTable, BorderLayout.CENTER);
 	}
 
 	private void createPlayerPanel()
 	{
-		playerPanel = new PlayerPanel(cardTable, gameController);
+		playerPanel = new PlayerPanel(cardTable, engine);
 	}
 
 	private void createMenu()
@@ -129,7 +131,7 @@ public class GjSetGUI
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				gameController.newGame();
+				engine.startNewGame();
 			}
 		});
 
@@ -142,6 +144,7 @@ public class GjSetGUI
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
+				engine.quitGame();
 				System.exit(0);
 			}
 		});
@@ -174,7 +177,7 @@ public class GjSetGUI
 
 	}
 
-	public CardTable getCardTable()
+	public CardTableComponent getCardTable()
 	{
 		return cardTable;
 	}
