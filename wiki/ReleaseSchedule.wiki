@@ -81,5 +81,5 @@ Requirements
   * Create a computer player for single player mode.
   * Implement chess-like ratings system.
   * Provide more customization and options for players, such as:
-  ** colorblind mode
-  ** handicapping options to better allow different skill levels to play together (i.e. 10-second lockout for experts, smaller penalties for novices, etc)
+    * colorblind mode
+    * handicapping options to better allow different skill levels to play together (i.e. 10-second lockout for experts, smaller penalties for novices, etc)
