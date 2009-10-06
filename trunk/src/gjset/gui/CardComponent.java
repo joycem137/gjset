@@ -38,7 +38,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Shape;
-import java.awt.geom.Path2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -144,7 +144,7 @@ public class CardComponent extends JComponent
 				/*
 				 * The squiggle is drawn by doing a complicated path using lines and quadratic curves.
 				 */
-				Path2D.Double squiggle = new Path2D.Double();
+				GeneralPath squiggle = new GeneralPath();
 				squiggle.moveTo(x, y);
 				squiggle.lineTo(x, y + SHAPE_HEIGHT - 5);
 				squiggle.curveTo(x + 23, y + SHAPE_HEIGHT + 20, x + 46, y + SHAPE_HEIGHT - 30, x + SHAPE_WIDTH, y
@@ -205,6 +205,11 @@ public class CardComponent extends JComponent
 						{
 							bottomY = yPos - 1;
 						}
+					}
+					else if(drawingShape.contains(xPos, yPos))
+					{
+						topY = yPos;
+						bottomY = -1;
 					}
 				}
 

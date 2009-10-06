@@ -39,7 +39,7 @@ public class LocalPlayer implements PlayerInterface
 	{
 	}
 
-	@Override
+//	@Override
 	public void displayNewGame()
 	{
 		// Remove any cards that were previously on the table.
@@ -58,46 +58,46 @@ public class LocalPlayer implements PlayerInterface
 		this.gui = gui;
 	}
 
-	@Override
+//	@Override
 	public void confirmSet()
 	{
 		// Display a message indicating that this is a set.
 		gui.getMessageBar().displayMessage("That's a set!");
 	}
 
-	@Override
+//	@Override
 	public void updateTable(CardTable table)
 	{
 		gui.getCardTable().update(table);
 	}
 
-	@Override
+//	@Override
 	public void indicateOutOfCardsToDraw()
 	{
 		gui.getMessageBar().displayMessage("There are no more cards to draw.");
 	}
 
-	@Override
+//	@Override
 	public void rejectSet()
 	{
 		// Display a message on the gui.
 		gui.getMessageBar().displayMessage("That's not a set!");
 	}
 
-	@Override
+//	@Override
 	public void displayEndOfGame()
 	{
 		gui.hidePlayerPanel();
 		gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
 	}
 
-	@Override
+//	@Override
 	public void indicateNoNeedToDrawMoreCards()
 	{
 		gui.getMessageBar().displayMessage("You don't need to draw more cards.");
 	}
 
-	@Override
+//	@Override
 	public void resetTable()
 	{
 		gui.getCardTable().reset();

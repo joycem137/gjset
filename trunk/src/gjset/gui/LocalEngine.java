@@ -40,25 +40,25 @@ public class LocalEngine implements EngineInterface
 		this.gc = gc;
 	}
 
-	@Override
+//	@Override
 	public void quitGame()
 	{
 		gc.quitGame();
 	}
 
-	@Override
+//	@Override
 	public void startNewGame()
 	{
 		gc.newGame();
 	}
 
-	@Override
+//	@Override
 	public void callNoMoreSets()
 	{
 		gc.noMoreSets();
 	}
 
-	@Override
+//	@Override
 	public void selectCard(CardComponent card)
 	{
 		gc.selectCard(card.getCard());
