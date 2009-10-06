@@ -48,8 +48,8 @@ public class CardTable
 	private int					gridRows;					// How many rows we are currently using.
 	private int					gridCols;					// How many cols we are currently using.
 
-	public static int			CARD_LIMIT	= 21;		// max number of cards on the table at a time	
-	public static int			ROW_LIMIT	= 7;		// max number of rows on the table at a time	
+	public static final int		CARD_LIMIT	= 21;		// max number of cards on the table at a time	
+	public static final int		ROW_LIMIT	= 7;		// max number of rows on the table at a time	
 	
 	private PlayerInterface		player;
 
