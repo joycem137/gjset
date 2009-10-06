@@ -1,9 +1,7 @@
-package gjset.gui;
+package gjset.client;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
+import gjset.client.gui.CardComponent;
+import gjset.engine.GameController;
 
 /* 
  *  LEGAL STUFF
@@ -33,19 +31,38 @@ import javax.swing.KeyStroke;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class WindowsKeyStrokeFactory implements KeyStrokeFactory
+public class LocalEngine implements EngineInterface
 {
 
-//	@Override
-	public KeyStroke getExitGameAcceleratorKeyStroke()
+	private GameController	gc;
+
+	public void setEngine(GameController gc)
 	{
-		return KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK);
+		this.gc = gc;
 	}
 
 //	@Override
-	public KeyStroke getNewGameAcceleratorKeyStroke()
+	public void quitGame()
 	{
-		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
+		gc.quitGame();
+	}
+
+//	@Override
+	public void startNewGame()
+	{
+		gc.newGame();
+	}
+
+//	@Override
+	public void callNoMoreSets()
+	{
+		gc.noMoreSets();
+	}
+
+//	@Override
+	public void selectCard(CardComponent card)
+	{
+		gc.selectCard(card.getCard());
 	}
 
 }

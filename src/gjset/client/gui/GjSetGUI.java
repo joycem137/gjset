@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.client.gui;
 
 /* 
  *  LEGAL STUFF
@@ -27,6 +27,8 @@ package gjset.gui;
  *  You should have received a copy of the GNU General Public License
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import gjset.client.EngineInterface;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.client.gui;
 
 /* 
  *  LEGAL STUFF
@@ -28,24 +28,13 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
 import javax.swing.KeyStroke;
 
-public class MacKeyStrokeFactory implements KeyStrokeFactory
+public interface KeyStrokeFactory
 {
 
-//	@Override
-	public KeyStroke getNewGameAcceleratorKeyStroke()
-	{
-		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.META_MASK);
-	}
+	public KeyStroke getNewGameAcceleratorKeyStroke();
 
-//	@Override
-	public KeyStroke getExitGameAcceleratorKeyStroke()
-	{
-		return KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.META_MASK);
-	}
+	public KeyStroke getExitGameAcceleratorKeyStroke();
 
 }

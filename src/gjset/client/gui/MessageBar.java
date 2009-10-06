@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.client.gui;
 
 /* 
  *  LEGAL STUFF
