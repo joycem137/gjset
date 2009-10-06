@@ -43,7 +43,7 @@ public class GameController
 
 	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.
 	private CardTable				cardTable;
-
+	
 	public GameController(PlayerInterface player)
 	{
 		//Store a link to the player interface
@@ -279,7 +279,7 @@ public class GameController
 		{
 			player.indicateOutOfCardsToDraw();
 		}
-		else if (cardTable.getNumCards() < 18)
+		else if (cardTable.getNumCards() < cardTable.CARD_LIMIT)
 		{
 			// Unselect all selected cards.
 			Iterator<Card> iterator = selectedCards.iterator();

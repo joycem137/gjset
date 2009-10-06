@@ -48,6 +48,9 @@ public class CardTable
 	private int					gridRows;					// How many rows we are currently using.
 	private int					gridCols;					// How many cols we are currently using.
 
+	public static int			CARD_LIMIT	= 21;		// max number of cards on the table at a time	
+	public static int			ROW_LIMIT	= 7;		// max number of rows on the table at a time	
+	
 	private PlayerInterface		player;
 
 	public CardTable(PlayerInterface player)
@@ -59,7 +62,7 @@ public class CardTable
 		cardPositions = new Vector<Point>();
 
 		// Create the grid on which to place cards.
-		grid = new Card[3][6];
+		grid = new Card[3][ROW_LIMIT];
 		gridRows = 0;
 		gridCols = 0;
 
@@ -186,7 +189,7 @@ public class CardTable
 	public void removeCards()
 	{
 		// Reset the grid
-		grid = new Card[3][6];
+		grid = new Card[3][ROW_LIMIT];
 		gridRows = 0;
 		gridCols = 0;
 
@@ -230,7 +233,7 @@ public class CardTable
 		}
 
 		// Create a new grid to drop everything into.
-		Card newGrid[][] = new Card[3][6];
+		Card newGrid[][] = new Card[3][ROW_LIMIT];
 
 		// Grab an iterator for the two lists that we care about
 		Iterator<Point> locationIterator = cardPositions.iterator();
