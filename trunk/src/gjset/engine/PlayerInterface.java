@@ -40,5 +40,6 @@ public interface PlayerInterface
 	void rejectSet();
 	void displayEndOfGame();
 	void indicateNoNeedToDrawMoreCards();
+	void resetTable();
 
 }

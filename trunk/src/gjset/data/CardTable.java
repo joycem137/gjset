@@ -1,8 +1,6 @@
 package gjset.data;
 
 import gjset.engine.PlayerInterface;
-import gjset.gui.CardComponent;
-import gjset.gui.EngineInterface;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -195,9 +193,10 @@ public class CardTable
 		// Reset the list of cards.
 		cardsOnTable.clear();
 		cardPositions.clear();
+		highlightedCards.clear();
 
 		// Clean up the screen.
-		player.updateTable(this);
+		player.resetTable();
 	}
 
 	/**

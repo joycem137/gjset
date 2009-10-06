@@ -96,4 +96,10 @@ public class LocalPlayer implements PlayerInterface
 	{
 		gui.getMessageBar().displayMessage("You don't need to draw more cards.");
 	}
+
+	@Override
+	public void resetTable()
+	{
+		gui.getCardTable().reset();
+	}
 }

@@ -69,6 +69,9 @@ public class GameController
 		//Start a new game on the interface.
 		player.displayNewGame();
 		
+		//Card the card table.
+		cardTable.removeCards();
+		
 		//Deal 12 cards to the table.
 		cardTable.addCards(deck.drawCards(12));
 
