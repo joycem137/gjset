@@ -28,24 +28,22 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.engine.GameController;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class CardMouseListener extends MouseAdapter
 {
 	private CardComponent	card;
-	private GameController	gameController;
+	private EngineInterface	engine;
 
-	public CardMouseListener(CardComponent card, GameController gameController)
+	public CardMouseListener(CardComponent card, EngineInterface engine)
 	{
 		this.card = card;
-		this.gameController = gameController;
+		this.engine = engine;
 	}
 
 	public void mouseClicked(MouseEvent me)
 	{
-		gameController.onCardClicked(card);
+		engine.selectCard(card);
 	}
 }

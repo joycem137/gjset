@@ -28,8 +28,6 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.engine.GameController;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -56,17 +54,15 @@ public class PlayerPanel extends JPanel
 	private Image				offScreenImage;
 	private Graphics2D			offScreenGraphics;
 
-	private CardTable			table;
-	private GameController		gameController;
+	private CardTableComponent	table;
 
 	private static final Color	panelColor			= new Color(0, 51, 0);
 
-	public PlayerPanel(CardTable table, final GameController gameController)
+	public PlayerPanel(CardTableComponent table, final EngineInterface engine)
 	{
 		super();
 
 		this.table = table;
-		this.gameController = gameController;
 
 		// Set the size of the card table.
 		setPreferredSize(new Dimension(720, 200));
@@ -101,7 +97,7 @@ public class PlayerPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				gameController.noMoreSets();
+				engine.callNoMoreSets();
 			}
 		});
 

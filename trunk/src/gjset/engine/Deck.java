@@ -28,7 +28,7 @@ package gjset.engine;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.engine.Card;
+import gjset.data.Card;
 
 import java.util.Vector;
 

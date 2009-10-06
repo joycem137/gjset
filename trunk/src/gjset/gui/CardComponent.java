@@ -28,8 +28,7 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.engine.Card;
-import gjset.engine.GameController;
+import gjset.data.Card;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -71,13 +70,13 @@ public class CardComponent extends JComponent
 	private Image				image;						// Stores the image of the card
 
 	// Create a basic blank card.
-	public CardComponent(GameController gameController, Card card)
+	public CardComponent(EngineInterface engine, Card card)
 	{
 		this.card = card;
 		generateCardImage();
 
 		// Create the mouse listener for this object
-		addMouseListener(new CardMouseListener(this, gameController));
+		addMouseListener(new CardMouseListener(this, engine));
 
 		// When they are created, cards are not highlighted.
 		highlighted = false;
