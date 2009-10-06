@@ -1,12 +1,11 @@
-package gjset.gui;
-
+package gjset.client.gui;
 
 /* 
  *  LEGAL STUFF
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton
+ *  gjSet is Copyright 2008, 2009 Joyce Murton
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -29,10 +28,24 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface EngineInterface
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+public class MacKeyStrokeFactory implements KeyStrokeFactory
 {
-	void selectCard(CardComponent card);
-	void startNewGame();
-	void quitGame();
-	void callNoMoreSets();
+
+//	@Override
+	public KeyStroke getNewGameAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.META_MASK);
+	}
+
+//	@Override
+	public KeyStroke getExitGameAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.META_MASK);
+	}
+
 }

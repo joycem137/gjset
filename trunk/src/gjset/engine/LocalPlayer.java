@@ -28,8 +28,8 @@
 
 package gjset.engine;
 
+import gjset.client.gui.GjSetGUI;
 import gjset.data.CardTable;
-import gjset.gui.GjSetGUI;
 
 public class LocalPlayer implements PlayerInterface
 {

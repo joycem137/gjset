@@ -28,10 +28,10 @@ package gjset;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import gjset.client.LocalEngine;
+import gjset.client.gui.GjSetGUI;
 import gjset.engine.GameController;
 import gjset.engine.LocalPlayer;
-import gjset.gui.GjSetGUI;
-import gjset.gui.LocalEngine;
 
 public class GjSetMain
 {

@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.client.gui;
 
 /* 
  *  LEGAL STUFF
@@ -28,6 +28,7 @@ package gjset.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import gjset.client.EngineInterface;
 import gjset.data.Card;
 
 import java.awt.BasicStroke;
