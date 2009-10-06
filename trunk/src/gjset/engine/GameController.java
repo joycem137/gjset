@@ -279,7 +279,7 @@ public class GameController
 		{
 			player.indicateOutOfCardsToDraw();
 		}
-		else if (cardTable.getNumCards() < cardTable.CARD_LIMIT)
+		else if (cardTable.getNumCards() < CardTable.CARD_LIMIT)
 		{
 			// Unselect all selected cards.
 			Iterator<Card> iterator = selectedCards.iterator();
