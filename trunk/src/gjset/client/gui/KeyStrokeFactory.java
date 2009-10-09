@@ -35,6 +35,8 @@ public interface KeyStrokeFactory
 
 	public KeyStroke getNewGameAcceleratorKeyStroke();
 
+	public KeyStroke getAddPlayerAcceleratorKeyStroke();	
+	
 	public KeyStroke getExitGameAcceleratorKeyStroke();
 
 }

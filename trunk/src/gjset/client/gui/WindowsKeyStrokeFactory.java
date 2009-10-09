@@ -36,13 +36,16 @@ import javax.swing.KeyStroke;
 public class WindowsKeyStrokeFactory implements KeyStrokeFactory
 {
 
-//	@Override
 	public KeyStroke getExitGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK);
 	}
+	
+	public KeyStroke getAddPlayerAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK);
+	}
 
-//	@Override
 	public KeyStroke getNewGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK);

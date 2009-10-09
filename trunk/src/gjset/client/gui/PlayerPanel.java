@@ -29,11 +29,13 @@ package gjset.client.gui;
  */
 
 import gjset.client.EngineInterface;
+import gjset.data.Player;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -57,7 +59,10 @@ public class PlayerPanel extends JPanel
 	private Graphics2D			offScreenGraphics;
 
 	private CardTableComponent	table;
+	private Player				player;
 
+	private Font				messageFont;
+	
 	private static final Color	panelColor			= new Color(0, 51, 0);
 
 	public PlayerPanel(CardTableComponent table, final EngineInterface engine)
@@ -83,7 +88,7 @@ public class PlayerPanel extends JPanel
 
 				offScreenImage = component.createImage(width, height);
 				offScreenGraphics = (Graphics2D) offScreenImage.getGraphics();
-				drawPanel();
+				drawPanel(player);
 			}
 		});
 
@@ -96,7 +101,6 @@ public class PlayerPanel extends JPanel
 			 */
 			private static final long	serialVersionUID	= -1742911717343411450L;
 
-//			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				engine.callNoMoreSets();
@@ -112,7 +116,7 @@ public class PlayerPanel extends JPanel
 		add(setButton);
 	}
 
-	public void drawPanel()
+	public void drawPanel(Player player)
 	{
 		// Draw the background
 		offScreenGraphics.setColor(table.getBackground());
@@ -137,6 +141,15 @@ public class PlayerPanel extends JPanel
 		offScreenGraphics.drawLine(15, 0, 15, getHeight() - 60);
 		offScreenGraphics.drawLine(getWidth() - 15, 0, getWidth() - 15, getHeight() - 60);
 
+		// Display the player score info.
+		this.player = player;
+		messageFont = new Font("Arial", Font.PLAIN, 12);
+		offScreenGraphics.setColor(Color.red);
+		offScreenGraphics.setFont(messageFont);
+		offScreenGraphics.drawString(player.getName(), 30, 15);
+		offScreenGraphics.setColor(Color.blue);
+		offScreenGraphics.drawString(String.valueOf(player.getScore()), 30, 35);		
+		
 		// Flush the image.
 		offScreenImage.flush();
 

@@ -137,6 +137,18 @@ public class GjSetGUI
 			}
 		});
 
+
+		// Build the add player option
+		JMenuItem addPlayerItem = new JMenuItem("Add Player", KeyEvent.VK_P);
+		addPlayerItem.setAccelerator(keyStrokeFactory.getAddPlayerAcceleratorKeyStroke());
+		fileMenu.add(addPlayerItem);
+		addPlayerItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+			}
+		});
+		
 		// Build the exit item.
 		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_X);
 		exitItem.setAccelerator(keyStrokeFactory.getExitGameAcceleratorKeyStroke());
@@ -182,6 +194,11 @@ public class GjSetGUI
 	public CardTableComponent getCardTable()
 	{
 		return cardTable;
+	}
+	
+	public PlayerPanel getPlayer()
+	{
+		return playerPanel;
 	}
 
 	public MessageBar getMessageBar()
