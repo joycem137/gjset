@@ -30,6 +30,7 @@ package gjset.engine;
 
 import gjset.data.Card;
 import gjset.data.CardTable;
+import gjset.data.Player;
 
 import java.util.Iterator;
 import java.util.List;
@@ -38,16 +39,17 @@ import java.util.Vector;
 public class GameController
 {
 	private Deck					deck;					// Stores the deck of cards.
-	private PlayerInterface			player;					// The gui interface.
+	private PlayerInterface			client;					// The gui interface.
 	private boolean					gameActive;				// Indicates whether there is an active game or not.
 
 	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.
 	private CardTable				cardTable;
+	private Player					player;					// player data for this game.
 	
-	public GameController(PlayerInterface player)
+	public GameController(PlayerInterface client)
 	{
 		//Store a link to the player interface
-		this.player = player;
+		this.client = client;
 		
 		// There is no active game at this time.
 		gameActive = false;
@@ -57,7 +59,10 @@ public class GameController
 		selectedCards = new Vector<Card>();
 		
 		//Create the card table.
-		this.cardTable = new CardTable(player);
+		this.cardTable = new CardTable(client);
+		
+		//Create a player.
+		this.player = new Player(1);
 	}
 
 	// This function starts a new game of set.
@@ -65,11 +70,14 @@ public class GameController
 	{
 		// Shuffle the cards
 		deck.shuffle();
+		
+		// reset the scores
+		player.resetScore();
 
 		//Start a new game on the interface.
-		player.displayNewGame();
+		client.displayNewGame();
 		
-		//Card the card table.
+		//Clear the card table.
 		cardTable.removeCards();
 		
 		//Deal 12 cards to the table.
@@ -107,7 +115,9 @@ public class GameController
 				// Determine if the set of cards is a set.
 				if (checkForSet(selectedCards))
 				{
-					player.confirmSet();
+					player.addPoints(3);
+					client.confirmSet();
+					client.updatePlayer(player);
 
 					// Check to see if we can draw more cards.
 					if (deck.remainingCards() > 0 && cardTable.getNumCards() <= 12)
@@ -117,7 +127,7 @@ public class GameController
 						
 						if (deck.remainingCards() == 0)
 						{
-							player.indicateOutOfCardsToDraw();
+							client.indicateOutOfCardsToDraw();
 						}
 					}
 					else
@@ -131,7 +141,9 @@ public class GameController
 				}
 				else
 				{
-					player.rejectSet();
+					player.addPenalty(3);
+					client.rejectSet();
+					client.updatePlayer(player);
 
 					// That wasn't a set... Remove the highlight on these cards.
 					Iterator<Card> iterator = selectedCards.iterator();
@@ -181,7 +193,7 @@ public class GameController
 
 		// We made it this far, there are no sets remaining.
 		gameActive = false;
-		player.displayEndOfGame();
+		client.displayEndOfGame();
 	}
 
 	/**
@@ -277,7 +289,7 @@ public class GameController
 
 		if (deck.remainingCards() < 3)
 		{
-			player.indicateOutOfCardsToDraw();
+			client.indicateOutOfCardsToDraw();
 		}
 		else if (cardTable.getNumCards() < CardTable.CARD_LIMIT)
 		{
@@ -300,7 +312,7 @@ public class GameController
 		}
 		else
 		{
-			player.indicateNoNeedToDrawMoreCards();
+			client.indicateNoNeedToDrawMoreCards();
 		}
 	}
 
