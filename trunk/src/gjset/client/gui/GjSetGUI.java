@@ -65,14 +65,11 @@ public class GjSetGUI
 		{
 			keyStrokeFactory = new MacKeyStrokeFactory();
 		}
-		else if(System.getProperty("os.name").contains("Windows"))
+		else  // use this for Windows and other non-Mac systems.
 		{
 			keyStrokeFactory = new WindowsKeyStrokeFactory();
 		}
-		else
-		{
-			System.exit(-1);
-		}
+
 
 		SwingUtilities.invokeLater(new Runnable()
 		{
