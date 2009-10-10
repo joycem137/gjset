@@ -82,7 +82,7 @@ public class GameController
 		
 		//Deal 12 cards to the table.
 		cardTable.addCards(deck.drawCards(12));
-
+		
 		// Set the game active flag to true.
 		gameActive = true;
 	}

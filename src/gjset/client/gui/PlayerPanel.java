@@ -59,7 +59,7 @@ public class PlayerPanel extends JPanel
 	private Graphics2D			offScreenGraphics;
 
 	private CardTableComponent	table;
-	private Player				player;
+	private Player				player				= new Player(1);
 
 	private Font				messageFont;
 	
