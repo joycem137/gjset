@@ -14,7 +14,7 @@ gjset may only be the beginning of this team's efforts.  If we are able to put i
 
 There are many gaming portals available on the internet.  However, these gaming portals suffer from a variety of issues that detract from the quality of their games.  Some sites, like Yahoo! Games, have an extremely large variety of games, but have an absolutely poor interface for accessing them.  Additionally, you can only play these games through your web browser, and do not have the choice of deciding what interface you want to use.
 
-Other portals, such as Richard's PbEM Server, allow play-by-post type play, but do not offer a quality interface for interacting with the game.  Everything is done through email.  Some web clients and other clients exist, but I have not yet found many implementations, and most suffer from being a laggy, functional-but-not-pretty interface.
+Other portals, such as Richard's PbEM Server, allow play-by-post type play, but do not offer a quality interface for interacting with the game.  Everything is done through email.  Some web clients and other clients exist, but I have not yet found many implementations, and most suffer from being a laggy, functional-but-not-pretty interface.  Its-your-turn.com seems to have a similar issue.
 
 Others do one thing and do it really well, as is the case with IGS, the Go server.  The open server protocol and popularity of the server has resulted in many different implementations of the interface for a variety of platforms, all of which can interact with one another.  And these clients can be quite well done.
 
