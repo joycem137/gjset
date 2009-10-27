@@ -76,6 +76,14 @@ public class Player
 	}
 
 	
+	public Player(int points, int penalty, int id, String name)
+	{
+		this.points = points;
+		this.penalty = penalty;
+		this.id = id;
+		this.name = name;
+	}
+
 	public int getScore()
 	{
 		return (points - penalty);
@@ -123,5 +131,19 @@ public class Player
 		if (name == "") {
 			name = "Player " + id;
 		}
+	}
+
+	public String getRepresentation()
+	{
+		return "" + points + ":" + penalty + ":" + id + ":" + name + ":";
+	}
+
+	public static Player parsePlayer(String[] messageArray)
+	{
+		int points = Integer.parseInt(messageArray[1]);
+		int penalty = Integer.parseInt(messageArray[2]);
+		int id = Integer.parseInt(messageArray[3]);
+		String name = messageArray[4];
+		return new Player(points, penalty, id, name);
 	}	
 }

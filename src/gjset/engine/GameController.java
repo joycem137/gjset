@@ -39,14 +39,14 @@ import java.util.Vector;
 public class GameController
 {
 	private Deck					deck;					// Stores the deck of cards.
-	private PlayerInterface			client;					// The gui interface.
+	private ClientInterface			client;					// The gui interface.
 	private boolean					gameActive;				// Indicates whether there is an active game or not.
 
 	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.
 	private CardTable				cardTable;
 	private Player					player;					// player data for this game.
 	
-	public GameController(PlayerInterface client)
+	public GameController(ClientInterface client)
 	{
 		//Store a link to the player interface
 		this.client = client;
@@ -275,8 +275,7 @@ public class GameController
 
 	public void callSet()
 	{
-		// TODO Auto-generated method stub
-
+		//Nothing to do at this time.
 	}
 
 	/**
