@@ -5,9 +5,9 @@
 The purpose of gjset, since the beginning, has been to be a programming project for a small group of people that want to do some coding on their own time but do not have a great deal of time to dedicate to a project.  Minimal progress is made over time, but corner are not cut.  This is intended to be a professional quality execution of a software project.  Our prioriters are as follows:
 
 ==Our priorities==
-# Develop professional quality code, using good design, architecture, documentation, etc.
-# Design an interface that is visually attractive and easy to use, and not just a cluster of buttons thrown on the screen at random.
-# Practice using various programming practices, such as Extreme Programming's "No early functionality" and "Simple Design" practices.
+ # Develop professional quality code, using good design, architecture, documentation, etc.
+ # Design an interface that is visually attractive and easy to use, and not just a cluster of buttons thrown on the screen at random.
+ # Practice using various programming practices, such as Extreme Programming's "No early functionality" and "Simple Design" practices.
 
 = The Future=
 gjset may only be the beginning of this team's efforts.  If we are able to put in sufficient time to complete gjset, the next project will tie into gjset in such a way as to start moving towards a sort of "galaxy of games" that we could work on.
@@ -21,10 +21,10 @@ Others do one thing and do it really well, as is the case with IGS, the Go serve
 This "Galaxy of games" concept will be directed to solve the problems of these past games.
 
 == Objectives ==
-# Users will be able to use a variety of interfaces to access both the game portal and the games themselves.  The protocol will be completely open for alternate implementations.
-# Each game will be designed to best approximate the experience of playing the game in person, such as in the case of gjset.
-# Players will be able to play games in real-time, and in the case of turn-based games, play at user defined intervals.
-# Games will be designed to look great, both in UI and in visual aesthetics.
+ # Users will be able to use a variety of interfaces to access both the game portal and the games themselves.  The protocol will be completely open for alternate implementations.
+ # Each game will be designed to best approximate the experience of playing the game in person, such as in the case of gjset.
+ # Players will be able to play games in real-time, and in the case of turn-based games, play at user defined intervals.
+ # Games will be designed to look great, both in UI and in visual aesthetics.
 
 = Architecture =
 Matching server will have associated front end software that launches the individual games when a new game is spawned.
