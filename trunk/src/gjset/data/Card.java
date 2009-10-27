@@ -201,4 +201,18 @@ public class Card
 		//System.out.println("Comparing " + this.toString() + " with " + card.toString() + ": " + result);
 		return result; 
 	}
+
+	public String getRepresentation()
+	{
+		return "" + number + color + shading + shape;
+	}
+
+	public static Card parseCard(String representation)
+	{	
+		int number = representation.charAt(0) - '0';
+		int color = representation.charAt(1) - '0';
+		int shading = representation.charAt(2) - '0';
+		int shape = representation.charAt(3) - '0';
+		return new Card(number, color, shading, shape);
+	}
 }

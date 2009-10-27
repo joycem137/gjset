@@ -1,14 +1,11 @@
-package gjset.client;
-
-import gjset.client.gui.CardComponent;
-import gjset.engine.GameController;
+package gjset.engine.gui;
 
 /* 
  *  LEGAL STUFF
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  gjSet is Copyright 2008-2009 Joyce Murton
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -31,38 +28,19 @@ import gjset.engine.GameController;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class LocalEngine implements EngineInterface
+public class CommandLineConsole extends ServerConsole
 {
 
-	private GameController	gc;
-
-	public void setEngine(GameController gc)
+	@Override
+	public void errorMessage(String string)
 	{
-		this.gc = gc;
+		System.err.println(string);
 	}
 
-//	@Override
-	public void quitGame()
+	@Override
+	public void message(String string)
 	{
-		gc.quitGame();
-	}
-
-//	@Override
-	public void startNewGame()
-	{
-		gc.newGame();
-	}
-
-//	@Override
-	public void callNoMoreSets()
-	{
-		gc.noMoreSets();
-	}
-
-//	@Override
-	public void selectCard(CardComponent card)
-	{
-		gc.selectCard(card.getCard());
+		System.out.println(string);
 	}
 
 }

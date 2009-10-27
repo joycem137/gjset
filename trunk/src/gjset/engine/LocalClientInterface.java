@@ -32,14 +32,15 @@ import gjset.client.gui.GjSetGUI;
 import gjset.data.CardTable;
 import gjset.data.Player;
 
-public class LocalPlayer implements PlayerInterface
+public class LocalClientInterface implements ClientInterface
 {
 	private GjSetGUI	gui;
 
-	public LocalPlayer()
+	public LocalClientInterface()
 	{
 	}
 
+//	@Override
 	public void displayNewGame()
 	{
 		// Remove any cards that were previously on the table.
@@ -58,46 +59,53 @@ public class LocalPlayer implements PlayerInterface
 		this.gui = gui;
 	}
 
+//	@Override
 	public void confirmSet()
 	{
 		// Display a message indicating that this is a set.
 		gui.getMessageBar().displayMessage("That's a set!");
 	}
 
+//	@Override
 	public void updateTable(CardTable table)
 	{
 		gui.getCardTable().update(table);
 	}
 
-	public void updatePlayer(Player player)
-	{
-		gui.getPlayer().drawPanel(player);
-	}
-	
+//	@Override
 	public void indicateOutOfCardsToDraw()
 	{
 		gui.getMessageBar().displayMessage("There are no more cards to draw.");
 	}
 
+//	@Override
 	public void rejectSet()
 	{
 		// Display a message on the gui.
 		gui.getMessageBar().displayMessage("That's not a set!");
 	}
 
+//	@Override
 	public void displayEndOfGame()
 	{
 		gui.hidePlayerPanel();
 		gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
 	}
 
+//	@Override
 	public void indicateNoNeedToDrawMoreCards()
 	{
 		gui.getMessageBar().displayMessage("You don't need to draw more cards.");
 	}
 
+//	@Override
 	public void resetTable()
 	{
 		gui.getCardTable().reset();
+	}
+
+	public void updatePlayer(Player player)
+	{
+		gui.getPlayer().drawPanel(player);
 	}
 }

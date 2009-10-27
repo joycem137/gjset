@@ -31,17 +31,17 @@ package gjset.engine;
 import gjset.data.CardTable;
 import gjset.data.Player;
 
-public interface PlayerInterface
+public interface ClientInterface
 {
 
 	void displayNewGame();
 	void updateTable(CardTable table);
-	void updatePlayer(Player player);
 	void confirmSet();
 	void indicateOutOfCardsToDraw();
 	void rejectSet();
 	void displayEndOfGame();
 	void indicateNoNeedToDrawMoreCards();
 	void resetTable();
+	void updatePlayer(Player player);
 
 }

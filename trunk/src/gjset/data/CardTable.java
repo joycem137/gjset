@@ -1,6 +1,6 @@
 package gjset.data;
 
-import gjset.engine.PlayerInterface;
+import gjset.engine.ClientInterface;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -51,9 +51,9 @@ public class CardTable
 	public static final int		CARD_LIMIT	= 21;		// max number of cards on the table at a time	
 	public static final int		ROW_LIMIT	= 7;		// max number of rows on the table at a time	
 	
-	private PlayerInterface		player;
+	private ClientInterface		player;
 
-	public CardTable(PlayerInterface player)
+	public CardTable(ClientInterface player)
 	{
 		//Store a link to the player interface.
 		this.player = player;
@@ -69,6 +69,37 @@ public class CardTable
 		// Create the vectors for holding cards.
 		cardsOnTable = new Vector<Card>();
 		highlightedCards = new Vector<Card>();
+	}
+
+	public CardTable(int numRows, int numCols, Vector<Card> cardList, Vector<Card> highlightedCards)
+	{
+		this.player = null;
+		
+		//Initialize the places to store the positions of cards.
+		cardPositions = new Vector<Point>();
+
+		// Create the grid on which to place cards.
+		grid = new Card[3][ROW_LIMIT];
+		
+		//Just grab the highlighted cards list outright.
+		this.highlightedCards = highlightedCards;
+		
+		//Now set our grid size.
+		gridRows = numRows;
+		gridCols = numCols;
+
+		// Create the vectors for holding cards.
+		cardsOnTable = new Vector<Card>();
+		
+		//Now go through and add all of our cards.
+		Iterator<Card> cardIterator = cardList.iterator();
+		for(int r = 0; r < numRows; r++)
+		{
+			for(int c = 0; c < numCols; c++)
+			{
+				dealCardToTable(cardIterator.next(), new Point(r, c));
+			}
+		}
 	}
 
 	public boolean isHighlighted(Card card)
@@ -340,4 +371,57 @@ public class CardTable
 		return grid[row][col];
 	}
 
+	public String getRepresentation()
+	{
+		String representation = new String();
+		
+		//Define the table.
+		representation += "" + gridRows;
+		representation += "" + gridCols;
+		
+		//Describe each card on the table.
+		for(int r = 0; r < gridRows; r++)
+		{
+			for(int c = 0; c < gridCols; c++)
+			{
+				Card card = grid[r][c];
+				representation += card.getRepresentation();
+				if(isHighlighted(card))
+				{
+					representation += "1";
+				}
+				else
+				{
+					representation += "0";
+				}
+			}
+		}
+		
+		return representation;
+	}
+
+	public static CardTable parseTable(String representation)
+	{
+		//Get the number of rows and columns.
+		int numRows = representation.charAt(0) - '0';
+		int numCols = representation.charAt(1) - '0';
+		
+		//Get all of the cards on the table.
+		Vector<Card> cardList = new Vector<Card>();
+		Vector<Card> highlightedCards = new Vector<Card>();
+
+		for(int i = 0; i < numRows * numCols; i++)
+		{
+			String cardRepresentation = representation.substring(2 + i * 5, 6 + i * 5);
+			Card card = Card.parseCard(cardRepresentation);
+			cardList.add(card);
+			
+			if(representation.charAt(6 + i * 5) == '1')
+			{
+				highlightedCards.add(card);
+			}
+		}
+		
+		return new CardTable(numRows, numCols, cardList, highlightedCards);
+	}
 }
