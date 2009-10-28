@@ -95,6 +95,13 @@ public class CardTableComponent extends JPanel
 		int gridRows = cardTable.getRows();
 		int gridCols = cardTable.getCols();
 		
+		//If this is a "null" table, then reset the table.
+		if(gridRows == 0 && gridCols == 0)
+		{
+			reset();
+			return;
+		}
+		
 		// Set the layout with the rows and columns.
 		layout.setRows(gridRows);
 		layout.setColumns(gridCols);
@@ -135,7 +142,7 @@ public class CardTableComponent extends JPanel
 
 	public void reset()
 	{
-		//Clear all cards from teh screen.
+		//Clear all cards from the screen.
 		cardPane.removeAll();
 		cardPane.doLayout();
 		cardPane.repaint();

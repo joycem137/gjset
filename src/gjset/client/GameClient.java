@@ -149,10 +149,6 @@ public class GameClient implements EngineInterface
 			// Display a message on the gui.
 			gui.getMessageBar().displayMessage("That's not a set!");
 		}
-		else if(messageArray[0].equals("RESET_TABLE"))
-		{
-			gui.getCardTable().reset();
-		}
 		else if(messageArray[0].equals("UPDATE_TABLE"))
 		{
 			CardTable table = CardTable.parseTable(messageArray[1]);

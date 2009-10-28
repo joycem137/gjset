@@ -127,11 +127,6 @@ public class GameServer implements ClientInterface
 		playerClientHandler.sendMessage("REJECT_SET");
 	}
 
-	public void resetTable()
-	{
-		playerClientHandler.sendMessage("RESET_TABLE");
-	}
-
 	public void updatePlayer(Player player)
 	{
 		playerClientHandler.sendMessage("UPDATE_PLAYER:" + player.getRepresentation());

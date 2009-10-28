@@ -1,10 +1,10 @@
 package gjset.data;
 
-import gjset.engine.ClientInterface;
-
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 /* 
@@ -51,12 +51,27 @@ public class CardTable
 	public static final int		CARD_LIMIT	= 21;		// max number of cards on the table at a time	
 	public static final int		ROW_LIMIT	= 7;		// max number of rows on the table at a time	
 	
-	private ClientInterface		player;
-
-	public CardTable(ClientInterface player)
+	private CardTableObservable observable;
+	
+	/**
+	 * Private class used to call <code>setChanged</code> whenever <code>notifyObservers</code> gets called.
+	 * 
+	 * @author joycem
+	 *
+	 */
+	private class CardTableObservable extends Observable
 	{
-		//Store a link to the player interface.
-		this.player = player;
+		public void notifyObservers()
+		{
+			super.setChanged();
+			super.notifyObservers();
+		}
+	}
+
+	public CardTable()
+	{
+		//Create our observable object.
+		observable = new CardTableObservable();
 
 		// And initialize the places to store the positions of cards.
 		cardPositions = new Vector<Point>();
@@ -72,9 +87,7 @@ public class CardTable
 	}
 
 	public CardTable(int numRows, int numCols, Vector<Card> cardList, Vector<Card> highlightedCards)
-	{
-		this.player = null;
-		
+	{		
 		//Initialize the places to store the positions of cards.
 		cardPositions = new Vector<Point>();
 
@@ -101,6 +114,11 @@ public class CardTable
 			}
 		}
 	}
+	
+	public void addObserver(Observer o)
+	{
+		observable.addObserver(o);
+	}
 
 	public boolean isHighlighted(Card card)
 	{
@@ -118,7 +136,7 @@ public class CardTable
 			highlightedCards.remove(card);
 		}
 		
-		player.updateTable(this);
+		observable.notifyObservers();
 	}
 	
 	public void addCards(Vector<Card> cards)
@@ -174,7 +192,7 @@ public class CardTable
 		}
 
 		// Finally, update the layout with the latest data.
-		player.updateTable(this);
+		observable.notifyObservers();
 	}
 
 	public void replaceCards(List<Card> selectedCards, List<Card> newCards)
@@ -211,7 +229,7 @@ public class CardTable
 		}
 
 		// Then we update the layout.
-		player.updateTable(this);
+		observable.notifyObservers();
 	}
 
 	/**
@@ -230,7 +248,7 @@ public class CardTable
 		highlightedCards.clear();
 
 		// Clean up the screen.
-		player.resetTable();
+		observable.notifyObservers();
 	}
 
 	/**
@@ -287,7 +305,7 @@ public class CardTable
 		cardPositions = newPositions;
 
 		// Redraw the table.
-		player.updateTable(this);
+		observable.notifyObservers();
 	}
 
 	private void moveCard(Card[][] newGrid, int row, int col, int newRow, int newCol)
