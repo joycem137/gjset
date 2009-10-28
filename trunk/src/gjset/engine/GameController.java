@@ -34,9 +34,11 @@ import gjset.data.Player;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
-public class GameController
+public class GameController implements Observer
 {
 	private Deck					deck;					// Stores the deck of cards.
 	private ClientInterface			client;					// The gui interface.
@@ -55,14 +57,17 @@ public class GameController
 		gameActive = false;
 
 		// Create the deck.
-		this.deck = new Deck();
+		deck = new Deck();
 		selectedCards = new Vector<Card>();
 		
 		//Create the card table.
-		this.cardTable = new CardTable(client);
+		cardTable = new CardTable();
+		
+		//Add this as an observer to the CardTable.
+		cardTable.addObserver(this);
 		
 		//Create a player.
-		this.player = new Player(1);
+		player = new Player(1);
 	}
 
 	// This function starts a new game of set.
@@ -318,5 +323,20 @@ public class GameController
 	public void quitGame()
 	{
 		//Nothing to do at this time.
+	}
+
+	/**
+	 * Implements the update method of the <code>Observer</code> interface.  
+	 * This is currently used by the <code>CardTable</code> to update the <code>GameController</code> with
+	 * the latest updates to the <code>CardTable</code>'s data.
+	 * 
+	 * @param o At this time, this is only going to be the <code>CardTable<code> object.
+	 * @param arg Not used. 
+	 * @see Observer, Observable
+	 */
+	public void update(Observable o, Object arg)
+	{
+		//Update the client's card table.
+		client.updateTable(cardTable);
 	}
 }
