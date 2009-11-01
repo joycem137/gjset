@@ -38,7 +38,7 @@ import java.net.Socket;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class GameServer implements ClientInterface
+public class GameServer implements ClientLinkInterface
 {
 	private static final int SERVER_PORT = 4337;
 	
@@ -48,7 +48,7 @@ public class GameServer implements ClientInterface
 
 	private RemoteClientHandler	playerClientHandler;
 
-	private GameController	gc;
+	private GameEngine	gc;
 
 	public GameServer()
 	{
@@ -87,7 +87,7 @@ public class GameServer implements ClientInterface
 		new Thread(runServer).start();
 	}
 	
-	public void linkGameController(GameController gc)
+	public void linkGameController(GameEngine gc)
 	{
 		this.gc = gc;
 	}

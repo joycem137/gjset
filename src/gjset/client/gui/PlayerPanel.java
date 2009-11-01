@@ -28,7 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.EngineInterface;
+import gjset.client.EngineLinkInterface;
 import gjset.data.Player;
 
 import java.awt.BasicStroke;
@@ -65,7 +65,7 @@ public class PlayerPanel extends JPanel
 	
 	private static final Color	panelColor			= new Color(0, 51, 0);
 
-	public PlayerPanel(CardTableComponent table, final EngineInterface engine)
+	public PlayerPanel(CardTableComponent table, final EngineLinkInterface engine)
 	{
 		super();
 

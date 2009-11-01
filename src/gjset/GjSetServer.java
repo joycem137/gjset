@@ -1,6 +1,6 @@
 package gjset;
 
-import gjset.engine.GameController;
+import gjset.engine.GameEngine;
 import gjset.engine.GameServer;
 
 /* 
@@ -36,7 +36,7 @@ public class GjSetServer
 	public static void main(String args[])
 	{
 		GameServer server = new GameServer();
-		GameController gc = new GameController(server);
+		GameEngine gc = new GameEngine(server);
 		server.linkGameController(gc);
 	}
 }

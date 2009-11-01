@@ -38,17 +38,17 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-public class GameController implements Observer
+public class GameEngine implements Observer
 {
 	private Deck					deck;					// Stores the deck of cards.
-	private ClientInterface			client;					// The gui interface.
+	private ClientLinkInterface			client;					// The gui interface.
 	private boolean					gameActive;				// Indicates whether there is an active game or not.
 
 	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.
 	private CardTable				cardTable;
 	private Player					player;					// player data for this game.
 	
-	public GameController(ClientInterface client)
+	public GameEngine(ClientLinkInterface client)
 	{
 		//Store a link to the player interface
 		this.client = client;

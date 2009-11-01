@@ -28,15 +28,15 @@
 
 package gjset.engine;
 
-import gjset.client.gui.GjSetGUI;
+import gjset.client.gui.PlayerUI;
 import gjset.data.CardTable;
 import gjset.data.Player;
 
-public class LocalClientInterface implements ClientInterface
+public class LocalClientLink implements ClientLinkInterface
 {
-	private GjSetGUI	gui;
+	private PlayerUI	gui;
 
-	public LocalClientInterface()
+	public LocalClientLink()
 	{
 	}
 
@@ -54,7 +54,7 @@ public class LocalClientInterface implements ClientInterface
 	}
 	
 	//Connect the GUI to the system.
-	public void setGUI(GjSetGUI gui)
+	public void setGUI(PlayerUI gui)
 	{
 		this.gui = gui;
 	}

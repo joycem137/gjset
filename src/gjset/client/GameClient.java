@@ -1,7 +1,7 @@
 package gjset.client;
 
 import gjset.client.gui.CardComponent;
-import gjset.client.gui.GjSetGUI;
+import gjset.client.gui.PlayerUI;
 import gjset.data.CardTable;
 import gjset.data.Player;
 
@@ -41,9 +41,9 @@ import java.net.SocketAddress;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class GameClient implements EngineInterface
+public class GameClient implements EngineLinkInterface
 {
-	private GjSetGUI	gui;
+	private PlayerUI	gui;
 	private Socket	socket;
 	private PrintWriter	writer;
 	private BufferedReader	reader;
@@ -52,7 +52,7 @@ public class GameClient implements EngineInterface
 	{
 	}
 	
-	public void linkGUI(GjSetGUI gui)
+	public void linkGUI(PlayerUI gui)
 	{
 		this.gui = gui;
 	}

@@ -28,7 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.EngineInterface;
+import gjset.client.EngineLinkInterface;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,9 +36,9 @@ import java.awt.event.MouseEvent;
 public class CardMouseListener extends MouseAdapter
 {
 	private CardComponent	card;
-	private EngineInterface	engine;
+	private EngineLinkInterface	engine;
 
-	public CardMouseListener(CardComponent card, EngineInterface engine)
+	public CardMouseListener(CardComponent card, EngineLinkInterface engine)
 	{
 		this.card = card;
 		this.engine = engine;
