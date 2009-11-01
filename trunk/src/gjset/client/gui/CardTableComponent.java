@@ -28,7 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.EngineInterface;
+import gjset.client.EngineLinkInterface;
 import gjset.data.Card;
 import gjset.data.CardTable;
 
@@ -48,14 +48,14 @@ public class CardTableComponent extends JPanel
 	private JPanel				cardPane;
 
 	// Store a link to the game engine
-	private EngineInterface		engine;
+	private EngineLinkInterface		engine;
 
 	// Set our parameters
 	private final int			CARD_BUFFER			= 20;					// The minimum distance between cards.
 	private final Color			backgroundColor		= new Color(0, 102, 0); // Store the background color to be used here.
 
 
-	public CardTableComponent(EngineInterface engine)
+	public CardTableComponent(EngineLinkInterface engine)
 	{
 		super();
 

@@ -28,7 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.EngineInterface;
+import gjset.client.EngineLinkInterface;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -41,7 +41,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
-public class GjSetGUI
+public class PlayerUI
 {
 	//UI Components
 	private JFrame				topFrame;
@@ -54,9 +54,9 @@ public class GjSetGUI
 	private KeyStrokeFactory	keyStrokeFactory;
 	
 	//Engine interface
-	private EngineInterface		engine;
+	private EngineLinkInterface		engine;
 
-	public GjSetGUI(EngineInterface engine)
+	public PlayerUI(EngineLinkInterface engine)
 	{
 		this.engine = engine;
 		
@@ -67,7 +67,7 @@ public class GjSetGUI
 		}
 		else  // use this for Windows and other non-Mac systems.
 		{
-			keyStrokeFactory = new WindowsKeyStrokeFactory();
+			keyStrokeFactory = new GeneralKeyStrokeFactory();
 		}
 
 

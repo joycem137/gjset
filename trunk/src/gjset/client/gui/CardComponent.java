@@ -28,7 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.EngineInterface;
+import gjset.client.EngineLinkInterface;
 import gjset.data.Card;
 
 import java.awt.BasicStroke;
@@ -71,7 +71,7 @@ public class CardComponent extends JComponent
 	private Image				image;						// Stores the image of the card
 
 	// Create a basic blank card.
-	public CardComponent(EngineInterface engine, Card card)
+	public CardComponent(EngineLinkInterface engine, Card card)
 	{
 		this.card = card;
 		generateCardImage();

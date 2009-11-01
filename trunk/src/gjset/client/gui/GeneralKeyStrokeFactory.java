@@ -1,9 +1,16 @@
+package gjset.client.gui;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 /* 
  *  LEGAL STUFF
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton
+ *  gjSet is Copyright 2008, 2009 Joyce Murton
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -26,21 +33,22 @@
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gjset.engine;
-
-import gjset.data.CardTable;
-import gjset.data.Player;
-
-public interface ClientInterface
+public class GeneralKeyStrokeFactory implements KeyStrokeFactory
 {
 
-	void displayNewGame();
-	void updateTable(CardTable table);
-	void confirmSet();
-	void indicateOutOfCardsToDraw();
-	void rejectSet();
-	void displayEndOfGame();
-	void indicateNoNeedToDrawMoreCards();
-	void updatePlayer(Player player);
+	public KeyStroke getExitGameAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK);
+	}
+	
+	public KeyStroke getAddPlayerAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK);
+	}
+
+	public KeyStroke getNewGameAcceleratorKeyStroke()
+	{
+		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
+	}
 
 }

@@ -1,7 +1,7 @@
 package gjset;
 
 import gjset.client.GameClient;
-import gjset.client.gui.GjSetGUI;
+import gjset.client.gui.PlayerUI;
 
 /* 
  *  LEGAL STUFF
@@ -40,7 +40,7 @@ public class GjSetClient
 	public static void main(String[] args)
 	{
 		GameClient client = new GameClient();
-		GjSetGUI gui = new GjSetGUI(client);
+		PlayerUI gui = new PlayerUI(client);
 		client.linkGUI(gui);
 		client.connectToServer(args[0], 4337);
 	}

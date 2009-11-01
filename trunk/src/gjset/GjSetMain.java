@@ -28,20 +28,20 @@ package gjset;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.LocalEngineInterface;
-import gjset.client.gui.GjSetGUI;
-import gjset.engine.GameController;
-import gjset.engine.LocalClientInterface;
+import gjset.client.LocalEngineLink;
+import gjset.client.gui.PlayerUI;
+import gjset.engine.GameEngine;
+import gjset.engine.LocalClientLink;
 
 public class GjSetMain
 {
 	public static void main(String[] args)
 	{
-		LocalClientInterface player = new LocalClientInterface();
-		LocalEngineInterface engine = new LocalEngineInterface();
+		LocalClientLink player = new LocalClientLink();
+		LocalEngineLink engine = new LocalEngineLink();
 		
-		GameController gc = new GameController(player);
-		GjSetGUI gui = new GjSetGUI(engine);
+		GameEngine gc = new GameEngine(player);
+		PlayerUI gui = new PlayerUI(engine);
 		
 		player.setGUI(gui);
 		engine.setEngine(gc);
