@@ -37,7 +37,7 @@ import java.net.Socket;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class RemoteClientHandler
+public class PlayerClientHandler
 {
 	private Socket	socket;
 	private PrintWriter	writer;
@@ -45,7 +45,7 @@ public class RemoteClientHandler
 	private BufferedReader	reader;
 	private ServerConsole	console;
 
-	public RemoteClientHandler(Socket socketIn, GameServer serverIn, ServerConsole consoleIn)
+	public PlayerClientHandler(Socket socketIn, GameServer serverIn, ServerConsole consoleIn)
 	{
 		this.socket = socketIn;
 		this.server = serverIn;
