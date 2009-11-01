@@ -304,11 +304,12 @@ public class Card
 	 *
 	 * @author Joyce Murton
 	 * @param o The object to compare this Card object with.
-	 * @return <code>true</code> if <code>o</code> is a <code>Card</code> type object, and 
+	 * @return <code>true</code> if <code>o</code> is a {@link Card} type object, and 
 	 * 			the properties of <code>o</code> are the same as on this object.  
-	 * 
-	 * 			<code>false</code> if <code>o</code> is not a <code>Card</code> type object, or,
-	 * 			if it is, 
+	 * <P>
+	 * 			<code>false</code> if <code>o</code> is not a {@link Card} type object, or,
+	 * 			if it is, if the properties of that Card are the same as the properties
+	 *          for this one.
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o)
@@ -321,11 +322,11 @@ public class Card
 
 	/**
 	 * 
-	 * Returns a representation of the card as a string.  This representation is a unique parsable string that 
-	 * can be transformed back into a Card object using the static <code>parseCard</code> method.
+	 * Returns a representation of the card as a {@link String}.  This representation is a unique parsable string that 
+	 * can be transformed back into a {@link Card} object using the static {@link #parseCard} method.
 	 *
 	 * @author Joyce Murton
-	 * @return The representation of this Card object.
+	 * @return The representation of this Card
 	 */
 	public String getRepresentation()
 	{
@@ -334,10 +335,10 @@ public class Card
 
 	/**
 	 * 
-	 * Constructs a new Card object using the format returned by <code>getRepresentation</code>.
+	 * Constructs a new {@link Card} object using the format returned by <code>getRepresentation</code>.
 	 *
 	 * @author Joyce Murton
-	 * @param representation The string representation of the Card.
+	 * @param representation The {@link String} representation of the Card.
 	 * @return The new Card object represented by the <code>representation</code> String.
 	 */
 	public static Card parseCard(String representation)
