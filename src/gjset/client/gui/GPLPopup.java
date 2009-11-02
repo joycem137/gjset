@@ -43,11 +43,22 @@ import javax.swing.JTextArea;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This class handles everything needed to create a little pop up window that displays the GPL license thingie.
+ * <P>
+ * The actual license is stored externally to this class, in the /resources/COPYING folder.
+ */
 public class GPLPopup
 {
 	private final String	gplTextString;
 	private JDialog			gplDialog;
 
+	/**
+	 * 
+	 * Construct the class to read in the GPL license.
+	 *
+	 * @author Joyce Murton
+	 */
 	public GPLPopup()
 	{
 		// Load the GPL text from memory.
@@ -80,6 +91,14 @@ public class GPLPopup
 		gplTextString = new String(gplTextChars);
 	}
 
+	/**
+	 * 
+	 * Create a dialog window that's tied to the passed in {@link JFrame} object.
+	 * The dialog window contains the GPL, along with the ability to scroll through the GPL to read it.
+	 *
+	 * @author Joyce Murton
+	 * @param parentFrame The parent JFrame object.
+	 */
 	public void displayPopup(JFrame parentFrame)
 	{
 		// Create the basic dialog

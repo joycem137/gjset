@@ -1,6 +1,6 @@
 package gjset.engine;
 
-import gjset.client.EngineLinkInterface;
+import gjset.client.GameClient;
 import gjset.client.gui.PlayerUI;
 import gjset.data.Card;
 import gjset.data.CardTable;
@@ -17,7 +17,7 @@ import java.net.Socket;
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton
+ *  gjSet is Copyright 2008-2009 Joyce Murton and Andrea Kilpatrick
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -51,8 +51,6 @@ import java.net.Socket;
  * This class also provides support for handling incoming messages from the UI to the engine, forwarding all incoming messages to the
  * linked {@link GameEngine} object.
  * 
- * @author Joyce Murton
- * @author Andrea Kilpatrick
  * @see PlayerUI
  * @see ClientLinkInterface
  */
@@ -73,7 +71,6 @@ public class GameServer implements ClientLinkInterface
 	 * When executed, this constructor will create a new Server socket and start a new thread listening
 	 * for incoming connections on that server.
 	 *
-	 * @author Joyce Murton
 	 */
 	public GameServer()
 	{
@@ -123,7 +120,6 @@ public class GameServer implements ClientLinkInterface
 	 * <P>
 	 * This method links the indicated {@link GameEngine} object to this object for this purpose.
 	 *
-	 * @author Joyce Murton
 	 * @param gc The GameEngine object to send client's messages to.
 	 */
 	public void linkGameController(GameEngine gc)
@@ -146,7 +142,6 @@ public class GameServer implements ClientLinkInterface
 	 * If a player selects three cards that are a set, this method is called to tell the UI to indicate that the selected
 	 * cards are indeed a set.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.engine.ClientLinkInterface#confirmSet()
 	 */
 	public void confirmSet()
@@ -159,7 +154,6 @@ public class GameServer implements ClientLinkInterface
 	 * When there are no more cards to draw, and there are no more sets on the table, the game is over.
 	 * Inform the UI of this fact.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.engine.ClientLinkInterface#displayEndOfGame()
 	 */
 	public void displayEndOfGame()
@@ -171,7 +165,6 @@ public class GameServer implements ClientLinkInterface
 	 * 
 	 * Tell the player's UI to do whatever it needs to do to show that a new game has been started.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.engine.ClientLinkInterface#displayNewGame()
 	 */
 	public void displayNewGame()
@@ -184,7 +177,6 @@ public class GameServer implements ClientLinkInterface
 	 * If you have 21 cards on the table, you are mathematically guaranteed to have a set out there somewhere.
 	 * This method is used if the player attempts to draw more cards when none are needed.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.engine.ClientLinkInterface#indicateNoNeedToDrawMoreCards()
 	 */
 	public void indicateNoNeedToDrawMoreCards()
@@ -197,7 +189,6 @@ public class GameServer implements ClientLinkInterface
 	 * If a player causes a situation to occur where more cards need to be drawn, and the deck is empty, send a message
 	 * to the UI to indicate as much.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.engine.ClientLinkInterface#indicateOutOfCardsToDraw()
 	 */
 	public void indicateOutOfCardsToDraw()
@@ -205,6 +196,13 @@ public class GameServer implements ClientLinkInterface
 		playerClientHandler.sendMessage("OUT_OF_CARDS_TO_DRAW");
 	}
 
+	/**
+	 * 
+	 * If a player selects three cards that are not a set, this method is called to tell the UI to 
+	 * indicate that the selected cards are not a set.
+	 *
+	 * @see gjset.engine.ClientLinkInterface#rejectSet()
+	 */
 	public void rejectSet()
 	{
 		playerClientHandler.sendMessage("REJECT_SET");
@@ -213,8 +211,6 @@ public class GameServer implements ClientLinkInterface
 	/**
 	 * There has been a change on the player's information.  Update the UI with the appropriate changes.
 	 *
-	 * @author Joyce Murton
-	 * @author Andrea Kilpatrick
 	 * @param player
 	 * @see gjset.engine.ClientLinkInterface#updatePlayer(gjset.data.Player)
 	 */
@@ -228,7 +224,6 @@ public class GameServer implements ClientLinkInterface
 	 * Tell the player's UI that the card table has changed.  This method provides the data that will be transferred
 	 * to the player/client. 
 	 *
-	 * @author Joyce Murton
 	 * @param table
 	 * @see gjset.engine.ClientLinkInterface#updateTable(gjset.data.CardTable)
 	 */
@@ -244,11 +239,23 @@ public class GameServer implements ClientLinkInterface
 		playerClientHandler.sendMessage(message);
 	}
 
+	/**
+	 * 
+	 * Indicates that the connected player has disconnected.  When we have more than one player, this
+	 * method should have a parameter indicating which player disconnected.
+	 *
+	 */
 	public void playerDisconnected()
 	{
 		//Nothing to do right now.
 	}
 
+	/**
+	 * 
+	 * Parse a message coming from the player and execute the appropriate action.
+	 *
+	 * @param line The message from the player.
+	 */
 	public void parseMessage(String line)
 	{
 		//Parse the strings.

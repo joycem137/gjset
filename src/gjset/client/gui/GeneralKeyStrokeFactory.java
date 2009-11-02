@@ -33,19 +33,49 @@ import javax.swing.KeyStroke;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Implements the {@link KeyStrokeFactory} with {@link KeyStroke} objects that will work for Linux and Windows.
+ * 
+ * @author Joyce Murton
+ * @author Andrea Kilpatrick
+ * @see KeyStrokeFactory
+ */
 public class GeneralKeyStrokeFactory implements KeyStrokeFactory
 {
-
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will quit the game in Linux or Windows.
+	 *
+	 * @author Joyce Murton
+	 * @return The {@link KeyStroke} that will quit the game in Linux or Windows.
+	 * @see gjset.client.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
+	 */
 	public KeyStroke getExitGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK);
 	}
 	
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will cause a player to be added to the game in Linux or Windows.
+	 *
+	 * @author Andrea Kilpatrick
+	 * @return The {@link KeyStroke} that will cause a player to be added to the game in Linux or Windows.
+	 * @see gjset.client.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
+	 */
 	public KeyStroke getAddPlayerAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK);
 	}
 
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will quit the game in Linux or Windows.
+	 *
+	 * @author Joyce Murton
+	 * @return The {@link KeyStroke} that will quit the game in Linux or Windows.
+	 * @see gjset.client.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
+	 */
 	public KeyStroke getNewGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
