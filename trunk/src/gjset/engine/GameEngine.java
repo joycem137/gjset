@@ -5,7 +5,7 @@ package gjset.engine;
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  gjSet is Copyright 2008, 2009 Joyce Murton and Andrea Kilpatrick
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -41,7 +41,7 @@ import java.util.Vector;
 public class GameEngine implements Observer
 {
 	private Deck					deck;					// Stores the deck of cards.
-	private ClientLinkInterface			client;					// The gui interface.
+	private ClientLinkInterface		client;					// The gui interface.
 	private boolean					gameActive;				// Indicates whether there is an active game or not.
 
 	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.

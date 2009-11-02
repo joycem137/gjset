@@ -5,7 +5,7 @@ package gjset.client.gui;
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  gjSet is Copyright 2008, 2009 Joyce Murton and Andrea Kilpatrick
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -41,6 +41,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
+/**
+ * This is the main class for handling the user interface for a player.  It is responsible for creating any and all
+ * components to put on the screen and interpreting incoming user actions.
+ * <P>
+ * Additionally, this is the main class for the client.
+ */
 public class PlayerUI
 {
 	//UI Components
@@ -56,8 +62,17 @@ public class PlayerUI
 	//Engine interface
 	private EngineLinkInterface		engine;
 
+	/**
+	 * 
+	 * Creates a PlayerUI with the given link to the {@link GameEngine}.
+	 * <P>
+	 * This method also results in the construction of the UI in the AWT event dispatching thread.
+	 *
+	 * @param engine The object to use to communicate with the GameEngine.
+	 */
 	public PlayerUI(EngineLinkInterface engine)
 	{
+		//Store a link to the game engine.
 		this.engine = engine;
 		
 		// Determine which keystroke factory to grab.
@@ -70,7 +85,7 @@ public class PlayerUI
 			keyStrokeFactory = new GeneralKeyStrokeFactory();
 		}
 
-
+		//Instantiate the UI in the AWT event dispatching thread.
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -80,39 +95,47 @@ public class PlayerUI
 		});
 	}
 
+	//Construct the UI for the player.
 	private void createGUI()
 	{
+		//Create the main window.
 		topFrame = new JFrame("gJSet");
 		topFrame.getContentPane().setLayout(new BorderLayout());
 		topFrame.setSize(1024, 768);
 		topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//Create the sub components of the window.
 		createMenu();
 		createCardTable();
 		createPlayerPanel();
 		createMessageBar();
 
+		//Finish constructing the window.
 		topFrame.pack();
 		topFrame.setVisible(true);
 	}
 
+	//Create the message bar that goes at the top of the page and displays messages.
 	private void createMessageBar()
 	{
 		messageBar = new MessageBar();
 		topFrame.add(messageBar, BorderLayout.NORTH);
 	}
 
+	//Create the card table, the big thing in the center of the screen that shows all the cards.
 	private void createCardTable()
 	{
 		cardTable = new CardTableComponent(engine);
 		topFrame.add(cardTable, BorderLayout.CENTER);
 	}
 
+	//Create the player panel to go on the bottom of the screen.
 	private void createPlayerPanel()
 	{
 		playerPanel = new PlayerPanel(cardTable, engine);
 	}
 
+	//Create the standard UI menu bar.
 	private void createMenu()
 	{
 		JMenuBar jMenuBar = new JMenuBar();
@@ -143,6 +166,7 @@ public class PlayerUI
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
+				//TODO: Make this do something.
 			}
 		});
 		
@@ -188,21 +212,43 @@ public class PlayerUI
 
 	}
 
+	/**
+	 * 
+	 * If an external object needs to operate directly on the {@link CardTableComponent}, provide them a link to it.
+	 *
+	 * @return The JComponent that represents the card table.
+	 */
 	public CardTableComponent getCardTable()
 	{
 		return cardTable;
 	}
 	
+	/**
+	 * 
+	 * If an external object needs to operate directly on the {@link PlayerPanel}, provide a link to it.
+	 *
+	 * @return The PlayerPanel object for this system's player.
+	 */
 	public PlayerPanel getPlayer()
 	{
 		return playerPanel;
 	}
 
+	/**
+	 * Return the {@link MessageBar} object located at the top of the screen.
+	 *
+	 * @return The {@link MessageBar} object located at the top of the screen.
+	 */
 	public MessageBar getMessageBar()
 	{
 		return messageBar;
 	}
 
+	/**
+	 * 
+	 * Add the {@link PlayerPanel} to the top {@link JFrame} and display it.
+	 *
+	 */
 	public void showPlayerPanel()
 	{
 		topFrame.add(playerPanel, BorderLayout.SOUTH);
@@ -210,6 +256,11 @@ public class PlayerUI
 		topFrame.repaint();
 	}
 
+	/**
+	 * 
+	 * Remove the {@link PlayerPanel} from the top {@link JFrame} to hide it.
+	 *
+	 */
 	public void hidePlayerPanel()
 	{
 		topFrame.remove(playerPanel);

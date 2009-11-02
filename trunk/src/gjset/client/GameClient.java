@@ -20,7 +20,7 @@ import java.net.SocketAddress;
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton
+ *  gjSet is Copyright 2008-2009 Joyce Murton and Andrea Kilpatrick
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -54,8 +54,6 @@ import java.net.SocketAddress;
  * This class also provides support for handling incoming messages from the engine to the UI, forwarding all incoming messages to the
  * linked {@link PlayerUI} object.
  * 
- * @author Joyce Murton
- * @author Andrea Kilpatrick
  * @see GameEngine
  * @see EngineLinkInterface
  */
@@ -72,20 +70,15 @@ public class GameClient implements EngineLinkInterface
 	private BufferedReader	reader;
 
 	/**
-	 * 
 	 * Blank constructor to assert that nothing is done on object instantiation.
-	 *
-	 * @author Joyce Murton
 	 */
 	public GameClient()
 	{
 	}
 	
 	/**
-	 * 
 	 * Provides a link to the game UI so that messages coming back from the server can be executed on the UI.
 	 *
-	 * @author Joyce Murton
 	 * @param gui The {@link PlayerUI} object to forward incoming messages to.
 	 */
 	public void linkGUI(PlayerUI gui)
@@ -94,12 +87,10 @@ public class GameClient implements EngineLinkInterface
 	}
 	
 	/**
-	 * 
 	 * Establishes a connection to the game server using the given hostname and port.
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
 	 *
-	 * @author Joyce Murton
 	 * @param hostname A {@link String} containing the IP Address or hostname of the server.
 	 * @param port An <code>int</code> containing the port number of the server to connect to.
 	 */
@@ -175,11 +166,8 @@ public class GameClient implements EngineLinkInterface
 	}
 
 	/**
-	 * 
 	 * Parses incoming messages from the server and deals with them.
 	 *
-	 * @author Joyce Murton
-	 * @author Andrea Kilpatrick
 	 * @param line The newline terminated incoming message.
 	 */
 	protected void parseMessage(String line)
@@ -244,12 +232,10 @@ public class GameClient implements EngineLinkInterface
 	}
 
 	/**
-	 * 
 	 * Used by the client when the player selects the "No more sets" button.
 	 * This indicates that the player thinks there are no more sets on the board
 	 * and that the engine should react appropriately.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#callNoMoreSets()
 	 */
 	public void callNoMoreSets()
@@ -258,14 +244,12 @@ public class GameClient implements EngineLinkInterface
 	}
 
 	/**
-	 * 
 	 * Tells the engine that the player wishes to end this game.
 	 * <P>
 	 * At this time, this is a simple method to indicate that a player is quitting the game.
 	 * As multiple players are introduced, this method will be scrapped in favor of a method of
 	 * detecting dropped player and similar issues.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#quitGame()
 	 */
 	public void quitGame()
@@ -274,10 +258,8 @@ public class GameClient implements EngineLinkInterface
 	}
 
 	/**
-	 * 
 	 * Tells the engine to select the card represented by the on screen {@link CardComponent} object.
 	 *
-	 * @author Joyce Murton
 	 * @param card The card that was selected by this player/client.
 	 * @see gjset.client.EngineLinkInterface#selectCard(gjset.client.gui.CardComponent)
 	 */
@@ -294,13 +276,11 @@ public class GameClient implements EngineLinkInterface
 	}
 
 	/**
-	 * 
 	 * Tells the engine to start a new game.
 	 * <P>
 	 * At this time, this is all that needs to take place.  This will be overwritten in the future as
 	 * starting new games becomes more complex.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#startNewGame()
 	 */
 	public void startNewGame()

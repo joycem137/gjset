@@ -33,19 +33,43 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+/**
+ * Implements the {@link KeyStrokeFactory} to create {@link KeyStroke} objects for the Mac OS X system.
+ */
 public class MacKeyStrokeFactory implements KeyStrokeFactory
 {
 
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will cause a new game to start in Mac OS X.
+	 *
+	 * @return The {@link KeyStroke} that will cause a new game to start in Mac OS X.
+	 * @see gjset.client.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
+	 */
 	public KeyStroke getNewGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.META_MASK);
 	}
 
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will cause a player to be added to the game for Mac OS X.
+	 *
+	 * @return The {@link KeyStroke} that will cause a player to be added to the game for Mac OS X.
+	 * @see gjset.client.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
+	 */
 	public KeyStroke getAddPlayerAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.META_MASK);
 	}	
 	
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will quit the game in Mac OS X.
+	 *
+	 * @return The {@link KeyStroke} that will quit the game in Mac OS X.
+	 * @see gjset.client.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
+	 */
 	public KeyStroke getExitGameAcceleratorKeyStroke()
 	{
 		return KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.META_MASK);

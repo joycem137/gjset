@@ -30,13 +30,41 @@ package gjset.client.gui;
 
 import javax.swing.KeyStroke;
 
+/**
+ * This program is being written to work on Windows, Linux, and Mac OS X.  Depending on which system
+ * is actually being used, the keyboard shortcuts will be different in places.  This interface is used
+ * to fix that problem.  The UI will pull shortcuts from this interface whenever they are needed.
+ * Which class is set to implement this interface will determine which operating system's keystrokes to
+ * provide.
+ * 
+ * @see GeneralKeyStrokeFactory
+ * @see MacKeyStrokeFactory
+ */
 public interface KeyStrokeFactory
 {
 
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will cause a new game to start.
+	 *
+	 * @return The KeyStroke that starts a new game.
+	 */
 	public KeyStroke getNewGameAcceleratorKeyStroke();
 
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will cause a player to be added to the game.
+	 *
+	 * @return The KeyStroke for adding a new player.
+	 */
 	public KeyStroke getAddPlayerAcceleratorKeyStroke();	
 	
+	/**
+	 * 
+	 * Return the {@link KeyStroke} that will quit the game.
+	 *
+	 * @return The KeyStroke that will quit the game.
+	 */
 	public KeyStroke getExitGameAcceleratorKeyStroke();
 
 }
