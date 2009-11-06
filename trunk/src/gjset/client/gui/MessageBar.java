@@ -40,18 +40,30 @@ import java.util.TimerTask;
 
 import javax.swing.JComponent;
 
+/**
+ * This class represents the message bar at the top of the screen, used to display messages to the user.
+ * <P>
+ * It may be overwritten in the future with a better messaging system. 
+ */
 public class MessageBar extends JComponent
 {
-	public BufferedImage		image;
+	//Stores the offscreen image buffer to write messages to.
+	private BufferedImage		image;
+	
+	//Stores the font of the text to use.
 	private Font				messageFont;
-	private Timer				messageTimer;									// Used to clear text after a certain amount of time.
+	
+	// Used to clear text after a certain amount of time.
+	private Timer				messageTimer;
+	
+	//The length of time to keep any one message on screen.
 	private static final long	MESSAGE_TIMEOUT		= 3000;
 
 	/**
 	 * 
+	 * Instantiate the object, setting the font, basic size/color, etc.
+	 *
 	 */
-	private static final long	serialVersionUID	= -8467508002566639620L;
-
 	public MessageBar()
 	{
 		super();
@@ -67,9 +79,18 @@ public class MessageBar extends JComponent
 		messageTimer = new Timer();
 	}
 
+	/**
+	 * 
+	 * Draw the offscreen buffer to the screen.  If the offscreen buffer does not yet exist, create it.
+	 *
+	 * @param g - Graphics context to draw to.
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		
+		//Check to see if the offscreen image buffer has been created yet.  If not, create it.
 		if (image == null)
 		{
 			// Create the image to store the message to be displayed.
@@ -82,16 +103,26 @@ public class MessageBar extends JComponent
 			g2.setColor(getBackground());
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
+		
+		//Draw the offscreen buffer to the screen.
 		g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), this);
 	}
 
-	// This message clears the currently displayed message.
+	/**
+	 * This clears the currently displayed message immediately.
+	 *
+	 */
 	public void clearMessage()
 	{
-		// TODO This method should animate the process of clearing the message.
 		displayMessage("");
 	}
 
+	/**
+	 * 
+	 * Displays the indicated message in the message bar for 3 seconds.
+	 *
+	 * @param message The message to display on screen.
+	 */
 	public void displayMessage(String message)
 	{
 		// Clear any pending timers
@@ -99,7 +130,6 @@ public class MessageBar extends JComponent
 		messageTimer = new Timer();
 
 		// Set the timer for the new message.
-		// TODO Allow the message time to be part of the function call.
 		messageTimer.schedule(new TimerTask()
 		{
 			public void run()
@@ -120,15 +150,13 @@ public class MessageBar extends JComponent
 		Rectangle2D barSize = this.getBounds();
 
 		// Set the font drawing settings.
-		// TODO Improve the drawing style of the string.
 		g.setColor(Color.red);
 		g.setFont(messageFont);
 
 		// Draw the message
 		g.drawString(message, (int) (barSize.getCenterX() - messageSize.getCenterX()),
 				(int) (barSize.getCenterY() - messageSize.getCenterY()));
-
-		// TODO Only repaint this section of the screen.
+		
 		repaint();
 	}
 }

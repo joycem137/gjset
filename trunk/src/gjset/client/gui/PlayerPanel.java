@@ -48,24 +48,38 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+/**
+ * Displays information, controls, and data to the player that's on this computer.
+ * This should be the primary location for all interface elements.
+ */
 public class PlayerPanel extends JPanel
 {
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 3670300153110634539L;
-
+	//Store the offscreen image and graphics context.
 	private Image				offScreenImage;
 	private Graphics2D			offScreenGraphics;
 
+	//Store a link to the card table component.
 	private CardTableComponent	table;
+	
+	//Store a lnk to the player whose information will be represented here.
 	private Player				player				= new Player(1);
 
-	private Font				messageFont;
+	//Store the font for the name of the player.
+	private Font				playerFont;
 	
+	//Store the colors used for the panel background.
 	private static final Color	panelColor			= new Color(0, 51, 0);
+	
+	//Store the color used for the player name.
 	private static final Color	playernameColor		= new Color(255, 192, 0);
 	
+	/**
+	 * 
+	 * Construct a PlayerPanel with a link to the indicated {@link CardTableComponent} and {@link GameEngine}.
+	 *
+	 * @param table The graphical representation of the card table
+	 * @param engine The link to the game engine.
+	 */
 	public PlayerPanel(CardTableComponent table, final EngineLinkInterface engine)
 	{
 		super();
@@ -95,13 +109,9 @@ public class PlayerPanel extends JPanel
 
 		setLayout(new FlowLayout());
 
+		//Create the "No more sets" button.
 		JButton nosetButton = new JButton(new AbstractAction("No more sets.")
 		{
-			/**
-			 * 
-			 */
-			private static final long	serialVersionUID	= -1742911717343411450L;
-
 			public void actionPerformed(ActionEvent arg0)
 			{
 				engine.callNoMoreSets();
@@ -113,15 +123,12 @@ public class PlayerPanel extends JPanel
 		nosetButton.setMaximumSize(new Dimension(180, 30));
 		nosetButton.setMinimumSize(new Dimension(180, 30));
 
-		JButton callsetButton = new JButton(new AbstractAction("Call a Set!")
+		//Create the "Call Set" button.
+		JButton callsetButton = new JButton(new AbstractAction("Call Set!")
 		{
-			/**
-			 * 
-			 */
-
 			public void actionPerformed(ActionEvent arg0)
 			{
-				engine.callNoMoreSets();
+				//Do nothing at this time.
 			}
 		});
 
@@ -135,6 +142,13 @@ public class PlayerPanel extends JPanel
 		add(nosetButton);
 	}
 
+	/**
+	 * 
+	 * Draw the player panel to the screen.  Whenever this is called, we are also simultaneously updating the player information
+	 * being drawn to the screen.
+	 *
+	 * @param player The updated player information.
+	 */
 	public void drawPanel(Player player)
 	{
 		// Draw the background
@@ -163,9 +177,9 @@ public class PlayerPanel extends JPanel
 		// Display the player score info.
 		this.player = player;
 		int fontsize = 24;
-		messageFont = new Font("American Uncial", Font.PLAIN, fontsize);
+		playerFont = new Font("American Uncial", Font.PLAIN, fontsize);
 		offScreenGraphics.setColor(playernameColor);
-		offScreenGraphics.setFont(messageFont);
+		offScreenGraphics.setFont(playerFont);
 		offScreenGraphics.drawString(player.getName(), 30, fontsize);
 		offScreenGraphics.setColor(Color.white);
 		offScreenGraphics.drawString(String.valueOf(player.getScore()), 60, (fontsize *2));		
@@ -177,6 +191,13 @@ public class PlayerPanel extends JPanel
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Paint the off screen graphics buffer to the screen.
+	 *
+	 * @param g The Graphics context for this component.
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);

@@ -32,11 +32,23 @@ import gjset.data.Card;
 
 import java.util.Vector;
 
+/**
+ * This class stores a model of a deck of cards.  It contains a list of {@link Card} objects and provides the ability to shuffle them.
+ * Once the deck is exhausted, it can be reshuffled into a completely new arrangement of cards, without having to create a new deck.
+ * 
+ * @see Card
+ * @see GameEngine
+ */
 public class Deck
 {
 	private Vector<Card>	cards;
 	private Vector<Card>	shuffledDeck;
 
+	/**
+	 * 
+	 * Creates a new deck of all 81 set cards and shuffles them.
+	 *
+	 */
 	public Deck()
 	{
 		cards = new Vector<Card>(81);
@@ -52,6 +64,14 @@ public class Deck
 		shuffle();
 	}
 
+	/**
+	 * 
+	 * Creates a new arrangement of shuffled cards.
+	 * <P>
+	 * Note that at this time, this method will completely repopulated the entire deck and not just reshuffle
+	 * the remaining cards.
+	 *
+	 */
 	public void shuffle()
 	{
 		// Create our companion array that we will shuffle.
@@ -87,6 +107,12 @@ public class Deck
 		}
 	}
 
+	/**
+	 * 
+	 * Removes the top card from the deck and returns it.
+	 *
+	 * @return The top card from the deck.
+	 */
 	public Card drawCard()
 	{
 		Card card = shuffledDeck.firstElement();
@@ -95,6 +121,13 @@ public class Deck
 		return card;
 	}
 
+	/**
+	 * 
+	 * Similar to {@link #drawCard}, but allows the user to remove more than one.
+	 *
+	 * @param number The number of cards to draw.
+	 * @return A {@link Vector} containing the cards you've drawn.
+	 */
 	public Vector<Card> drawCards(int number)
 	{
 		Vector<Card> vector = new Vector<Card>(number);
@@ -105,6 +138,12 @@ public class Deck
 		return vector;
 	}
 
+	/**
+	 * 
+	 * Return the number of cards remaining in the shuffled deck.
+	 *
+	 * @return The number of cards remaining in the shuffled deck.
+	 */
 	public int remainingCards()
 	{
 		return shuffledDeck.size();

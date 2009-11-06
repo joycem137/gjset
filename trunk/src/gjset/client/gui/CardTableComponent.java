@@ -39,10 +39,11 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+/**
+ * Handles the work of representing a {@link CardTable} object to the user.
+ */
 public class CardTableComponent extends JPanel
 {
-	private static final long	serialVersionUID	= 1L;
-
 	// This is used to handle laying out the cards in a grid for the moment.
 	private GridLayout			layout;
 	private JPanel				cardPane;
@@ -54,7 +55,12 @@ public class CardTableComponent extends JPanel
 	private final int			CARD_BUFFER			= 20;					// The minimum distance between cards.
 	private final Color			backgroundColor		= new Color(0, 102, 0); // Store the background color to be used here.
 
-
+	/**
+	 * 
+	 * This constructor takes a link to the {@link GameEngine} and initializes all of its graphical elements.
+	 *
+	 * @param engine A link to the {@link GameEngine}
+	 */
 	public CardTableComponent(EngineLinkInterface engine)
 	{
 		super();
@@ -87,7 +93,12 @@ public class CardTableComponent extends JPanel
 	}
 
 	/**
-	 * Repositions the cards.
+	 * 
+	 * This method should be called any time the {@link CardTable} data changes within the {@link GameEngine}.
+	 * This method will be called any time the highlighting, physical arrangement, or number/composition of
+	 * cards on the table changes.
+	 *
+	 * @param cardTable A CardTable object containing the latest updates on the cards that are on the table.
 	 */
 	public void update(CardTable cardTable)
 	{
@@ -140,6 +151,11 @@ public class CardTableComponent extends JPanel
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Reset the card table to its pristine condition.  Used when finishing a game.
+	 *
+	 */
 	public void reset()
 	{
 		//Clear all cards from the screen.
