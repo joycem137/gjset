@@ -64,7 +64,8 @@ public class PlayerPanel extends JPanel
 	private Font				messageFont;
 	
 	private static final Color	panelColor			= new Color(0, 51, 0);
-
+	private static final Color	playernameColor		= new Color(255, 192, 0);
+	
 	public PlayerPanel(CardTableComponent table, final EngineLinkInterface engine)
 	{
 		super();
@@ -94,7 +95,7 @@ public class PlayerPanel extends JPanel
 
 		setLayout(new FlowLayout());
 
-		JButton setButton = new JButton(new AbstractAction("No more sets.")
+		JButton nosetButton = new JButton(new AbstractAction("No more sets.")
 		{
 			/**
 			 * 
@@ -108,12 +109,30 @@ public class PlayerPanel extends JPanel
 		});
 
 		// Set the button's size.
-		setButton.setPreferredSize(new Dimension(180, 30));
-		setButton.setMaximumSize(new Dimension(180, 30));
-		setButton.setMinimumSize(new Dimension(180, 30));
+		nosetButton.setPreferredSize(new Dimension(180, 30));
+		nosetButton.setMaximumSize(new Dimension(180, 30));
+		nosetButton.setMinimumSize(new Dimension(180, 30));
 
-		// Add the button to the screen.
-		add(setButton);
+		JButton callsetButton = new JButton(new AbstractAction("Call a Set!")
+		{
+			/**
+			 * 
+			 */
+
+			public void actionPerformed(ActionEvent arg0)
+			{
+				engine.callNoMoreSets();
+			}
+		});
+
+		// Set the button's size.
+		callsetButton.setPreferredSize(new Dimension(180, 30));
+		callsetButton.setMaximumSize(new Dimension(180, 30));
+		callsetButton.setMinimumSize(new Dimension(180, 30));
+
+		// Add the buttons to the screen.
+		add(callsetButton);
+		add(nosetButton);
 	}
 
 	public void drawPanel(Player player)
@@ -143,12 +162,13 @@ public class PlayerPanel extends JPanel
 
 		// Display the player score info.
 		this.player = player;
-		messageFont = new Font("Arial", Font.PLAIN, 12);
-		offScreenGraphics.setColor(Color.red);
+		int fontsize = 24;
+		messageFont = new Font("American Uncial", Font.PLAIN, fontsize);
+		offScreenGraphics.setColor(playernameColor);
 		offScreenGraphics.setFont(messageFont);
-		offScreenGraphics.drawString(player.getName(), 30, 15);
-		offScreenGraphics.setColor(Color.blue);
-		offScreenGraphics.drawString(String.valueOf(player.getScore()), 30, 35);		
+		offScreenGraphics.drawString(player.getName(), 30, fontsize);
+		offScreenGraphics.setColor(Color.white);
+		offScreenGraphics.drawString(String.valueOf(player.getScore()), 60, (fontsize *2));		
 		
 		// Flush the image.
 		offScreenImage.flush();
