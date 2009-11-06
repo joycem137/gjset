@@ -35,7 +35,6 @@ import gjset.engine.GameEngine;
  * Implements the {@link EngineLinkInterface} locally.  This means that all communication between the engine
  * and the clients/player objects takes place using standard message passing on the local machine.
  * 
- * @author Joyce Murton
  * @see EngineLinkInterface
  */
 public class LocalEngineLink implements EngineLinkInterface
@@ -50,7 +49,6 @@ public class LocalEngineLink implements EngineLinkInterface
 	 * <B>Note:</b> This method MUST be called prior to using the class normally, as without it, there is no
 	 * connection to the {@link GameEngine}
 	 *
-	 * @author Joyce Murton
 	 * @param gc The GameEngine object that this class will send messages to.
 	 */
 	public void setEngine(GameEngine gc)
@@ -66,7 +64,6 @@ public class LocalEngineLink implements EngineLinkInterface
 	 * As multiple players are introduced, this method will be scrapped in favor of a method of
 	 * detecting dropped player and similar issues.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#quitGame()
 	 */
 	public void quitGame()
@@ -80,7 +77,6 @@ public class LocalEngineLink implements EngineLinkInterface
 	 * At this time, this is all that needs to take place.  This will be overwritten in the future as
 	 * starting new games becomes more complex.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#startNewGame()
 	 */
 	public void startNewGame()
@@ -94,7 +90,6 @@ public class LocalEngineLink implements EngineLinkInterface
 	 * This indicates that the player thinks there are no more sets on the board
 	 * and that the engine should react appropriately.
 	 *
-	 * @author Joyce Murton
 	 * @see gjset.client.EngineLinkInterface#callNoMoreSets()
 	 */
 	public void callNoMoreSets()
@@ -106,7 +101,6 @@ public class LocalEngineLink implements EngineLinkInterface
 	 * 
 	 * Tells the engine to select the card represented by the on screen {@link CardComponent} object.
 	 *
-	 * @author Joyce Murton
 	 * @param card The card that was selected by this player/client.
 	 * @see gjset.client.EngineLinkInterface#selectCard(gjset.client.gui.CardComponent)
 	 */

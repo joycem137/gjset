@@ -45,11 +45,25 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
+/**
+ * Handles all of the work in representing a {@link Card} object to the world.
+ * This class is used to handle UI actions on the card as well as draw it.
+ * 
+ * @see Card
+ * @see GameEngine
+ */
 public class CardComponent extends JComponent
 {
 
 	// The width and height of the cards are currently fixed. This may be changed later.
+	/**
+	 * The width of a card image.
+	 */
 	public static final int	CARD_WIDTH			= 100;
+	
+	/**
+	 * The height of a card image.
+	 */
 	public static final int	CARD_HEIGHT			= 139;
 
 	// Symbol sizes are currently set statically.
@@ -59,18 +73,19 @@ public class CardComponent extends JComponent
 	// Set the shadow offset.
 	private final int		CARD_SHADOW_OFFSET	= 3;
 	private final int		SHAPE_SHADOW_OFFSET	= 2;
-	
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 1L;
 
 	private boolean				highlighted;				// Indicates whether this card is highlighted.
 
 	private Card				card;						// Stores the card data for this card.
 	private Image				image;						// Stores the image of the card
 
-	// Create a basic blank card.
+	/**
+	 *
+	 * Create a basic card to represent the passed in {@link Card} object.
+	 *
+	 * @param engine The link to the {@link GameEngine} so that clicking on cards does something.
+	 * @param card The {@link Card} object that this CardComponent will represent.
+	 */
 	public CardComponent(EngineLinkInterface engine, Card card)
 	{
 		this.card = card;
@@ -129,7 +144,7 @@ public class CardComponent extends JComponent
 		image.flush();
 	}
 
-	// Draws the symbol at the currently specified location.
+	// Draws the symbol at the specified location.
 	private void drawSymbol(Graphics2D g, int x, int y)
 	{
 		Shape drawingShape = null;
@@ -229,7 +244,7 @@ public class CardComponent extends JComponent
 		}
 	}
 
-	// Identify the y position of the top symbol, based on the number of symbols to be drawn.
+	// Identify the y coordinate of the top symbol, based on the number of symbols to be drawn.
 	private int getTopYPosition()
 	{
 		switch (card.getNumber())
@@ -261,7 +276,15 @@ public class CardComponent extends JComponent
 		}
 	}
 
-	// Actually paint the card.
+	/**
+	 * 
+	 * Paints the card to the screen.  This method actually only draws the internal card image and the highlight to the screen.
+	 * The card image is not drawn at this time, but drawn at instantiation.  The static image of that card is then rendered to
+	 * the screen.
+	 *
+	 * @param g The graphics context for drawing.
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	protected void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
@@ -279,20 +302,30 @@ public class CardComponent extends JComponent
 		}
 	}
 
-	// Set the highlight on the card.
+	/**
+	 * Set the highlight value for this card.
+	 *
+	 * @param highlightValue Boolean value to indicate whether or not this card is highlighted.
+	 */
 	public void setHighlight(boolean highlightValue)
 	{
 		highlighted = highlightValue;
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Indicates whether or not this Card is highlighted.
+	 *
+	 * @return A boolean value indicating whether or not this card is highlighted.
+	 */
 	public boolean isHighlighted()
 	{
 		return highlighted;
 	}
 
 	/**
-	 * Reset the card to its original position and state.
+	 * Reset the card to its original position and state.  Currently, this just sets the 
 	 */
 	public void reset()
 	{
@@ -300,18 +333,34 @@ public class CardComponent extends JComponent
 	}
 
 	/**
-	 * This method returns a plaintext description of the card.
+	 * This method returns a plaintext description of the card.  This is generally used for
+	 * debug purposes and printing information to the console.
+	 * 
+	 * @return A {@link String} containing a plaintext description of the attached card object.
 	 */
 	public String toString()
 	{
 		return card.toString();
 	}
 
+	/**
+	 * 
+	 * Test whether the internal card object is equal to another CardComponent's card object.
+	 *
+	 * @param cardComponent The other CardComponent object to test for equality.
+	 * @return A boolean indicating whether or not the two objects are the same.
+	 */
 	public boolean equals(CardComponent cardComponent)
 	{
 		return card.equals(cardComponent.card);
 	}
 
+	/**
+	 * 
+	 * Return the card associated with this CardComponent.
+	 *
+	 * @return The Card object associated with this CardComponent.
+	 */
 	public Card getCard()
 	{
 		return card;

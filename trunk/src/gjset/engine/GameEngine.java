@@ -38,6 +38,15 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+/**
+ * This is the "brains" behind the operation. In the Model-View-Controller architecture, this is handling both the Controller and Model
+ * aspects.  The GameEngine object gets a {@link ClientLinkInterface} object to communicate with the client to send updates to the UI
+ * whenever something changes.  If something happens on the client, the {@link PlayerUI} object sends a message to this object informing it
+ * of the event, and the GameEngine reacts appropriately.
+ * 
+ * The Model portion of the GameEngine is stored in 3 objects:  The {@link Deck}, the {@link CardTable}, and the {@link Player}.
+ * Each stores pertinent data about what the current state of the game is.
+ */
 public class GameEngine implements Observer
 {
 	private Deck					deck;					// Stores the deck of cards.
@@ -48,6 +57,13 @@ public class GameEngine implements Observer
 	private CardTable				cardTable;
 	private Player					player;					// player data for this game.
 	
+	/**
+	 * Create a GameEngine with a link to the {@link PlayerUI} using the {@link ClientLinkInterface} parameter passed in.
+	 * 
+	 * This constructor instantiates and initializes all of the game model data.
+	 *
+	 * @param client The link to the {@PlayerUI}.
+	 */
 	public GameEngine(ClientLinkInterface client)
 	{
 		//Store a link to the player interface
@@ -70,7 +86,11 @@ public class GameEngine implements Observer
 		player = new Player(1);
 	}
 
-	// This function starts a new game of set.
+	/**
+	 * 
+	 * Tell the player's UI to do whatever it needs to do to show that a new game has been started.
+	 *
+	 */
 	public void newGame()
 	{
 		// Shuffle the cards
@@ -92,7 +112,15 @@ public class GameEngine implements Observer
 		gameActive = true;
 	}
 
-	// Handles the act of selecting the card passed in as an object.
+	/**
+	 * 
+	 * Causes the indicated {@link Card} object to be highlighted on screen.  If this is the third highlighted card,
+	 * this method will determine if this is a set or not and send an update to the {@link PlayerUI}.
+	 * <P>
+	 * If the card was already highlighted, this method will unhighlight it.
+	 *
+	 * @param card The selected card.
+	 */
 	public void selectCard(Card card)
 	{
 		if (!gameActive) return; // Do nothing if the game isn't running.
@@ -164,6 +192,10 @@ public class GameEngine implements Observer
 		}
 	}
 
+	/*
+	 * This private method checks to see if the game is over.  
+	 * The game is considered over when the deck is empty and there are no sets on the board.
+	 */
 	private void checkForEndofGame()
 	{
 		System.out.println("Checking for end of game.");
@@ -201,12 +233,11 @@ public class GameEngine implements Observer
 		client.displayEndOfGame();
 	}
 
-	/**
-	 * This function takes two cards and provides the system with the only possible card that would make the two cards part of a set.
+	/*
+	 * This function takes two cards and returns the only possible card that completes the set.
 	 * 
-	 * @param card1
-	 * @param card2
-	 * @return
+	 * This method is used to determine if there are any sets on the table.
+	 * 
 	 */
 	private Card finishSet(Card card1, Card card2)
 	{
@@ -238,12 +269,6 @@ public class GameEngine implements Observer
 	// This function checks a vector of cards to determine if they are a set.
 	private boolean checkForSet(Vector<Card> cards)
 	{
-		// System.out.println("Comparing the following cards:");
-		// for(int i = 0; i < cards.size(); i++)
-		// {
-		// System.out.println(cards.get(i).toString());
-		// }
-
 		// Check each property
 		for (int property = 1; property <= 4; property++)
 		{
@@ -273,18 +298,24 @@ public class GameEngine implements Observer
 			}
 		}
 
-		// System.out.println("Well, we ran the gauntlet.  This is definitely a set.");
-		// We managed to make it through the gauntlet! This REALLY IS A SET!!!
 		return true;
 	}
 
+	/**
+	 * 
+	 * Currently a placeholder, this function will perform the behavior of "calling set," which means locking out
+	 * any other players that have not called set.
+	 *
+	 */
 	public void callSet()
 	{
 		//Nothing to do at this time.
 	}
 
 	/**
-	 * Handle the situation where the user believes there are no more sets available.
+	 * Used by the client when the player selects the "No more sets" button.
+	 * This indicates that the player thinks there are no more sets on the board
+	 * and that the engine should react appropriately.
 	 */
 	public void noMoreSets()
 	{
@@ -320,6 +351,12 @@ public class GameEngine implements Observer
 		}
 	}
 
+	/**
+	 * 
+	 * Currently a placeholder method, this method will do whatever is necessary for a player to quit a game and remove the player
+	 * from the game.
+	 *
+	 */
 	public void quitGame()
 	{
 		//Nothing to do at this time.
