@@ -39,8 +39,6 @@ import gjset.data.Player;
  * This class is specifcally meant to facilitate messages from a {@link GameEngine} object
  * to a {@link PlayerUI} object.
  * 
- * @author Joyce Murton
- * @author Andrea Kilpatrick
  * @see LocalClientLink
  * @see GameServer
  * @see EngineLinkInterface
@@ -51,7 +49,6 @@ public interface ClientLinkInterface
 	 * 
 	 * Tell the player's UI to do whatever it needs to do to show that a new game has been started.
 	 *
-	 * @author Joyce Murton
 	 */
 	void displayNewGame();
 	
@@ -60,7 +57,6 @@ public interface ClientLinkInterface
 	 * Tell the player's UI that the card table has changed.  This method provides the data that will be transferred
 	 * to the player/client. 
 	 *
-	 * @author Joyce Murton
 	 * @param table The {@link CardTable} object that has been updated and should be updated on the client.
 	 */
 	void updateTable(CardTable table);
@@ -70,7 +66,6 @@ public interface ClientLinkInterface
 	 * If a player selects three cards that are a set, this method is called to tell the UI to indicate that the selected
 	 * cards are indeed a set.
 	 *
-	 * @author Joyce Murton
 	 */
 	void confirmSet();
 	
@@ -79,7 +74,6 @@ public interface ClientLinkInterface
 	 * If a player selects three cards that are not a set, this method is called to tell the UI to indicate that the selected
 	 * cards are not a set.
 	 *
-	 * @author Joyce Murton
 	 */
 	void rejectSet();
 	
@@ -88,7 +82,6 @@ public interface ClientLinkInterface
 	 * If a player causes a situation to occur where more cards need to be drawn, and the deck is empty, send a message
 	 * to the UI to indicate as much.
 	 *
-	 * @author Joyce Murton
 	 */
 	void indicateOutOfCardsToDraw();
 	
@@ -96,7 +89,6 @@ public interface ClientLinkInterface
 	 * When there are no more cards to draw, and there are no more sets on the table, the game is over.
 	 * Inform the UI of this fact.
 	 *
-	 * @author Joyce Murton
 	 */
 	void displayEndOfGame();
 	
@@ -105,7 +97,6 @@ public interface ClientLinkInterface
 	 * If you have 21 cards on the table, you are mathematically guaranteed to have a set out there somewhere.
 	 * This method is used if the player attempts to draw more cards when none are needed.
 	 *
-	 * @author Joyce Murton
 	 */
 	void indicateNoNeedToDrawMoreCards();
 	
@@ -113,7 +104,6 @@ public interface ClientLinkInterface
 	 * 
 	 * There has been a change on the player's information.  Update the UI with the appropriate changes.
 	 *
-	 * @author Andrea Kilpatrick
 	 * @param player The player whose updated data needs to be transfered to the client UI.
 	 */
 	void updatePlayer(Player player);

@@ -43,7 +43,6 @@ import gjset.client.gui.CardComponent;
  * This class is specifically meant to facilitate messages from a {@link PlayerUI} object
  * to a {@link GameEngine} object.
  * 
- * @author Joyce Murton
  * @see GameClient
  * @see LocalEngineLink
  * @see ClientLinkInterface
@@ -54,7 +53,6 @@ public interface EngineLinkInterface
 	 * 
 	 * Tells the engine to select the card represented by the on screen {@link CardComponent} object.
 	 *
-	 * @author Joyce Murton
 	 * @param card The card that was selected by this player/client.
 	 */
 	void selectCard(CardComponent card);
@@ -66,7 +64,6 @@ public interface EngineLinkInterface
 	 * At this time, this is all that needs to take place.  This will be overwritten in the future as
 	 * starting new games becomes more complex.
 	 *
-	 * @author Joyce Murton
 	 */
 	void startNewGame();
 	
@@ -78,7 +75,6 @@ public interface EngineLinkInterface
 	 * As multiple players are introduced, this method will be scrapped in favor of a method of
 	 * detecting dropped player and similar issues.
 	 *
-	 * @author Joyce Murton
 	 */
 	void quitGame();
 	
@@ -88,7 +84,6 @@ public interface EngineLinkInterface
 	 * This indicates that the player thinks there are no more sets on the board
 	 * and that the engine should react appropriately.
 	 *
-	 * @author Joyce Murton
 	 */
 	void callNoMoreSets();
 }
