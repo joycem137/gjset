@@ -1,6 +1,15 @@
-package gjset.gui;
+package gjset.client.gui;
+
+import gjset.gui.GPLPopup;
+import gjset.gui.GeneralKeyStrokeFactory;
+import gjset.gui.KeyStrokeFactory;
+import gjset.gui.Launcher;
+import gjset.gui.MacKeyStrokeFactory;
+import gjset.gui.ResourceManager;
+import gjset.gui.SimpleImagePanel;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -9,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 /* 
  *  LEGAL STUFF
@@ -45,19 +55,29 @@ import javax.swing.JMenuItem;
  */
 public class MainFrame extends JFrame
 {
-	private GPLPopup			gplPopup;
+	//Store the various pages we might display.
+	private Launcher			launcherDialog;
 
 	// Keyboard components
 	private KeyStrokeFactory	keyStrokeFactory;
-
-	private final Color			backgroundColor	= new Color(0, 102, 0); // Store the background color to be used here.
-
-	private Launcher			launcherDialog;
+	
+	private JPanel rootPanel;
 
 	public MainFrame()
 	{
 		super("gJSet");
 
+		setOSVersion();
+
+		createGUI();
+	}
+
+	/**
+	 * Performs any tasks associated with setting the OS.
+	 *
+	 */
+	private void setOSVersion()
+	{
 		// Determine which keystroke factory to grab.
 		if (System.getProperty("os.name").contains("Mac OS X"))
 		{
@@ -68,30 +88,32 @@ public class MainFrame extends JFrame
 		{
 			keyStrokeFactory = new GeneralKeyStrokeFactory();
 		}
-
-		createGUI();
 	}
 
 	// Construct the UI for the player.
 	private void createGUI()
 	{
 		// Create the main window.
-		setSize(1024, 768);
+		setSize(1024, 768 + 43);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setLayout(null);
+		
+		//Add the background to the image
+		ResourceManager resourceManager = ResourceManager.getInstance();
+		Image backgroundImage = resourceManager.getImage("window_main.png");
+		rootPanel = new SimpleImagePanel(backgroundImage);
+		add(rootPanel);
+		
+		rootPanel.setLayout(null);
+		rootPanel.setLocation(0, 0);
+		rootPanel.setSize(1024, 768);
 
-		// Set the color of the background.
-		getContentPane().setBackground(backgroundColor);
-
-		// Create the sub components of the window.
-		createMenu();
-
+		//Set the page translucent.
+		setBackground(new Color(1f, 1f, 1f, 0f));
+		
 		// Finish constructing the window.
 		setVisible(true);
-
-		// We're going to start with the launcher open. Add it to the panel.
-		showLauncherDialog();
 	}
 
 	/**
@@ -104,74 +126,5 @@ public class MainFrame extends JFrame
 			launcherDialog = new Launcher();
 			add(launcherDialog);
 		}
-	}
-
-	// Create the standard UI menu bar.
-	private void createMenu()
-	{
-		JMenuBar jMenuBar = new JMenuBar();
-		setJMenuBar(jMenuBar);
-
-		// Build the file menu
-		JMenu fileMenu = new JMenu("File");
-		fileMenu.setMnemonic(KeyEvent.VK_F);
-
-		// Build the new game option
-		JMenuItem newGameItem = new JMenuItem("New Game", KeyEvent.VK_N);
-		newGameItem.setAccelerator(keyStrokeFactory.getNewGameAcceleratorKeyStroke());
-		fileMenu.add(newGameItem);
-		newGameItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				showLauncherDialog();
-			}
-		});
-
-		// Build the exit item.
-		JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_X);
-		exitItem.setAccelerator(keyStrokeFactory.getExitGameAcceleratorKeyStroke());
-		fileMenu.add(exitItem);
-
-		exitItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				// TODO: Exit the game.
-				System.exit(0);
-			}
-		});
-
-		// Add the file menu to the menu bar.
-		jMenuBar.add(fileMenu);
-
-		// Create the help menu for the GNU stuff.
-		JMenu helpMenu = new JMenu("Help");
-		helpMenu.setMnemonic(KeyEvent.VK_H);
-
-		// Create the "GPL Text" item.
-		JMenuItem gplItem = new JMenuItem("About GPL", KeyEvent.VK_G);
-		helpMenu.add(gplItem);
-
-		// Create the gplPopup
-		gplPopup = new GPLPopup();
-
-		// Add the GPL text to the gplItem
-		gplItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				displayGPLPopup();
-			}
-		});
-
-		// Add the help menu to the menu bar.
-		jMenuBar.add(helpMenu);
-
-	}
-
-	private void displayGPLPopup()
-	{
-		gplPopup.displayPopup(this);
 	}
 }
