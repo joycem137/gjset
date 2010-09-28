@@ -1,5 +1,7 @@
 package gjset.gui;
 
+import gjset.client.gui.MainFrame;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;

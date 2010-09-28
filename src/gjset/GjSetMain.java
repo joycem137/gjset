@@ -1,9 +1,8 @@
 package gjset;
 
-import gjset.client.LocalEngineLink;
-import gjset.client.gui.MainGamePanel;
-import gjset.engine.GameEngine;
-import gjset.engine.LocalClientLink;
+import gjset.client.gui.MainFrame;
+
+import javax.swing.SwingUtilities;
 
 /* 
  *  LEGAL STUFF
@@ -33,26 +32,26 @@ import gjset.engine.LocalClientLink;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 public class GjSetMain
 {
 	public static void main(String[] args)
 	{
-		/*SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable()
+		{
 			public void run()
 			{
 				new MainFrame();
 			}
-		});*/
-		
-		LocalClientLink player = new LocalClientLink();
+		});
+
+		/*LocalClientLink player = new LocalClientLink();
 		LocalEngineLink engine = new LocalEngineLink();
-		
+
 		GameEngine gc = new GameEngine(player);
 		MainGamePanel gui = new MainGamePanel(engine);
-		
+
 		player.setGUI(gui);
-		engine.setEngine(gc);
+		engine.setEngine(gc);*/
 	}
 
 }
