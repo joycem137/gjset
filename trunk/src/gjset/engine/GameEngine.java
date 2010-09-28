@@ -41,7 +41,7 @@ import java.util.Vector;
 /**
  * This is the "brains" behind the operation. In the Model-View-Controller architecture, this is handling both the Controller and Model
  * aspects.  The GameEngine object gets a {@link ClientLinkInterface} object to communicate with the client to send updates to the UI
- * whenever something changes.  If something happens on the client, the {@link PlayerUI} object sends a message to this object informing it
+ * whenever something changes.  If something happens on the client, the {@link MainGamePanel} object sends a message to this object informing it
  * of the event, and the GameEngine reacts appropriately.
  * 
  * The Model portion of the GameEngine is stored in 3 objects:  The {@link Deck}, the {@link CardTable}, and the {@link Player}.
@@ -58,7 +58,7 @@ public class GameEngine implements Observer
 	private Player					player;					// player data for this game.
 	
 	/**
-	 * Create a GameEngine with a link to the {@link PlayerUI} using the {@link ClientLinkInterface} parameter passed in.
+	 * Create a GameEngine with a link to the {@link MainGamePanel} using the {@link ClientLinkInterface} parameter passed in.
 	 * 
 	 * This constructor instantiates and initializes all of the game model data.
 	 *
@@ -115,7 +115,7 @@ public class GameEngine implements Observer
 	/**
 	 * 
 	 * Causes the indicated {@link Card} object to be highlighted on screen.  If this is the third highlighted card,
-	 * this method will determine if this is a set or not and send an update to the {@link PlayerUI}.
+	 * this method will determine if this is a set or not and send an update to the {@link MainGamePanel}.
 	 * <P>
 	 * If the card was already highlighted, this method will unhighlight it.
 	 *

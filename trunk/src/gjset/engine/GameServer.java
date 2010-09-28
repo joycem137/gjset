@@ -1,7 +1,7 @@
 package gjset.engine;
 
 import gjset.client.GameClient;
-import gjset.client.gui.PlayerUI;
+import gjset.client.gui.MainGamePanel;
 import gjset.data.Card;
 import gjset.data.CardTable;
 import gjset.data.Player;
@@ -41,7 +41,7 @@ import java.net.Socket;
  */
 
 /**
- * This class implements the {@link ClientLinkInterface} to provide the game engine with a link to all {@link PlayerUI}
+ * This class implements the {@link ClientLinkInterface} to provide the game engine with a link to all {@link MainGamePanel}
  * objects running on remote systems.  It is intended to be used in conjunction with {@link GameClient} objects to complete the
  * interaction
  * <P>
@@ -51,7 +51,7 @@ import java.net.Socket;
  * This class also provides support for handling incoming messages from the UI to the engine, forwarding all incoming messages to the
  * linked {@link GameEngine} object.
  * 
- * @see PlayerUI
+ * @see MainGamePanel
  * @see ClientLinkInterface
  */
 public class GameServer implements ClientLinkInterface

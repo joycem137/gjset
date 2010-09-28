@@ -28,7 +28,7 @@
 
 package gjset.engine;
 
-import gjset.client.gui.PlayerUI;
+import gjset.client.gui.MainGamePanel;
 import gjset.data.CardTable;
 import gjset.data.Player;
 
@@ -40,7 +40,7 @@ import gjset.data.Player;
  */
 public class LocalClientLink implements ClientLinkInterface
 {
-	private PlayerUI	gui;
+	private MainGamePanel	gui;
 
 	/**
 	 * 
@@ -54,11 +54,11 @@ public class LocalClientLink implements ClientLinkInterface
 	 * Used to provide the LocalClientLInk with a link to the local player UI running on this system.
 	 * <P>
 	 * <B>Note:</b> This method MUST be called prior to using the class normally, as without it, there is no
-	 * connection to the {@link PlayerUI}
+	 * connection to the {@link MainGamePanel}
 	 * 
-	 * @param gui The {@link PlayerUI} to forward messages to.
+	 * @param gui The {@link MainGamePanel} to forward messages to.
 	 */
-	public void setGUI(PlayerUI gui)
+	public void setGUI(MainGamePanel gui)
 	{
 		this.gui = gui;
 	}

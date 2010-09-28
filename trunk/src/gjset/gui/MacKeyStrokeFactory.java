@@ -1,4 +1,4 @@
-package gjset.client.gui;
+package gjset.gui;
 
 /* 
  *  LEGAL STUFF
@@ -28,6 +28,7 @@ package gjset.client.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -44,7 +45,7 @@ public class MacKeyStrokeFactory implements KeyStrokeFactory
 	 * Return the {@link KeyStroke} that will cause a new game to start in Mac OS X.
 	 *
 	 * @return The {@link KeyStroke} that will cause a new game to start in Mac OS X.
-	 * @see gjset.client.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
 	 */
 	public KeyStroke getNewGameAcceleratorKeyStroke()
 	{
@@ -56,7 +57,7 @@ public class MacKeyStrokeFactory implements KeyStrokeFactory
 	 * Return the {@link KeyStroke} that will cause a player to be added to the game for Mac OS X.
 	 *
 	 * @return The {@link KeyStroke} that will cause a player to be added to the game for Mac OS X.
-	 * @see gjset.client.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
 	 */
 	public KeyStroke getAddPlayerAcceleratorKeyStroke()
 	{
@@ -68,7 +69,7 @@ public class MacKeyStrokeFactory implements KeyStrokeFactory
 	 * Return the {@link KeyStroke} that will quit the game in Mac OS X.
 	 *
 	 * @return The {@link KeyStroke} that will quit the game in Mac OS X.
-	 * @see gjset.client.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
 	 */
 	public KeyStroke getExitGameAcceleratorKeyStroke()
 	{

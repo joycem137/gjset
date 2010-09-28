@@ -1,4 +1,5 @@
-package gjset.client.gui;
+package gjset.gui;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -48,7 +49,7 @@ public class GeneralKeyStrokeFactory implements KeyStrokeFactory
 	 *
 	 * @author Joyce Murton
 	 * @return The {@link KeyStroke} that will quit the game in Linux or Windows.
-	 * @see gjset.client.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getExitGameAcceleratorKeyStroke()
 	 */
 	public KeyStroke getExitGameAcceleratorKeyStroke()
 	{
@@ -61,7 +62,7 @@ public class GeneralKeyStrokeFactory implements KeyStrokeFactory
 	 *
 	 * @author Andrea Kilpatrick
 	 * @return The {@link KeyStroke} that will cause a player to be added to the game in Linux or Windows.
-	 * @see gjset.client.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getAddPlayerAcceleratorKeyStroke()
 	 */
 	public KeyStroke getAddPlayerAcceleratorKeyStroke()
 	{
@@ -74,7 +75,7 @@ public class GeneralKeyStrokeFactory implements KeyStrokeFactory
 	 *
 	 * @author Joyce Murton
 	 * @return The {@link KeyStroke} that will quit the game in Linux or Windows.
-	 * @see gjset.client.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
+	 * @see gjset.gui.KeyStrokeFactory#getNewGameAcceleratorKeyStroke()
 	 */
 	public KeyStroke getNewGameAcceleratorKeyStroke()
 	{
