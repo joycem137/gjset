@@ -1,6 +1,6 @@
 package gjset;
 
-import gjset.client.gui.MainFrame;
+import gjset.gui.MainFrame;
 
 import javax.swing.SwingUtilities;
 

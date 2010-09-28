@@ -1,12 +1,5 @@
-package gjset.client.gui;
+package gjset.gui;
 
-import gjset.gui.GeneralKeyStrokeFactory;
-import gjset.gui.KeyStrokeFactory;
-import gjset.gui.Launcher;
-import gjset.gui.MacKeyStrokeFactory;
-import gjset.gui.Page;
-import gjset.gui.ResourceManager;
-import gjset.gui.SimpleImagePanel;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -110,7 +103,7 @@ public class MainFrame extends JFrame
 		rootPanel.setSize(1024, 768);
 
 		//Set the page translucent.
-		setBackground(new Color(1f, 1f, 1f, 0f));
+		setBackground(new Color(1f, 1f, 1f, 0.0f));
 		
 		// Finish constructing the window.
 		setVisible(true);

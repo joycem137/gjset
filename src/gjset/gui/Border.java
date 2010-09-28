@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
@@ -51,18 +50,28 @@ public class Border extends JComponent
 	private Image top;
 	private Image bottom;
 	
-	public Border(String style)
+	public Border(String style, boolean useTitle)
 	{
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		
-		cornerUL = resourceManager.getImage(style + "_ul.png");
-		cornerUR = resourceManager.getImage(style + "_ur.png");
+		if(useTitle)
+		{
+			cornerUL = resourceManager.getImage(style + "_title_l.png");
+			cornerUR = resourceManager.getImage(style + "_title_r.png");
+			top 	= resourceManager.getImage(style + "_title_m.png");
+		}
+		else
+		{	
+			cornerUL = resourceManager.getImage(style + "_ul.png");
+			cornerUR = resourceManager.getImage(style + "_ur.png");
+			top 	= resourceManager.getImage(style + "_um.png");
+		}
+		
 		cornerLL = resourceManager.getImage(style + "_ll.png");
 		cornerLR = resourceManager.getImage(style + "_lr.png");
 		
 		left 	= resourceManager.getImage(style + "_ml.png");
 		right 	= resourceManager.getImage(style + "_mr.png");
-		top 	= resourceManager.getImage(style + "_um.png");
 		bottom 	= resourceManager.getImage(style + "_lm.png");
 	}
 
@@ -71,27 +80,32 @@ public class Border extends JComponent
 		int width = getWidth();
 		int height = getHeight();
 		
-		int cornerWidth = cornerUL.getWidth(this);
-		int cornerHeight = cornerUL.getHeight(this);
+		int topCornerWidth = cornerUL.getWidth(this);
+		int topCornerHeight = cornerUL.getHeight(this);
+		
+		int bottomCornerWidth = cornerLL.getWidth(this);
+		int bottomCornerHeight = cornerLL.getHeight(this);
 		
 		//Draw the sides
-		Rectangle area = new Rectangle( cornerWidth, 0, width - 2 * cornerWidth, top.getHeight(this));
+		Rectangle area = new Rectangle( topCornerWidth, 0, width - topCornerWidth - bottomCornerWidth, top.getHeight(this));
 		texturePaintHorizontal(g, top, area);
 		
-		area = new Rectangle( cornerWidth, height - bottom.getHeight(this), width - 2 * cornerWidth, bottom.getHeight(this));
+		area = new Rectangle( bottomCornerWidth, height - bottom.getHeight(this), 
+				width - topCornerWidth - bottomCornerWidth, bottom.getHeight(this));
 		texturePaintHorizontal(g, bottom, area);
 		
-		area = new Rectangle( 0, cornerHeight, left.getWidth(this), height - 2 * cornerHeight);
+		area = new Rectangle( 0, topCornerHeight, left.getWidth(this), height - topCornerHeight - bottomCornerHeight);
 		texturePaintVertical(g, left, area);
 		
-		area = new Rectangle( width - right.getWidth(this), cornerHeight, right.getWidth(this), height - 2 * cornerHeight);
+		area = new Rectangle( width - right.getWidth(this), topCornerHeight, 
+				right.getWidth(this), height - topCornerHeight - bottomCornerHeight);
 		texturePaintVertical(g, right, area);
 		
 		//Draw the corners
 		g.drawImage(cornerUL, 0, 0, this);
-		g.drawImage(cornerUR, width - cornerWidth, 0, this);
-		g.drawImage(cornerLL, 0, height - cornerHeight, this);
-		g.drawImage(cornerLR, width - cornerWidth, height - cornerHeight, this);
+		g.drawImage(cornerUR, width - topCornerWidth, 0, this);
+		g.drawImage(cornerLL, 0, height - bottomCornerHeight, this);
+		g.drawImage(cornerLR, width - bottomCornerWidth, height - bottomCornerHeight, this);
 	}
 
 	/**
@@ -101,7 +115,7 @@ public class Border extends JComponent
 	 * @param image
 	 * @param areaToPaint
 	 */
-	private void texturePaintHorizontal(Graphics g, Image image, Rectangle areaToPaint)
+	protected void texturePaintHorizontal(Graphics g, Image image, Rectangle areaToPaint)
 	{
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
@@ -131,7 +145,7 @@ public class Border extends JComponent
 	 * @param image
 	 * @param areaToPaint
 	 */
-	private void texturePaintVertical(Graphics g, Image image, Rectangle areaToPaint)
+	protected void texturePaintVertical(Graphics g, Image image, Rectangle areaToPaint)
 	{
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
@@ -161,6 +175,6 @@ public class Border extends JComponent
 	 */
 	public int getBorderWidth()
 	{
-		return top.getHeight(this);
+		return bottom.getHeight(this);
 	}
 }

@@ -1,11 +1,13 @@
-package gjset.client.gui;
+package gjset.gui;
 
-import gjset.gui.Border;
-import gjset.gui.Page;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 /* 
  *  LEGAL STUFF
@@ -60,6 +62,22 @@ public class LaunchPage extends Page
 		realBackgroundColor = new Color(227, 209, 156);
 		
 		createBorder();
+		
+		createTitle();
+	}
+
+	/**
+	 * Add a title to the border.
+	 *
+	 */
+	private void createTitle()
+	{
+		JLabel title;
+		title = new JLabel("New Game", SwingConstants.CENTER);
+		title.setFont(new Font("Tahoma Bold", Font.BOLD, 20));
+		title.setSize(531, 28);
+		title.setLocation(0, 0);
+		border.add(title);
 	}
 
 	/**
@@ -68,7 +86,7 @@ public class LaunchPage extends Page
 	 */
 	private void createBorder()
 	{
-		border = new Border("window");
+		border = new Border("window", true);
 		border.setSize(getWidth(), getHeight());
 		add(border);
 	}
