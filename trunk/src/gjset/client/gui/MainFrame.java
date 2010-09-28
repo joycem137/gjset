@@ -1,6 +1,5 @@
 package gjset.client.gui;
 
-import gjset.gui.GPLPopup;
 import gjset.gui.GeneralKeyStrokeFactory;
 import gjset.gui.KeyStrokeFactory;
 import gjset.gui.Launcher;
@@ -10,14 +9,8 @@ import gjset.gui.SimpleImagePanel;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 /* 
@@ -65,11 +58,13 @@ public class MainFrame extends JFrame
 
 	public MainFrame()
 	{
-		super("gJSet");
+		super("Combo Cards!");
 
 		setOSVersion();
 
 		createGUI();
+		
+		loadFirstPage();
 	}
 
 	/**

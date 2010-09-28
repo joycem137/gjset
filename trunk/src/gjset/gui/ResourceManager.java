@@ -2,7 +2,6 @@ package gjset.gui;
 
 import java.awt.Image;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class ResourceManager
 {
 	private static ResourceManager singleton;
 	
-	private static final String RESOURCE_DIRECTORY = "/Users/joycem/Projects/gjset/resources/Images";
+	private static String RESOURCE_DIRECTORY = "resources";
 	
 	private Map<String, Image> map;
 	
@@ -65,7 +64,7 @@ public class ResourceManager
 	
 	/**
 	 * 
-	 * Creates the resource manager and intializes all values.
+	 * Creates the resource manager and initializes all values.
 	 *
 	 */
 	private ResourceManager()
@@ -101,17 +100,6 @@ public class ResourceManager
 		String path = "/" + RESOURCE_DIRECTORY + "/" + filename;
 		
 		URL imageFile = getClass().getResource(path);
-		
-		// DEBUG
-		path = RESOURCE_DIRECTORY + "/" + filename;
-		try
-		{
-			imageFile = new URL("file://" + path);
-		} catch (MalformedURLException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		// Verify that we found a file
 		if(imageFile == null)
