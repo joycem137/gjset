@@ -1,11 +1,16 @@
 package gjset;
 
+import gjset.client.LocalEngineLink;
+import gjset.client.gui.MainGamePanel;
+import gjset.engine.GameEngine;
+import gjset.engine.LocalClientLink;
+
 /* 
  *  LEGAL STUFF
  * 
  *  This file is part of gjSet.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  gjSet is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
@@ -28,20 +33,23 @@ package gjset;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import gjset.client.LocalEngineLink;
-import gjset.client.gui.PlayerUI;
-import gjset.engine.GameEngine;
-import gjset.engine.LocalClientLink;
 
 public class GjSetMain
 {
 	public static void main(String[] args)
 	{
+		/*SwingUtilities.invokeLater(new Runnable(){
+			public void run()
+			{
+				new MainFrame();
+			}
+		});*/
+		
 		LocalClientLink player = new LocalClientLink();
 		LocalEngineLink engine = new LocalEngineLink();
 		
 		GameEngine gc = new GameEngine(player);
-		PlayerUI gui = new PlayerUI(engine);
+		MainGamePanel gui = new MainGamePanel(engine);
 		
 		player.setGUI(gui);
 		engine.setEngine(gc);

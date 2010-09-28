@@ -1,4 +1,4 @@
-package gjset.client.gui;
+package gjset.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -62,7 +62,8 @@ public class GPLPopup
 	public GPLPopup()
 	{
 		// Load the GPL text from memory.
-		URL gplURL = this.getClass().getResource("/resources/COPYING");
+		String path = "/resources/COPYING";
+		URL gplURL = getClass().getResource(path);
 		
 		System.out.println("Got URL: " + gplURL);
 		

@@ -40,7 +40,7 @@ import gjset.client.gui.CardComponent;
  * Any and all communication from the player/client to the engine takes place through
  * these methods. 
  * <P>
- * This class is specifically meant to facilitate messages from a {@link PlayerUI} object
+ * This class is specifically meant to facilitate messages from a {@link MainGamePanel} object
  * to a {@link GameEngine} object.
  * 
  * @see GameClient

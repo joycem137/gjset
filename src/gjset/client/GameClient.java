@@ -1,7 +1,7 @@
 package gjset.client;
 
 import gjset.client.gui.CardComponent;
-import gjset.client.gui.PlayerUI;
+import gjset.client.gui.MainGamePanel;
 import gjset.data.CardTable;
 import gjset.data.Player;
 import gjset.engine.GameEngine;
@@ -52,7 +52,7 @@ import java.net.SocketAddress;
  * Subsequent UI actions on the part of the user will be transmitted to the engine through this class.
  * <P>
  * This class also provides support for handling incoming messages from the engine to the UI, forwarding all incoming messages to the
- * linked {@link PlayerUI} object.
+ * linked {@link MainGamePanel} object.
  * 
  * @see GameEngine
  * @see EngineLinkInterface
@@ -60,7 +60,7 @@ import java.net.SocketAddress;
 public class GameClient implements EngineLinkInterface
 {
 	//Stores a link to the UI.
-	private PlayerUI	gui;
+	private MainGamePanel	gui;
 	
 	//Stores the socket to connect to the server.
 	private Socket	socket;
@@ -79,9 +79,9 @@ public class GameClient implements EngineLinkInterface
 	/**
 	 * Provides a link to the game UI so that messages coming back from the server can be executed on the UI.
 	 *
-	 * @param gui The {@link PlayerUI} object to forward incoming messages to.
+	 * @param gui The {@link MainGamePanel} object to forward incoming messages to.
 	 */
-	public void linkGUI(PlayerUI gui)
+	public void linkGUI(MainGamePanel gui)
 	{
 		this.gui = gui;
 	}

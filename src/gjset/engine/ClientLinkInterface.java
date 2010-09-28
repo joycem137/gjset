@@ -37,7 +37,7 @@ import gjset.data.Player;
  * through this interface.
  * <P>
  * This class is specifcally meant to facilitate messages from a {@link GameEngine} object
- * to a {@link PlayerUI} object.
+ * to a {@link MainGamePanel} object.
  * 
  * @see LocalClientLink
  * @see GameServer

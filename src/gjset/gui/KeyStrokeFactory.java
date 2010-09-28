@@ -1,4 +1,4 @@
-package gjset.client.gui;
+package gjset.gui;
 
 /* 
  *  LEGAL STUFF
@@ -27,6 +27,7 @@ package gjset.client.gui;
  *  You should have received a copy of the GNU General Public License
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 import javax.swing.KeyStroke;
 
