@@ -3,6 +3,7 @@ package gjset.gui;
 import gjset.client.gui.MainFrame;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
@@ -46,9 +46,8 @@ import javax.swing.border.BevelBorder;
 /**
  * This class contains all of the UI elements for creating the launcher for the system.
  */
-public class Launcher extends JPanel
+public class Launcher extends Page
 {
-
 	private JLabel	title;
 
 	/**
@@ -63,8 +62,16 @@ public class Launcher extends JPanel
 		
 		setLayout(new GridLayout(4, 1));
 		setBackground(Color.white);
-		setSize(531, 325);
-		setLocation(246, 221);
+		
+		//Get the parent container
+		Container parent = getParent();
+		
+		//Set page information
+		pageWidth = 531;
+		pageHeight = 325;
+		pageX = 246;
+		pageY = 221;
+		
 		setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		
 		createUIElements();

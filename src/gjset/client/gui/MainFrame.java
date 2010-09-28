@@ -4,11 +4,13 @@ import gjset.gui.GeneralKeyStrokeFactory;
 import gjset.gui.KeyStrokeFactory;
 import gjset.gui.Launcher;
 import gjset.gui.MacKeyStrokeFactory;
+import gjset.gui.Page;
 import gjset.gui.ResourceManager;
 import gjset.gui.SimpleImagePanel;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -48,17 +50,20 @@ import javax.swing.JPanel;
  */
 public class MainFrame extends JFrame
 {
-	//Store the various pages we might display.
-	private Launcher			launcherDialog;
-
 	// Keyboard components
 	private KeyStrokeFactory	keyStrokeFactory;
 	
 	private JPanel rootPanel;
+	private Page currentPage;
+	
+	private Rectangle playingFieldArea;
 
 	public MainFrame()
 	{
 		super("Combo Cards!");
+		
+		// Currently hard coded information about where the playing area is.
+		playingFieldArea = new Rectangle(14, 14, 996, 522);
 
 		setOSVersion();
 
@@ -110,16 +115,27 @@ public class MainFrame extends JFrame
 		// Finish constructing the window.
 		setVisible(true);
 	}
+	
+	private void loadPage(Page page)
+	{
+		// Destroy the old page, if there was one.
+		if(currentPage != null)
+		{
+			rootPanel.remove(currentPage);
+			currentPage.destroy();
+		}
+		
+		//Load the new page.
+		currentPage = page;
+		rootPanel.add(page);
+	}
 
 	/**
-	 * This method creates and displays the launcher panel.
+	 * TODO: Describe method
+	 *
 	 */
-	private void showLauncherDialog()
+	private void loadFirstPage()
 	{
-		if (launcherDialog == null)
-		{
-			launcherDialog = new Launcher();
-			add(launcherDialog);
-		}
+		loadPage(new LaunchPage(playingFieldArea));
 	}
 }
