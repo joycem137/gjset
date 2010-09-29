@@ -178,11 +178,14 @@ public class Button extends JComponent
 		//Draw the last partial image in.
 		int remainingWidth = areaToPaint.width - cols * imageWidth;
 		
-		BufferedImage temp = new BufferedImage(remainingWidth, imageHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-		Graphics2D g2 = temp.createGraphics();
-		g2.drawImage(image, 0, 0, this);
-		temp.flush();
-		
-		g.drawImage(temp, areaToPaint.width + areaToPaint.x - remainingWidth, areaToPaint.y, this);
+		if(remainingWidth > 0)
+		{
+			BufferedImage temp = new BufferedImage(remainingWidth, imageHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+			Graphics2D g2 = temp.createGraphics();
+			g2.drawImage(image, 0, 0, this);
+			temp.flush();
+			
+			g.drawImage(temp, areaToPaint.width + areaToPaint.x - remainingWidth, areaToPaint.y, this);
+		}
 	}
 }
