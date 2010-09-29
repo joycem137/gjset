@@ -1,4 +1,5 @@
-package gjset.gui;
+package gjset.gui.framework;
+
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -139,11 +140,11 @@ public class Border extends JComponent
 	}
 
 	/**
-	 * Paint a single texture verticall up and down the screen.
+	 * Paint a single texture vertical up and down the screen.
 	 *
-	 * @param g
-	 * @param image
-	 * @param areaToPaint
+	 * @param g The current graphics context.
+	 * @param image The Image to use as a texture
+	 * @param areaToPaint A Rectangle representing the area to paint.
 	 */
 	protected void texturePaintVertical(Graphics g, Image image, Rectangle areaToPaint)
 	{
@@ -169,12 +170,27 @@ public class Border extends JComponent
 	}
 
 	/**
-	 * TODO: Describe method
+	 * Returns the interior of the border.
 	 *
-	 * @return
+	 * @return A Rectangle object representing the interior of the border.
 	 */
-	public int getBorderWidth()
+	public Rectangle getInnerArea()
 	{
-		return bottom.getHeight(this);
+		return new Rectangle(left.getWidth(this), top.getHeight(this),
+							getWidth() - left.getWidth(this) - right.getWidth(this),
+							getHeight() - top.getHeight(this) - bottom.getHeight(this));
+	}
+	
+	/**
+	 * 
+	 * Returns the area of the entire top bar.  Used for titles when they are available.
+	 *
+	 * @return A Rectangle object representing the title bar.
+	 */
+	public Rectangle getTitleArea()
+	{
+		return new Rectangle(cornerUL.getWidth(this), 0,
+							getWidth() - cornerUL.getWidth(this) - cornerUR.getWidth(this),
+							top.getHeight(this));
 	}
 }

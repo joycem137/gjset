@@ -1,6 +1,10 @@
 package gjset.gui;
 
 
+import gjset.gui.framework.Page;
+import gjset.gui.framework.ResourceManager;
+import gjset.gui.framework.SimpleImagePanel;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -102,8 +106,11 @@ public class MainFrame extends JFrame
 		rootPanel.setLocation(0, 0);
 		rootPanel.setSize(1024, 768);
 
-		//Set the page translucent.
+		// Set the page translucent.
 		setBackground(new Color(1f, 1f, 1f, 0.0f));
+		
+		// Turn of resizability.  I'm a control freak. :)
+		setResizable(false);
 		
 		// Finish constructing the window.
 		setVisible(true);
@@ -124,7 +131,7 @@ public class MainFrame extends JFrame
 	}
 
 	/**
-	 * TODO: Describe method
+	 * Loads the first page.
 	 *
 	 */
 	private void loadFirstPage()
