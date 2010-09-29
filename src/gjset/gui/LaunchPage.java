@@ -7,13 +7,15 @@ import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /* 
@@ -52,6 +54,7 @@ public class LaunchPage extends Page
 {
 	private Color	realBackgroundColor;
 	private Border	border;
+	private SimpleLookAndFeel	lnf;
 
 	/**
 	 * This creates a LaunchPage with a link back to the parent {@link MainFrame} that created
@@ -63,16 +66,14 @@ public class LaunchPage extends Page
 	{
 		super();
 		
-		setBackground(new Color(1f, 1f, 1f, 0f));
+		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
 		setBasicInformation(frame);
 		
-		realBackgroundColor = new Color(227, 209, 156);
+		realBackgroundColor = lnf.getDialogBackgroundColor();
 		
 		createBorder();
-		
 		createTitle();
-		
 		createButtons();
 	}
 
@@ -81,21 +82,56 @@ public class LaunchPage extends Page
 	 *
 	 */
 	private void createButtons()
-	{
-		Button button = new Button(new AbstractAction()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					System.out.println("I was pressed!  Yay!");
-				}
-			}, "button_brown");
-		
-		//Set the button's location
+	{	
 		Rectangle usableArea = border.getInnerArea();
 		
-		button.setSize(37, 37);
-		button.setLocation(68, 88);
+		addButtonAndLabel(new AbstractAction("Play Against the Computer?")
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO: Load play game page.
+			}
+		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
+		
+		addButtonAndLabel(new AbstractAction("Join a Game?")
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO: Load Join a game page.
+			}
+		}, new Rectangle(usableArea.x, 100, usableArea.width, 40));
+		
+		addButtonAndLabel(new AbstractAction("Host a Game?")
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO: Load Host a game page.
+			}
+		}, new Rectangle(usableArea.x, 150, usableArea.width, 40));
+	}
+
+	/**
+	 * Added a button and an associated label.
+	 *
+	 * @param action
+	 * @param string
+	 */
+	private void addButtonAndLabel(Action action, Rectangle frame)
+	{
+		// You may now proceed to add all of the buttons and labels.
+		Button button = new Button(action, lnf.getDialogButtonStyle());
+		
+		button.setSize(40, 22);
+		button.setLocation(40, frame.y);
 		add(button);
+		
+		JLabel label = new JLabel((String)action.getValue(Action.NAME));
+		label.setFont(lnf.getDialogFont());
+
+		label.setLocation(115, frame.y - 10);
+		label.setSize(frame.width - label.getX(), 40);
+		
+		add(label);
 	}
 
 	/**
@@ -108,10 +144,10 @@ public class LaunchPage extends Page
 		title = new FancyLabel("New Game", SwingConstants.CENTER);
 		
 		// Design the label.
-		title.setFont(new Font("Tahoma Bold", Font.BOLD, 20));
+		title.setFont(lnf.getDialogTitleFont());
 		title.setFancyEffect(FancyLabel.OUTLINE);
-		title.setForeground(Color.white);
-		title.setBackground(Color.black);
+		title.setForeground(lnf.getDialogTitleFG());
+		title.setBackground(lnf.getDialogTitleBG());
 		
 		// Center the title in the title area of the border.
 		Rectangle titleArea = border.getTitleArea();
@@ -128,7 +164,7 @@ public class LaunchPage extends Page
 	 */
 	private void createBorder()
 	{
-		border = new Border("window", true);
+		border = new Border(lnf.getBorderStyle(), true);
 		border.setSize(getWidth(), getHeight());
 		add(border);
 	}
@@ -141,8 +177,8 @@ public class LaunchPage extends Page
 	private void setBasicInformation(Rectangle frame)
 	{
 		//Set page information
-		int pageWidth = 531;
-		int pageHeight = 325;
+		int pageWidth = 435;
+		int pageHeight = 220;
 		
 		setSize(pageWidth, pageHeight);
 		
