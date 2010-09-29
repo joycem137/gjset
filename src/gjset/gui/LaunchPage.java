@@ -1,12 +1,16 @@
 package gjset.gui;
 
 
+import gjset.gui.framework.Border;
+import gjset.gui.framework.FancyLabel;
+import gjset.gui.framework.Page;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 /* 
@@ -72,11 +76,21 @@ public class LaunchPage extends Page
 	 */
 	private void createTitle()
 	{
-		JLabel title;
-		title = new JLabel("New Game", SwingConstants.CENTER);
+		FancyLabel title;
+		title = new FancyLabel("New Game", SwingConstants.CENTER);
+		
+		// Design the label.
 		title.setFont(new Font("Tahoma Bold", Font.BOLD, 20));
-		title.setSize(531, 28);
-		title.setLocation(0, 0);
+		title.setFancyEffect(FancyLabel.OUTLINE);
+		title.setForeground(Color.white);
+		title.setBackground(Color.black);
+		
+		// Center the title in the title area of the border.
+		Rectangle titleArea = border.getTitleArea();
+		title.setSize(titleArea.width, titleArea.height);
+		title.setLocation(titleArea.x, titleArea.y);
+		
+		// Add the title to the border.
 		border.add(title);
 	}
 
@@ -94,7 +108,7 @@ public class LaunchPage extends Page
 	/**
 	 * Sets the basic position and size of the page.
 	 *
-	 * @param frame
+	 * @param frame A Rectangle representing the frame this page sits in.
 	 */
 	private void setBasicInformation(Rectangle frame)
 	{
@@ -113,8 +127,11 @@ public class LaunchPage extends Page
 	
 	public void paintComponent(Graphics g)
 	{
-		int borderWidth = border.getBorderWidth();
+		super.paintComponent(g);
+		
+		//Fill in the background.
+		Rectangle backgroundArea = border.getInnerArea();
 		g.setColor(realBackgroundColor);
-		g.fillRect(borderWidth, borderWidth, getWidth() - 2 * borderWidth, getHeight() - 2 * borderWidth);
+		((Graphics2D) g).fill(backgroundArea);
 	}
 }

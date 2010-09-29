@@ -1,7 +1,4 @@
-package gjset.gui;
-
-import java.awt.Graphics;
-import java.awt.Image;
+package gjset.gui.framework;
 
 import javax.swing.JPanel;
 
@@ -36,17 +33,16 @@ import javax.swing.JPanel;
 /**
  *
  */
-public class SimpleImagePanel extends JPanel
+public abstract class Page extends JPanel
 {
-	protected Image image;
 	
-	public SimpleImagePanel(Image image)
+	/**
+	 *
+	 * Called when the page is destroyed to remove any listeners
+	 * it may have created.
+	 *
+	 */
+	public void destroy()
 	{
-		this.image = image;
-	}
-	
-	public void paintComponent(Graphics g)
-	{
-		g.drawImage(image, 0, 0, this);
 	}
 }

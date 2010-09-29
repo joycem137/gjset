@@ -1,6 +1,8 @@
 package gjset.gui;
 
 
+import gjset.gui.framework.Page;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
