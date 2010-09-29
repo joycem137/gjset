@@ -2,6 +2,7 @@ package gjset.gui;
 
 
 import gjset.gui.framework.Border;
+import gjset.gui.framework.Button;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
 
@@ -10,7 +11,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.SwingConstants;
 
 /* 
@@ -42,8 +45,9 @@ import javax.swing.SwingConstants;
  */
 
 /**
- *
+ * This page provides launching points for the other applications that we might run.
  */
+@SuppressWarnings("serial")
 public class LaunchPage extends Page
 {
 	private Color	realBackgroundColor;
@@ -68,6 +72,30 @@ public class LaunchPage extends Page
 		createBorder();
 		
 		createTitle();
+		
+		createButtons();
+	}
+
+	/**
+	 * Adds all of the buttons to the screen.
+	 *
+	 */
+	private void createButtons()
+	{
+		Button button = new Button(new AbstractAction()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					System.out.println("I was pressed!  Yay!");
+				}
+			}, "button_brown");
+		
+		//Set the button's location
+		Rectangle usableArea = border.getInnerArea();
+		
+		button.setSize(37, 37);
+		button.setLocation(68, 88);
+		add(button);
 	}
 
 	/**

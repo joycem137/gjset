@@ -51,6 +51,8 @@ public class FancyLabel extends JComponent
 
 	public FancyLabel(String text, int horizontalAlignment)
 	{
+		super();
+		
 		this.text = text;
 		this.horizontalAlignment = horizontalAlignment;
 	}

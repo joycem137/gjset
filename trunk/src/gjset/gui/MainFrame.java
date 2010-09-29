@@ -45,6 +45,7 @@ import javax.swing.JPanel;
  * <P>
  * The launcher, game panel, and other panels will all be places on top of this one.
  */
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame
 {
 	// Keyboard components
@@ -79,11 +80,17 @@ public class MainFrame extends JFrame
 		if (System.getProperty("os.name").contains("Mac OS X"))
 		{
 			keyStrokeFactory = new MacKeyStrokeFactory();
+
+			// Set the page translucent.
+			setBackground(new Color(1f, 1f, 1f, 0.0f));
+			getRootPane().putClientProperty("apple.awt.draggableWindowBackground", false);
 		}
 		else
 		// use this for Windows and other non-Mac systems.
 		{
 			keyStrokeFactory = new GeneralKeyStrokeFactory();
+			
+			setBackground(new Color(0, 102, 0));
 		}
 	}
 
@@ -105,9 +112,6 @@ public class MainFrame extends JFrame
 		rootPanel.setLayout(null);
 		rootPanel.setLocation(0, 0);
 		rootPanel.setSize(1024, 768);
-
-		// Set the page translucent.
-		setBackground(new Color(1f, 1f, 1f, 0.0f));
 		
 		// Turn of resizability.  I'm a control freak. :)
 		setResizable(false);
