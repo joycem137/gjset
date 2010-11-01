@@ -14,7 +14,7 @@ public class ClientGUIModel extends Observable
 	 */
 	public int getCardsInDeck()
 	{
-		return 33;
+		return 84;
 	}
 
 }

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 /**
  *	This displays the deck to players.
  */
+@SuppressWarnings("serial")
 public class DeckPanel extends JPanel
 {
 	private int cardsInDeck;

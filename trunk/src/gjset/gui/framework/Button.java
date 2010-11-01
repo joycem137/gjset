@@ -1,12 +1,10 @@
 package gjset.gui.framework;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -140,7 +138,7 @@ public class Button extends JComponent
 			Rectangle areaToPaint = new Rectangle(leftDown.getWidth(this), 0, 
 					getWidth() - leftDown.getWidth(this) - rightDown.getWidth(this), 
 					middleDown.getHeight(this));
-			texturePaintHorizontal(g, middleDown, areaToPaint);
+			PaintUtilities.texturePaintHorizontal(this, g, middleDown, areaToPaint);
 		}
 		else
 		{
@@ -152,40 +150,7 @@ public class Button extends JComponent
 			Rectangle areaToPaint = new Rectangle(leftUp.getWidth(this), 0, 
 					getWidth() - leftUp.getWidth(this) - rightUp.getWidth(this), 
 					middleUp.getHeight(this));
-			texturePaintHorizontal(g, middleUp, areaToPaint);
-		}
-	}
-
-	/**
-	 * Paint a single texture horizontally across the screen.
-	 *
-	 * @param g
-	 * @param image
-	 * @param areaToPaint
-	 */
-	protected void texturePaintHorizontal(Graphics g, Image image, Rectangle areaToPaint)
-	{
-		int imageWidth = image.getWidth(this);
-		int imageHeight = image.getHeight(this);
-		
-		int cols = areaToPaint.width / imageWidth;
-		
-		for (int x = 0; x < cols; x++) 
-		{
-			g.drawImage(image, x * imageWidth + areaToPaint.x, areaToPaint.y, this);
-		}
-		
-		//Draw the last partial image in.
-		int remainingWidth = areaToPaint.width - cols * imageWidth;
-		
-		if(remainingWidth > 0)
-		{
-			BufferedImage temp = new BufferedImage(remainingWidth, imageHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-			Graphics2D g2 = temp.createGraphics();
-			g2.drawImage(image, 0, 0, this);
-			temp.flush();
-			
-			g.drawImage(temp, areaToPaint.width + areaToPaint.x - remainingWidth, areaToPaint.y, this);
+			PaintUtilities.texturePaintHorizontal(this, g, middleUp, areaToPaint);
 		}
 	}
 }
