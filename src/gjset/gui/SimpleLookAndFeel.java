@@ -60,6 +60,7 @@ public class SimpleLookAndFeel
 	{
 		defaultFont = new Font("Tahoma Bold", Font.BOLD, 20);
 		dialogBackgroundColor = new Color(227, 209, 156);
+		
 	}
 	
 	public Font getDialogFont()
@@ -95,5 +96,17 @@ public class SimpleLookAndFeel
 	public Color getDialogTitleBG()
 	{
 		return Color.black;
+	}
+
+	public Font getDeckSizeFont()
+	{
+		Font deckFont = defaultFont.deriveFont(35.0f);
+		
+		return deckFont;
+	}
+
+	public Color getDeckSizeColor()
+	{
+		return Color.white;
 	}
 }

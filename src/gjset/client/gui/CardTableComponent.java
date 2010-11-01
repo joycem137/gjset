@@ -93,6 +93,15 @@ public class CardTableComponent extends JPanel
 	}
 
 	/**
+	 * TODO: Describe constructor
+	 *
+	 */
+	public CardTableComponent()
+	{
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
 	 * 
 	 * This method should be called any time the {@link CardTable} data changes within the {@link GameEngine}.
 	 * This method will be called any time the highlighting, physical arrangement, or number/composition of

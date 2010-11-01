@@ -1,6 +1,9 @@
 package gjset.gui;
 
 
+import gjset.client.gui.ClientGUIController;
+import gjset.client.gui.ClientGUIModel;
+import gjset.client.gui.LocalClientGUIController;
 import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
@@ -55,7 +58,7 @@ public class LaunchPage extends Page
 	private Color	realBackgroundColor;
 	private Border	border;
 	private SimpleLookAndFeel	lnf;
-	private MainFrame	mainframe;
+	private MainFrame	mainFrame;
 
 	/**
 	 * This creates a LaunchPage with a link back to the parent {@link MainFrame} that created
@@ -67,11 +70,11 @@ public class LaunchPage extends Page
 	{
 		super();
 		
-		this.mainframe = mainframe;
+		this.mainFrame = mainframe;
 		
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
-		setBasicInformation(frame);
+		configurePage(frame);
 		
 		realBackgroundColor = lnf.getDialogBackgroundColor();
 		
@@ -92,8 +95,11 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				PlayGamePage page = new PlayGamePage();
-				mainframe.loadPage(page);
+				ClientGUIModel guiModel = new ClientGUIModel();
+				ClientGUIController controller = new LocalClientGUIController(guiModel);
+				PlayGamePage page = new PlayGamePage(controller, mainFrame);
+				
+				mainFrame.loadPage(page);
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		
@@ -178,12 +184,8 @@ public class LaunchPage extends Page
 	 *
 	 * @param frame A Rectangle representing the frame this page sits in.
 	 */
-	private void setBasicInformation(Rectangle frame)
-	{
-		// Turn off the automatic layout system.
-		setLayout(null);
-		setOpaque(false);
-		
+	private void configurePage(Rectangle frame)
+	{	
 		//Set page information
 		int pageWidth = 435;
 		int pageHeight = 220;

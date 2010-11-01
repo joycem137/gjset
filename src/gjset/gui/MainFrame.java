@@ -6,6 +6,8 @@ import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 
@@ -54,14 +56,11 @@ public class MainFrame extends JFrame
 	private JPanel rootPanel;
 	private Page currentPage;
 	
-	private Rectangle playingFieldArea;
+	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 37, 996, 522);
 
 	public MainFrame()
 	{
 		super("Combo Cards!");
-		
-		// Currently hard coded information about where the playing area is.
-		playingFieldArea = new Rectangle(14, 14, 996, 522);
 
 		setOSVersion();
 
@@ -125,15 +124,11 @@ public class MainFrame extends JFrame
 		// Destroy the old page, if there was one.
 		if(currentPage != null)
 		{
-			System.out.println("Destroying page " + currentPage);
-			
 			rootPanel.remove(currentPage);
 			currentPage.destroy();
 		}
 		
 		//Load the new page.
-		System.out.println("Adding page " + page);
-		
 		currentPage = page;
 		rootPanel.add(page);
 		
@@ -147,6 +142,6 @@ public class MainFrame extends JFrame
 	 */
 	private void loadFirstPage()
 	{
-		loadPage(new LaunchPage(playingFieldArea, this));
+		loadPage(new LaunchPage(PLAYING_FIELD_AREA, this));
 	}
 }

@@ -1,10 +1,10 @@
 package gjset.client.gui;
 
-import java.awt.Color;
-
+import gjset.gui.MainFrame;
 import gjset.gui.framework.Page;
 
-import javax.swing.JLabel;
+import java.util.Observable;
+import java.util.Observer;
 
 /* 
  *  LEGAL STUFF
@@ -35,20 +35,65 @@ import javax.swing.JLabel;
  */
 
 /**
- *
+ * This class starts a game
  */
-public class PlayGamePage extends Page
+@SuppressWarnings("serial")
+public class PlayGamePage extends Page implements Observer
 {
-	public PlayGamePage()
+	private MainFrame	mainFrame;
+	private ClientGUIController controller;
+	
+	// All of the various screen components.
+	private DeckPanel	deckPanel;
+
+	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
-		setOpaque(false);
-		setSize(1024, 768);
-		setLocation(0,0);
-		setLayout(null);
+		super();
 		
-		JLabel label = new JLabel("test");
-		label.setLocation(200,200);
-		label.setSize(200,200);
-		add(label);
+		this.mainFrame = mainFrame;
+		
+		configurePage();
+		
+		createDeck();
+
+		// Obtain the game controller
+		this.controller = controller;
+		controller.getClientGUIModel().addObserver(this);
+	}
+	
+	/**
+	 * Create the deck object.
+	 *
+	 */
+	private void createDeck()
+	{
+		deckPanel = new DeckPanel();
+		add(deckPanel);
+	}
+
+	/**
+	 * Configure the page's basic settings.
+	 *
+	 */
+	private void configurePage()
+	{
+		// We'll want to cover the *entire* screen.
+		setSize(mainFrame.getSize());
+		setLocation(0,0);
+	}
+	/**
+	 * Cycle through all of the screen settings and place objects in their appropriate locations.
+	 *
+	 * @param observable
+	 * @param object
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable observable, Object object)
+	{
+		ClientGUIModel model = (ClientGUIModel) observable;
+		
+		int cardsInDeck = model.getCardsInDeck();
+		deckPanel.updateSize(cardsInDeck);
+		
 	}
 }

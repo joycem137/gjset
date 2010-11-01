@@ -43,15 +43,6 @@ public class GjSetMain
 				new MainFrame();
 			}
 		});
-
-		/*LocalClientLink player = new LocalClientLink();
-		LocalEngineLink engine = new LocalEngineLink();
-
-		GameEngine gc = new GameEngine(player);
-		MainGamePanel gui = new MainGamePanel(engine);
-
-		player.setGUI(gui);
-		engine.setEngine(gc);*/
 	}
 
 }
