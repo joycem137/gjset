@@ -1,6 +1,7 @@
 package gjset.gui;
 
 
+import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.FancyLabel;
@@ -15,7 +16,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /* 
@@ -55,6 +55,7 @@ public class LaunchPage extends Page
 	private Color	realBackgroundColor;
 	private Border	border;
 	private SimpleLookAndFeel	lnf;
+	private MainFrame	mainframe;
 
 	/**
 	 * This creates a LaunchPage with a link back to the parent {@link MainFrame} that created
@@ -62,9 +63,11 @@ public class LaunchPage extends Page
 	 *
 	 * @param mainFrame - The parent frame of this object.
 	 */
-	public LaunchPage(Rectangle frame)
+	public LaunchPage(Rectangle frame, MainFrame mainframe)
 	{
 		super();
+		
+		this.mainframe = mainframe;
 		
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
@@ -89,7 +92,8 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Load play game page.
+				PlayGamePage page = new PlayGamePage();
+				mainframe.loadPage(page);
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		
@@ -176,6 +180,10 @@ public class LaunchPage extends Page
 	 */
 	private void setBasicInformation(Rectangle frame)
 	{
+		// Turn off the automatic layout system.
+		setLayout(null);
+		setOpaque(false);
+		
 		//Set page information
 		int pageWidth = 435;
 		int pageHeight = 220;
