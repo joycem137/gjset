@@ -53,6 +53,7 @@ public class Border extends JComponent
 	
 	public Border(String style, boolean useTitle)
 	{
+		setLayout(null);
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		
 		if(useTitle)
@@ -131,12 +132,15 @@ public class Border extends JComponent
 		//Draw the last partial image in.
 		int remainingWidth = areaToPaint.width - cols * imageWidth;
 		
-		BufferedImage temp = new BufferedImage(remainingWidth, imageHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-		Graphics2D g2 = temp.createGraphics();
-		g2.drawImage(image, 0, 0, this);
-		temp.flush();
-		
-		g.drawImage(temp, areaToPaint.width + areaToPaint.x - remainingWidth, areaToPaint.y, this);
+		if(remainingWidth > 0)
+		{
+			BufferedImage temp = new BufferedImage(remainingWidth, imageHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+			Graphics2D g2 = temp.createGraphics();
+			g2.drawImage(image, 0, 0, this);
+			temp.flush();
+			
+			g.drawImage(temp, areaToPaint.width + areaToPaint.x - remainingWidth, areaToPaint.y, this);
+		}
 	}
 
 	/**
@@ -161,12 +165,15 @@ public class Border extends JComponent
 		//Draw the last partial image in.
 		int remainingHeight = areaToPaint.height - rows * imageHeight;
 		
-		BufferedImage temp = new BufferedImage(imageWidth, remainingHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-		Graphics2D g2 = temp.createGraphics();
-		g2.drawImage(image, 0, 0, this);
-		temp.flush();
-		
-		g.drawImage(temp, areaToPaint.x, areaToPaint.height + areaToPaint.y - remainingHeight, this);
+		if(remainingHeight > 0)
+		{
+			BufferedImage temp = new BufferedImage(imageWidth, remainingHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+			Graphics2D g2 = temp.createGraphics();
+			g2.drawImage(image, 0, 0, this);
+			temp.flush();
+			
+			g.drawImage(temp, areaToPaint.x, areaToPaint.height + areaToPaint.y - remainingHeight, this);
+		}
 	}
 
 	/**

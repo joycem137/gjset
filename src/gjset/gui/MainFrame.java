@@ -89,7 +89,6 @@ public class MainFrame extends JFrame
 		// use this for Windows and other non-Mac systems.
 		{
 			keyStrokeFactory = new GeneralKeyStrokeFactory();
-			
 			setBackground(new Color(0, 102, 0));
 		}
 	}
@@ -106,6 +105,7 @@ public class MainFrame extends JFrame
 		//Add the background to the image
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		Image backgroundImage = resourceManager.getImage("window_main.png");
+		
 		rootPanel = new SimpleImagePanel(backgroundImage);
 		add(rootPanel);
 		
@@ -120,18 +120,25 @@ public class MainFrame extends JFrame
 		setVisible(true);
 	}
 	
-	private void loadPage(Page page)
+	public void loadPage(Page page)
 	{
 		// Destroy the old page, if there was one.
 		if(currentPage != null)
 		{
+			System.out.println("Destroying page " + currentPage);
+			
 			rootPanel.remove(currentPage);
 			currentPage.destroy();
 		}
 		
 		//Load the new page.
+		System.out.println("Adding page " + page);
+		
 		currentPage = page;
 		rootPanel.add(page);
+		
+		rootPanel.revalidate();
+		repaint();
 	}
 
 	/**
@@ -140,6 +147,6 @@ public class MainFrame extends JFrame
 	 */
 	private void loadFirstPage()
 	{
-		loadPage(new LaunchPage(playingFieldArea));
+		loadPage(new LaunchPage(playingFieldArea, this));
 	}
 }
