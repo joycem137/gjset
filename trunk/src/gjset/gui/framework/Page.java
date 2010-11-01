@@ -36,6 +36,15 @@ import javax.swing.JPanel;
 public abstract class Page extends JPanel
 {
 	
+	public Page()
+	{
+		super();
+		
+		// Turn off the automatic layout system.
+		setLayout(null);
+		setOpaque(false);
+	}
+	
 	/**
 	 *
 	 * Called when the page is destroyed to remove any listeners
