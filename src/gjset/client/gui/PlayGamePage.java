@@ -55,12 +55,24 @@ public class PlayGamePage extends Page implements Observer
 		configurePage();
 		
 		createDeck();
+		
+		createButtons();
 
 		// Obtain the game controller
 		this.controller = controller;
 		controller.getClientGUIModel().addObserver(this);
 	}
 	
+	/**
+	 * Create the call set and draw buttons.
+	 *
+	 */
+	private void createButtons()
+	{
+		//callSetButton = new ComplexButton();
+		//add(callSetButton);
+	}
+
 	/**
 	 * Create the deck object.
 	 *
@@ -82,7 +94,7 @@ public class PlayGamePage extends Page implements Observer
 		setLocation(0,0);
 	}
 	/**
-	 * Cycle through all of the screen settings and place objects in their appropriate locations.
+	 * Check all of the objects in the model to determine whether any have changed.
 	 *
 	 * @param observable
 	 * @param object
