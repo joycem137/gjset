@@ -1,5 +1,7 @@
 package gjset.client.gui;
 
+import gjset.data.CardTable;
+
 import java.util.Observable;
 
 /**
@@ -25,6 +27,16 @@ public class ClientGUIModel extends Observable
 	public boolean canCallSet()
 	{
 		return true;
+	}
+
+	/**
+	 * Returns the card table associated with this model.
+	 *
+	 * @return
+	 */
+	public CardTable getCardTable()
+	{
+		return null;
 	}
 
 }
