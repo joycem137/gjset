@@ -128,8 +128,6 @@ public class CardPanel extends JComponent
 	
 	public void paintComponent(Graphics g)
 	{
-		System.out.println("CardPanel.paintComponent()");
-		
 		// Draw the card background and abort early.
 		if(!faceUp || cardData == null)
 		{
