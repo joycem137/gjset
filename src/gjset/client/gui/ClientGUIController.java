@@ -15,4 +15,16 @@ public interface ClientGUIController
 	 */
 	ClientGUIModel getClientGUIModel();
 
+	/**
+	 * Initiates a request to call set from the client machine.
+	 *
+	 */
+	void callSet();
+
+	/**
+	 * Initiates a request to draw more cards on the client machine.
+	 *
+	 */
+	void drawMoreCards();
+
 }

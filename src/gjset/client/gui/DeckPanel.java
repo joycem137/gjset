@@ -78,7 +78,7 @@ public class DeckPanel extends JPanel
 		
 		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
 
-		setSize(100, deckIcon.getHeight(this) + NUDGE);
+		setSize(95, deckIcon.getHeight(this) + NUDGE);
 		setLocation(playingFrame.width - getWidth() + playingFrame.x - NUDGE, playingFrame.height - getHeight() + 2 * NUDGE);
 	}
 
