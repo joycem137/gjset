@@ -48,7 +48,7 @@ public class ConcreteClientGUIController implements ClientGUIController
 	 */
 	public void drawMoreCards()
 	{
-		System.out.println("Draw more cards!");
+		model.drawCards();
 	}
 
 	/**
@@ -59,7 +59,17 @@ public class ConcreteClientGUIController implements ClientGUIController
 	 */
 	public void selectCard(Card cardData)
 	{
-		System.out.println("Yay! Card selected!");
+		System.out.println("Yay! Card " + cardData + " selected!");
+	}
+
+	/**
+	 * TODO: Describe overridden method
+	 *
+	 * @see gjset.client.gui.ClientGUIController#simulate()
+	 */
+	public void simulate()
+	{
+		model.simulate();
 	}
 
 }

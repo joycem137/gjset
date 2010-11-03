@@ -228,6 +228,7 @@ public class SymbolImageFactory
 	 */
 	public Image getImage(int number, int color, int shape, int shading)
 	{
+		System.out.println("Getting image");
 		return masterImages[number - 1][color - 1][shape - 1][shading - 1];
 	}
 
