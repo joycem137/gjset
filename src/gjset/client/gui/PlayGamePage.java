@@ -58,6 +58,7 @@ public class PlayGamePage extends Page implements Observer
 	private DeckPanel deckPanel;
 	private BigButton callSetButton;
 	private BigButton drawButton;
+	private CardTablePanel cardTablePanel;
 
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
@@ -67,6 +68,8 @@ public class PlayGamePage extends Page implements Observer
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
 		configurePage();
+
+		createCardTable();
 		createDeck();
 		createButtons();
 
@@ -75,6 +78,16 @@ public class PlayGamePage extends Page implements Observer
 		controller.getClientGUIModel().addObserver(this);
 	}
 	
+	/**
+	 * Create the objects that are going to lie on the table.
+	 *
+	 */
+	private void createCardTable()
+	{
+		cardTablePanel = new CardTablePanel();
+		add(cardTablePanel);
+	}
+
 	/**
 	 * Create the call set and draw buttons.
 	 *
