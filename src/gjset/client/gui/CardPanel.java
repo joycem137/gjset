@@ -18,19 +18,24 @@ import javax.swing.event.MouseInputAdapter;
 public class CardPanel extends JComponent
 {
 	private Image cardImage;
-	private Image	cardHalo;
-	private Image	cardBack;
+	private Image cardHalo;
+	private Image cardBack;
 	
 	private SymbolImageFactory symbolFactory;
+	private ClientGUIController controller;
 	
-	private boolean selected;
+	private boolean highlighted;
 	private boolean faceUp;
+	private Card cardData;
 	
-	public CardPanel()
+	public CardPanel(ClientGUIController controller, Card cardData)
 	{
 		super();
 		
-		selected = false;
+		this.cardData = cardData;
+		this.controller = controller;
+		
+		highlighted = false;
 		faceUp = true;
 		
 		symbolFactory = SymbolImageFactory.getInstance();
@@ -39,10 +44,47 @@ public class CardPanel extends JComponent
 		configurePanel();
 		addActionListener();
 	}
+	
+	/**
+	 * 
+	 * Resets this cards information to the indicated card data.
+	 *
+	 * @param cardData
+	 */
+	public void setCardData(Card cardData)
+	{
+		this.cardData = cardData;
+		repaint();
+	}
+	
+	/**
+	 * 
+	 * Can be used to turn this card face up or face down.
+	 *
+	 * @param value
+	 */
+	public void setFaceUp(boolean value)
+	{
+		this.faceUp = value;
+		repaint();
+	}
+	
+	/**
+	 * 
+	 * This function is used to set whether this card should be highlighted or not.
+	 *
+	 * @param value
+	 */
+	public void setHighlighted(boolean value)
+	{
+		this.highlighted = value;
+		repaint();
+	}
 
 
 	/**
 	 * Adds all of the action listeners to our class.
+	 * @param controller 
 	 *
 	 */
 	private void addActionListener()
@@ -53,9 +95,8 @@ public class CardPanel extends JComponent
 			{
 				if(faceUp && contains(me.getPoint()))
 				{
-					// Depress the button.
-					selected = !selected;
-					repaint();
+					// Tell the controller we selected this card.
+					controller.selectCard(cardData);
 				}
 			}
 		};
@@ -87,7 +128,7 @@ public class CardPanel extends JComponent
 	public void paintComponent(Graphics g)
 	{
 		// Draw the card background and abort early.
-		if(!faceUp)
+		if(!faceUp || cardData == null)
 		{
 			g.drawImage(cardBack, 0, 0, this);
 			return;
@@ -97,13 +138,13 @@ public class CardPanel extends JComponent
 		g.drawImage(cardImage, 0, 0, this);
 		
 		// Draw the halo
-		if(selected)
+		if(highlighted)
 		{
 			g.drawImage(cardHalo, 0, 0, this);
 		}
 		
 		// Draw the symbols, centered on the image.
-		Image symbolImage = symbolFactory.getImage(3, Card.COLOR_RED, Card.SHAPE_OVAL, Card.SHADING_STRIPED);
+		Image symbolImage = symbolFactory.getImage(cardData);
 		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
 				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
 	}

@@ -1,5 +1,7 @@
 package gjset.client.gui;
 
+import gjset.data.Card;
+
 /**
  *
  */
@@ -47,6 +49,17 @@ public class ConcreteClientGUIController implements ClientGUIController
 	public void drawMoreCards()
 	{
 		System.out.println("Draw more cards!");
+	}
+
+	/**
+	 * Initiates a request to select a given card. Note that this may cause the game to declare a set.
+	 *
+	 * @param cardData
+	 * @see gjset.client.gui.ClientGUIController#selectCard(gjset.data.Card)
+	 */
+	public void selectCard(Card cardData)
+	{
+		System.out.println("Yay! Card selected!");
 	}
 
 }
