@@ -3,10 +3,13 @@ package gjset.gui;
 import gjset.data.Card;
 import gjset.gui.framework.ResourceManager;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.RGBImageFilter;
+
+import javax.swing.JPanel;
 
 /**
  *
@@ -31,7 +34,7 @@ public class SymbolImageFactory
 		return singleton;
 	}
 	
-	private static final int SHAPE_SHADOW_OFFSET = 1;
+	private static final int SYMBOL_BUFFER = 2;
 
 	private Image baseImages[][];
 	private Image shadowImages[][];
@@ -136,12 +139,11 @@ public class SymbolImageFactory
 		Image baseImage = baseImages[shape - 1][shading - 1];
 		Image shadowImage = shadowImages[shape - 1][shading - 1];
 		
-		int imageHeight = baseImage.getHeight(null);
-		int imageWidth = baseImage.getWidth(null);
+		int imageHeight = shadowImage.getHeight(null);
+		int imageWidth = shadowImage.getWidth(null);
 		
 		// Create the image object to store the drawing of the card.
-		BufferedImage image = new BufferedImage(imageWidth + SHAPE_SHADOW_OFFSET * 2, 
-				number * (imageHeight + SHAPE_SHADOW_OFFSET) + SHAPE_SHADOW_OFFSET, 
+		BufferedImage image = new BufferedImage(imageWidth, SYMBOL_BUFFER * (number - 1) + number * imageHeight, 
 				BufferedImage.TYPE_INT_ARGB_PRE);
 
 		// Get the image's graphics context.
@@ -151,13 +153,14 @@ public class SymbolImageFactory
 		int yPos;
 		for (int i = 0; i < number; i++)
 		{
-			yPos = SHAPE_SHADOW_OFFSET + i * (imageHeight + SHAPE_SHADOW_OFFSET);
+			yPos = i * (imageHeight + SYMBOL_BUFFER);
 			
 			// Draw the shadow
-			g.drawImage(shadowImage, 2 * SHAPE_SHADOW_OFFSET, yPos + SHAPE_SHADOW_OFFSET, null);
+			g.drawImage(shadowImage, 0, yPos, null);
 
 			// Draw the actual symbol.
-			g.drawImage(baseImage, SHAPE_SHADOW_OFFSET, yPos, null);
+			Image colorSymbol = colorizeSymbol(color, baseImage);
+			g.drawImage(colorSymbol, 0, yPos, null);
 		}
 
 		// Flush the image drawing.
@@ -166,20 +169,51 @@ public class SymbolImageFactory
 		return image;
 	}
 	
-	// Convert the color property to a Color object.
-	private Color getRealColor(int color)
+	/**
+	 * Draw an image to the indicated graphics context, colorizing it as we go.
+	 *
+	 * @param color
+	 * @param baseImage
+	 */
+	private Image colorizeSymbol(int color, Image baseImage)
 	{
-		switch (color)
-		{
-			case Card.COLOR_RED:
-				return Color.red;
-			case Card.COLOR_BLUE:
-				return Color.blue;
-			case Card.COLOR_GREEN:
-				return Color.green;
-			default:
-				return Color.black;
-		}
+		ColorizingFilter filter = new ColorizingFilter(color);
+		
+		// I guess we need a jpanel to host this?
+		JPanel blah = new JPanel();
+		Image image = blah.createImage(new FilteredImageSource(baseImage.getSource(), filter));
+		
+		return image;
+	}
+	
+	class ColorizingFilter extends RGBImageFilter 
+	{
+		private int colorMask;
+	    public ColorizingFilter(int color)
+	    {
+	    	if(color == Card.COLOR_RED)
+	    	{
+	    		colorMask = 0xff0000;
+	    	}
+	    	else if(color == Card.COLOR_GREEN)
+	    	{
+	    		colorMask = 0x00ff00;
+	    	}
+	    	else if(color == Card.COLOR_BLUE)
+	    	{
+	    		colorMask = 0x0000ff;
+	    	}
+	    	
+	    	// The filter's operation does not depend on the
+	    	// pixel's location, so IndexColorModels can be
+	    	// filtered directly.
+	    	canFilterIndexColorModel = true;
+	    }
+
+	    public int filterRGB(int x, int y, int rgb) 
+	    {	
+	    	return rgb | colorMask;
+	    }
 	}
 
 	/**
