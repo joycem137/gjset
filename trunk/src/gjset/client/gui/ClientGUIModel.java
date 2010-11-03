@@ -1,6 +1,7 @@
 package gjset.client.gui;
 
 import gjset.data.CardTable;
+import gjset.engine.Deck;
 
 import java.util.Observable;
 
@@ -9,6 +10,28 @@ import java.util.Observable;
  */
 public class ClientGUIModel extends Observable
 {	
+	private Deck deck;
+	private CardTable cardTable;
+	
+	public ClientGUIModel()
+	{
+		deck = new Deck();
+		cardTable = new CardTable();
+		deck.shuffle();
+		cardTable.removeCards();
+		cardTable.addCards(deck.drawCards(12));
+	}
+	
+	public void drawCards()
+	{
+		if(deck.remainingCards() > 0)
+		{
+			cardTable.addCards(deck.drawCards(3));
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
 	/**
 	 * Returns the number of cards in the deck.
 	 *
@@ -16,7 +39,7 @@ public class ClientGUIModel extends Observable
 	 */
 	public int getCardsInDeck()
 	{
-		return 84;
+		return deck.remainingCards();
 	}
 
 	/**
@@ -36,7 +59,17 @@ public class ClientGUIModel extends Observable
 	 */
 	public CardTable getCardTable()
 	{
-		return null;
+		return cardTable;
+	}
+
+	/**
+	 * TODO: Describe method
+	 *
+	 */
+	public void simulate()
+	{
+		setChanged();
+		notifyObservers();
 	}
 
 }

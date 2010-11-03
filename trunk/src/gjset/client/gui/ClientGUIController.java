@@ -36,4 +36,10 @@ public interface ClientGUIController
 	 */
 	void selectCard(Card cardData);
 
+	/**
+	 * TODO: Describe method
+	 *
+	 */
+	void simulate();
+
 }

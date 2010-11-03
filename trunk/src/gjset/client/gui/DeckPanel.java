@@ -17,16 +17,13 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class DeckPanel extends JPanel
 {
-	private int cardsInDeck;
 	private Image deckIcon;
 	private JLabel label;
 	private SimpleLookAndFeel lnf;
 	private final int NUDGE = 5;
 	
 	public DeckPanel()
-	{
-		cardsInDeck = 0;
-		
+	{	
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 
 		ResourceManager resourceManager = ResourceManager.getInstance();
@@ -45,12 +42,12 @@ public class DeckPanel extends JPanel
 	 */
 	private void createDeckSizeLabel()
 	{
-		label = new JLabel("35", JLabel.LEFT);
+		label = new JLabel("0", JLabel.RIGHT);
 		
 		label.setForeground(lnf.getDeckSizeColor());
 		label.setFont(lnf.getDeckSizeFont());
 		
-		label.setSize(getWidth(), getHeight());
+		label.setSize(getWidth() - deckIcon.getWidth(this) - NUDGE, getHeight());
 		label.setLocation(0, 0);
 		add(label);
 	}
@@ -78,7 +75,7 @@ public class DeckPanel extends JPanel
 		
 		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
 
-		setSize(95, deckIcon.getHeight(this) + NUDGE);
+		setSize(100, deckIcon.getHeight(this) + NUDGE);
 		setLocation(playingFrame.width - getWidth() + playingFrame.x - NUDGE, playingFrame.height - getHeight() + 2 * NUDGE);
 	}
 
@@ -89,11 +86,8 @@ public class DeckPanel extends JPanel
 	 */
 	public void updateSize(int cardsInDeck)
 	{
-		if(this.cardsInDeck != cardsInDeck)
-		{
-			this.cardsInDeck = cardsInDeck;
-			repaint();
-		}
+		label.setText("" + cardsInDeck);
+		repaint();
 	}
 
 	

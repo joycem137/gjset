@@ -114,6 +114,7 @@ public class BigButton extends JComponent
 	public void setDisabled(boolean b)
 	{
 		enabled = !b;
+		repaint();
 	}
 
 }
