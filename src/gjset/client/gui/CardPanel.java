@@ -111,6 +111,7 @@ public class CardPanel extends JComponent
 	private void configurePanel()
 	{
 		setSize(cardImage.getWidth(this), cardImage.getHeight(this));
+		setOpaque(false);
 	}
 
 	/**
@@ -128,6 +129,7 @@ public class CardPanel extends JComponent
 	public void paintComponent(Graphics g)
 	{
 		System.out.println("CardPanel.paintComponent()");
+		
 		// Draw the card background and abort early.
 		if(!faceUp || cardData == null)
 		{

@@ -5,6 +5,8 @@ import gjset.data.CardTable;
 import gjset.engine.GameEngine;
 import gjset.gui.MainFrame;
 
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
@@ -63,7 +65,10 @@ public class CardTablePanel extends JPanel
 	{
 		// Create the card pane
 		cardPane = new JPanel();
-
+		//cardPane.setLayout(null);
+		cardPane.setOpaque(false);
+		add(cardPane);
+		
 		// Set up the layout
 		layout = new GridLayout(3, 4, CARD_BUFFER, CARD_BUFFER);
 		cardPane.setLayout(layout);
@@ -90,10 +95,8 @@ public class CardTablePanel extends JPanel
 			return;
 		}
 		
-		// Set the layout with the rows and columns.
-		layout.setRows(gridRows);
-		layout.setColumns(gridCols);
-
+		int cardBuffer = CARD_BUFFER;
+		
 		// Remove all of the cards from the card pane.
 		cardPane.removeAll();
 
@@ -107,6 +110,8 @@ public class CardTablePanel extends JPanel
 				cardComponent = new CardPanel(controller, card);
 				cardPane.add(cardComponent);
 				cardComponent.setHighlighted(cardTable.isHighlighted(card));
+				
+				cardComponent.setLocation(col * (cardComponent.getWidth() + CARD_BUFFER), row * (cardComponent.getHeight() + CARD_BUFFER));
 			}
 		}
 
@@ -123,10 +128,9 @@ public class CardTablePanel extends JPanel
 
 		// Relocate the card pane.
 		cardPane.setBounds(xStart, yStart, rowLength, colHeight);
-
-		// Repaint the component.
-		cardPane.doLayout();
-		repaint();
+		
+		cardPane.revalidate();
+		cardPane.repaint();
 	}
 
 	/**
@@ -138,8 +142,23 @@ public class CardTablePanel extends JPanel
 	{
 		//Clear all cards from the screen.
 		cardPane.removeAll();
-		cardPane.doLayout();
+		cardPane.revalidate();
 		cardPane.repaint();
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		
+		System.out.println("Repainting CardTablePanel.");
+		System.out.println("Main panel stats are: " + getBounds());
+		System.out.println("Card pane stats are: " + cardPane.getBounds());
+		Component cards[] = cardPane.getComponents();
+		if(cards.length > 0)
+		{
+			Component card = cards[0];
+			System.out.println("A card looks like " + card.getBounds());
+		}
 	}
 
 }
