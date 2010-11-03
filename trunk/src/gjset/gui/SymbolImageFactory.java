@@ -230,5 +230,16 @@ public class SymbolImageFactory
 	{
 		return masterImages[number - 1][color - 1][shape - 1][shading - 1];
 	}
+
+	/**
+	 * Returns an image that represents the indicated card data.
+	 *
+	 * @param cardData
+	 * @return
+	 */
+	public Image getImage(Card cardData)
+	{
+		return getImage(cardData.getNumber(), cardData.getColor(), cardData.getShape(), cardData.getShading());
+	}
 	
 }

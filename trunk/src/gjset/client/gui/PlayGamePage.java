@@ -84,7 +84,7 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createCardTable()
 	{
-		cardTablePanel = new CardTablePanel();
+		cardTablePanel = new CardTablePanel(controller);
 		add(cardTablePanel);
 	}
 

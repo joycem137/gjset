@@ -1,5 +1,7 @@
 package gjset.client.gui;
 
+import gjset.data.Card;
+
 
 
 /**
@@ -26,5 +28,12 @@ public interface ClientGUIController
 	 *
 	 */
 	void drawMoreCards();
+
+	/**
+	 * Initiates a request from the client to select the indicated card. This may cause a "set" to be called.
+	 *
+	 * @param cardData
+	 */
+	void selectCard(Card cardData);
 
 }
