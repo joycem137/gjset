@@ -182,12 +182,15 @@ public class PlayGamePage extends Page implements Observer
 	{
 		ClientGUIModel model = (ClientGUIModel) observable;
 		
-		// Update the cards
+		// Update the deck
 		int cardsInDeck = model.getCardsInDeck();
 		deckPanel.updateSize(cardsInDeck);
 		
 		// Determine if we can call set or draw more cards.
 		drawButton.setDisabled(cardsInDeck <= 0);
 		callSetButton.setDisabled(model.canCallSet());
+		
+		// Update the card table
+		cardTablePanel.update(model.getCardTable());
 	}
 }
