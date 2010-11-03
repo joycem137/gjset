@@ -3,7 +3,7 @@ package gjset.gui;
 
 import gjset.client.gui.ClientGUIController;
 import gjset.client.gui.ClientGUIModel;
-import gjset.client.gui.LocalClientGUIController;
+import gjset.client.gui.ConcreteClientGUIController;
 import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
@@ -96,7 +96,7 @@ public class LaunchPage extends Page
 			public void actionPerformed(ActionEvent e)
 			{
 				ClientGUIModel guiModel = new ClientGUIModel();
-				ClientGUIController controller = new LocalClientGUIController(guiModel);
+				ClientGUIController controller = new ConcreteClientGUIController(guiModel);
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
 				
 				mainFrame.loadPage(page);

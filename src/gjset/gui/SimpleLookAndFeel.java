@@ -40,7 +40,7 @@ public class SimpleLookAndFeel
 	private static SimpleLookAndFeel	singleton;
 
 	/**
-	 * TODO: Describe method
+	 * Return the system's default look and feel.
 	 *
 	 * @return
 	 */
@@ -108,5 +108,22 @@ public class SimpleLookAndFeel
 	public Color getDeckSizeColor()
 	{
 		return Color.white;
+	}
+
+	public Font getBigButtonFont()
+	{
+		Font buttonFont = defaultFont.deriveFont(18.0f);
+		
+		return buttonFont;
+	}
+
+	public Color getBigButtonLabelBackground()
+	{
+		return new Color(61, 28, 8);
+	}
+
+	public Color getBigButtonLabelForeground()
+	{
+		return new Color(243, 232, 175);
 	}
 }

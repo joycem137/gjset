@@ -1,7 +1,9 @@
 package gjset.client.gui;
 
 import gjset.gui.MainFrame;
+import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.BigButton;
+import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
 
 import java.awt.event.ActionEvent;
@@ -10,6 +12,7 @@ import java.util.Observer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingConstants;
 
 /* 
  *  LEGAL STUFF
@@ -45,24 +48,26 @@ import javax.swing.Action;
 @SuppressWarnings("serial")
 public class PlayGamePage extends Page implements Observer
 {
+	private static final int BUTTON_INSET = 200;
+	
 	private MainFrame	mainFrame;
 	private ClientGUIController controller;
+	private SimpleLookAndFeel lnf;
 	
 	// All of the various screen components.
 	private DeckPanel deckPanel;
 	private BigButton callSetButton;
-	private BigButton	drawButton;
+	private BigButton drawButton;
 
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
 		super();
 		
 		this.mainFrame = mainFrame;
+		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
 		configurePage();
-		
 		createDeck();
-		
 		createButtons();
 
 		// Obtain the game controller
@@ -76,21 +81,21 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createButtons()
 	{
-		callSetButton = createButtonAndLabel(new AbstractAction()
+		callSetButton = createButtonAndLabel(new AbstractAction("Call Set")
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
 				controller.callSet();
 			}
-		}, "button_call", 170);
+		}, "button_call", BUTTON_INSET, false);
 		
-		drawButton = createButtonAndLabel(new AbstractAction()
+		drawButton = createButtonAndLabel(new AbstractAction("Draw")
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
 				controller.drawMoreCards();
 			}
-		}, "button_draw", 755);
+		}, "button_draw", getWidth() - BUTTON_INSET, true); // This call to the call set button width is a bit of a hack.
 	}
 	
 	/**
@@ -99,14 +104,36 @@ public class PlayGamePage extends Page implements Observer
 	 *
 	 * @param action
 	 * @param style
+	 * @param xPos
+	 * @param adjustXPos
+	 * 
 	 * @return
 	 */
-	private BigButton createButtonAndLabel(Action action, String style, int xPos)
+	private BigButton createButtonAndLabel(Action action, String style, int xPos, boolean adjustXPos)
 	{
+		// Add the button
 		BigButton button = new BigButton(action, style);
-		button.setLocation(xPos, 620);
 		button.setDisabled(true);
 		add(button);
+		
+		// Adjust the x position by the width of the button.
+		if(adjustXPos)
+		{
+			xPos -= button.getWidth();
+		}
+		
+		button.setLocation(xPos, 620);
+		
+		FancyLabel label = new FancyLabel((String)action.getValue(Action.NAME), SwingConstants.CENTER);
+		label.setFancyEffect(FancyLabel.OUTLINE);
+		label.setBackground(lnf.getBigButtonLabelBackground());
+		label.setForeground(lnf.getBigButtonLabelForeground());
+		label.setFont(lnf.getBigButtonFont());
+		
+		label.setSize(button.getWidth(), button.getHeight());
+		label.setLocation(xPos, 620 + button.getHeight() - 15);
+		add(label);
+		
 		return button;
 	}
 
@@ -130,6 +157,7 @@ public class PlayGamePage extends Page implements Observer
 		setSize(mainFrame.getSize());
 		setLocation(0,0);
 	}
+	
 	/**
 	 * Check all of the objects in the model to determine whether any have changed.
 	 *
@@ -141,8 +169,12 @@ public class PlayGamePage extends Page implements Observer
 	{
 		ClientGUIModel model = (ClientGUIModel) observable;
 		
+		// Update the cards
 		int cardsInDeck = model.getCardsInDeck();
 		deckPanel.updateSize(cardsInDeck);
 		
+		// Determine if we can call set or draw more cards.
+		drawButton.setDisabled(cardsInDeck <= 0);
+		callSetButton.setDisabled(model.canCallSet());
 	}
 }

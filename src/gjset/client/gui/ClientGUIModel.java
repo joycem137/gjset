@@ -17,4 +17,14 @@ public class ClientGUIModel extends Observable
 		return 84;
 	}
 
+	/**
+	 * Returns true if this client is allowed to call set.
+	 *
+	 * @return
+	 */
+	public boolean canCallSet()
+	{
+		return true;
+	}
+
 }
