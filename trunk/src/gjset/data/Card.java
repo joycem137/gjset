@@ -54,8 +54,8 @@ public class Card
 	public static final int	SHAPE_DIAMOND		= 3;
 
 	public static final int	SHADING_NONE		= 1;
-	public static final int	SHADING_FULL		= 2;
-	public static final int	SHADING_STRIPED		= 3;
+	public static final int	SHADING_STRIPED		= 2;
+	public static final int	SHADING_FULL		= 3;
 
 	// Store constant indices for the various properties that exist.
 	public static final int	PROP_NUMBER			= 1;

@@ -53,7 +53,7 @@ public class MainFrame extends JFrame
 	private JPanel rootPanel;
 	private Page currentPage;
 	
-	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 37, 996, 522);
+	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 14, 996, 522);
 
 	public MainFrame()
 	{
