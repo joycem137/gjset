@@ -1,10 +1,15 @@
 package gjset.client.gui;
 
 import gjset.gui.MainFrame;
+import gjset.gui.framework.BigButton;
 import gjset.gui.framework.Page;
 
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 /* 
  *  LEGAL STUFF
@@ -44,7 +49,9 @@ public class PlayGamePage extends Page implements Observer
 	private ClientGUIController controller;
 	
 	// All of the various screen components.
-	private DeckPanel	deckPanel;
+	private DeckPanel deckPanel;
+	private BigButton callSetButton;
+	private BigButton	drawButton;
 
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
@@ -69,8 +76,38 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createButtons()
 	{
-		//callSetButton = new ComplexButton();
-		//add(callSetButton);
+		callSetButton = createButtonAndLabel(new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				controller.callSet();
+			}
+		}, "button_call", 170);
+		
+		drawButton = createButtonAndLabel(new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				controller.drawMoreCards();
+			}
+		}, "button_draw", 755);
+	}
+	
+	/**
+	 * 
+	 * Create a big button and add a label underneath it.
+	 *
+	 * @param action
+	 * @param style
+	 * @return
+	 */
+	private BigButton createButtonAndLabel(Action action, String style, int xPos)
+	{
+		BigButton button = new BigButton(action, style);
+		button.setLocation(xPos, 620);
+		button.setDisabled(true);
+		add(button);
+		return button;
 	}
 
 	/**

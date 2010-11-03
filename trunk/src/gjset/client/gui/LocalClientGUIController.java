@@ -29,4 +29,24 @@ public class LocalClientGUIController implements ClientGUIController
 		return model;
 	}
 
+	/**
+	 * Initiates a request to call set from this client.
+	 *
+	 * @see gjset.client.gui.ClientGUIController#callSet()
+	 */
+	public void callSet()
+	{
+		System.out.println("Calls set");
+	}
+
+	/**
+	 * Initiates a request to draw more cards from this client.
+	 *
+	 * @see gjset.client.gui.ClientGUIController#drawMoreCards()
+	 */
+	public void drawMoreCards()
+	{
+		System.out.println("Draw more cards!");
+	}
+
 }
