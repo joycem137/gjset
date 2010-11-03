@@ -102,8 +102,8 @@ public class CardPanel extends JComponent
 			g.drawImage(cardHalo, 0, 0, this);
 		}
 		
-		// Draw the symbols.
-		Image symbolImage = symbolFactory.getImage(2, Card.COLOR_RED, Card.SHAPE_OVAL, Card.SHADING_FULL);
+		// Draw the symbols, centered on the image.
+		Image symbolImage = symbolFactory.getImage(3, Card.COLOR_RED, Card.SHAPE_OVAL, Card.SHADING_STRIPED);
 		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
 				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
 	}
