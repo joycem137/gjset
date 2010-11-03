@@ -3,7 +3,7 @@ package gjset.client.gui;
 /**
  *
  */
-public class LocalClientGUIController implements ClientGUIController
+public class ConcreteClientGUIController implements ClientGUIController
 {
 
 	private ClientGUIModel	model;
@@ -13,7 +13,7 @@ public class LocalClientGUIController implements ClientGUIController
 	 *
 	 * @param guiModel
 	 */
-	public LocalClientGUIController(ClientGUIModel model)
+	public ConcreteClientGUIController(ClientGUIModel model)
 	{
 		this.model = model;
 	}
