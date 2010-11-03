@@ -98,8 +98,7 @@ public class PlayGamePage extends Page implements Observer
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				//controller.callSet();
-				controller.simulate();
+				controller.callSet();
 			}
 		}, "button_call", BUTTON_INSET, false);
 		
@@ -127,7 +126,7 @@ public class PlayGamePage extends Page implements Observer
 	{
 		// Add the button
 		BigButton button = new BigButton(action, style);
-		//button.setDisabled(true);
+		button.setDisabled(true);
 		add(button);
 		
 		// Adjust the x position by the width of the button.
@@ -181,7 +180,6 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	public void update(Observable observable, Object object)
 	{
-		System.out.println("Updating game view");
 		ClientGUIModel model = (ClientGUIModel) observable;
 		
 		// Update the deck
@@ -189,7 +187,7 @@ public class PlayGamePage extends Page implements Observer
 		deckPanel.updateSize(cardsInDeck);
 		
 		// Determine if we can call set or draw more cards.
-		drawButton.setDisabled(cardsInDeck <= 0);
+		drawButton.setDisabled(!model.canDrawCards());
 		callSetButton.setDisabled(model.canCallSet());
 		
 		// Update the card table

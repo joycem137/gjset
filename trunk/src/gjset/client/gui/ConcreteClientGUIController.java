@@ -62,14 +62,4 @@ public class ConcreteClientGUIController implements ClientGUIController
 		System.out.println("Yay! Card " + cardData + " selected!");
 	}
 
-	/**
-	 * TODO: Describe overridden method
-	 *
-	 * @see gjset.client.gui.ClientGUIController#simulate()
-	 */
-	public void simulate()
-	{
-		model.simulate();
-	}
-
 }

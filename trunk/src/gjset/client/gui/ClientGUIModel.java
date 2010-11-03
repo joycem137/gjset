@@ -63,13 +63,13 @@ public class ClientGUIModel extends Observable
 	}
 
 	/**
-	 * TODO: Describe method
+	 * Returns true if the GUI is able to request a drawing of cards.
 	 *
+	 * @return
 	 */
-	public void simulate()
+	public boolean canDrawCards()
 	{
-		setChanged();
-		notifyObservers();
+		return deck.remainingCards() > 0 && cardTable.getCols() < 7;
 	}
 
 }

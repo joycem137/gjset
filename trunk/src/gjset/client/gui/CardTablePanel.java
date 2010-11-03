@@ -5,9 +5,6 @@ import gjset.data.CardTable;
 import gjset.engine.GameEngine;
 import gjset.gui.MainFrame;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
@@ -23,7 +20,6 @@ public class CardTablePanel extends JPanel
 	private Rectangle playingFrame;
 	
 	private JPanel cardPane;
-	private GridLayout layout;
 
 	private ClientGUIController controller;
 
@@ -65,13 +61,9 @@ public class CardTablePanel extends JPanel
 	{
 		// Create the card pane
 		cardPane = new JPanel();
-		//cardPane.setLayout(null);
+		cardPane.setLayout(null);
 		cardPane.setOpaque(false);
 		add(cardPane);
-		
-		// Set up the layout
-		layout = new GridLayout(3, 4, CARD_BUFFER, CARD_BUFFER);
-		cardPane.setLayout(layout);
 	}
 
 	/**
@@ -95,7 +87,13 @@ public class CardTablePanel extends JPanel
 			return;
 		}
 		
-		int cardBuffer = CARD_BUFFER;
+		int horizontalBuffer = CARD_BUFFER;
+		
+		// Prevent the card pane from getting too big.
+		if(gridCols == 7)
+		{
+			horizontalBuffer = CARD_BUFFER / 4;
+		}
 		
 		// Remove all of the cards from the card pane.
 		cardPane.removeAll();
@@ -111,14 +109,14 @@ public class CardTablePanel extends JPanel
 				cardPane.add(cardComponent);
 				cardComponent.setHighlighted(cardTable.isHighlighted(card));
 				
-				cardComponent.setLocation(col * (cardComponent.getWidth() + CARD_BUFFER), row * (cardComponent.getHeight() + CARD_BUFFER));
+				cardComponent.setLocation(col * (cardComponent.getWidth() + horizontalBuffer), row * (cardComponent.getHeight() + CARD_BUFFER));
 			}
 		}
 
 		// Now set up the position of the card pane, to center it on the screen.
 		// The x coordinate is back a few cards
 		double centerX = getWidth() / 2.0;
-		int rowLength = (int) (gridCols * cardComponent.getWidth() + (gridCols - 0.50) * CARD_BUFFER);
+		int rowLength = (int) (gridCols * cardComponent.getWidth() + (gridCols - 0.50) * horizontalBuffer);
 		int xStart = (int) (centerX - rowLength / 2.0);
 
 		// The y coordinate is up a few cards.
@@ -144,21 +142,6 @@ public class CardTablePanel extends JPanel
 		cardPane.removeAll();
 		cardPane.revalidate();
 		cardPane.repaint();
-	}
-	
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		
-		System.out.println("Repainting CardTablePanel.");
-		System.out.println("Main panel stats are: " + getBounds());
-		System.out.println("Card pane stats are: " + cardPane.getBounds());
-		Component cards[] = cardPane.getComponents();
-		if(cards.length > 0)
-		{
-			Component card = cards[0];
-			System.out.println("A card looks like " + card.getBounds());
-		}
 	}
 
 }
