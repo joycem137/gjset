@@ -149,6 +149,7 @@ public class CardTableData
 		return root;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void parseTable(Element root)
 	{
 		//Get the number of rows and columns.
