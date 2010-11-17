@@ -56,4 +56,14 @@ public class MockClientCommunicator implements ClientCommunicator
 		return message;
 	}
 
+	/**
+	 * Pretend to send the indicated message to the message handler.
+	 *
+	 * @param updateMessage
+	 */
+	public void injectMessage(Element updateMessage)
+	{
+		handler.handleMessage(updateMessage);
+	}
+
 }

@@ -34,6 +34,18 @@ public class TestGUIModel
 	{
 		ClientGUIModel model = new ClientGUIModel();
 		
+		evaluateInitialModelState(model);
+	}
+	
+	/**
+	 * 
+	 * Performs the tests required to test the initial state of the model.
+	 * Public to allow other classes to access this.
+	 *
+	 * @param model
+	 */
+	public static void evaluateInitialModelState(ClientGUIModel model)
+	{
 		assertEquals(GameConstants.GAME_STATE_NOT_STARTED, model.getGameState());
 		assertEquals(0, model.getCardsInDeck());
 		assertFalse(model.canSelectCards());
@@ -56,6 +68,16 @@ public class TestGUIModel
 		
 		model.update(gameupdateElement);
 		
+		evaluateBasicModelUpdate(model);
+	}
+
+	/**
+	 * Perform the tests necessary to verify that the basic model was correctly updated.
+	 *
+	 * @param model
+	 */
+	public static void evaluateBasicModelUpdate(ClientGUIModel model)
+	{
 		// Now test that all of the correct values got updated.
 		assertEquals(69, model.getCardsInDeck());
 		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
