@@ -4,7 +4,7 @@ package gjset.gui;
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientGUIController;
-import gjset.client.GameClient;
+import gjset.client.ConcreteClientCommunicator;
 import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
@@ -96,7 +96,7 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				GameClient client = new GameClient("127.0.0.1", GameConstants.GAME_PORT);
+				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 				ClientGUIController controller = new ConcreteClientGUIController(client);
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
 				

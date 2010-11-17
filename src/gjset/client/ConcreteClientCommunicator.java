@@ -2,12 +2,15 @@ package gjset.client;
 
 import gjset.engine.GameEngine;
 import gjset.engine.GameServer;
+import gjset.tools.MessageHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.List;
+import java.util.Vector;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -15,7 +18,6 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.dom4j.tree.DefaultElement;
 
 /* 
  *  LEGAL STUFF
@@ -59,14 +61,14 @@ import org.dom4j.tree.DefaultElement;
  * @see GameEngine
  * @see EngineLinkInterface
  */
-public class GameClient
+public class ConcreteClientCommunicator implements ClientCommunicator
 {
 	private static final int COMM_VERSION = 1;
 
 	private final DocumentFactory documentFactory;
 	
-	//Stores a link to the UI.
-	private ClientGUIController	gui;
+	//Stores all message handlers.
+	private List<MessageHandler> handlers;
 	
 	//Stores the socket to connect to the server.
 	private Socket	socket;
@@ -84,22 +86,26 @@ public class GameClient
 	 * @param hostname A {@link String} containing the IP Address or hostname of the server.
 	 * @param port An <code>int</code> containing the port number of the server to connect to.
 	 */
-	public GameClient(String hostname, int port)
+	public ConcreteClientCommunicator(String hostname, int port)
 	{
 		//Create our address to connect to.
 		socketAddress = new InetSocketAddress(hostname, port);
 		
 		documentFactory = DocumentFactory.getInstance();
+		
+		handlers = new Vector<MessageHandler>();
 	}
 	
 	/**
-	 * Provides a link to the game UI so that messages coming back from the server can be executed on the UI.
+	 * Adds a message handler to the communicator.
 	 *
-	 * @param gui The {@link MainGamePanel} object to forward incoming messages to.
+	 * @param handler
+	 * @see gjset.client.ClientCommunicator#addMessageHandler(gjset.client.ClientGUIController)
 	 */
-	public void linkGUI(ClientGUIController gui)
+	@Override
+	public void addMessageHandler(MessageHandler handler)
 	{
-		this.gui = gui;
+		handlers.add(handler);
 	}
 	
 	/**
@@ -182,11 +188,13 @@ public class GameClient
 	}
 
 	/**
-	 * Send the indicated message over.
+	 * This command sends the indicated XML to the server, appending the appropriate information.
 	 *
-	 * @param root
+	 * @param messageElement
+	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
 	 */
-	public void sendMessage(DefaultElement messageElement)
+	@Override
+	public void sendMessage(Element messageElement)
 	{
 		Element fullXMLElement = wrapMessage(messageElement);
 		try
@@ -206,7 +214,7 @@ public class GameClient
 	 * @param messageElement
 	 * @return
 	 */
-	private Element wrapMessage(DefaultElement messageElement)
+	private Element wrapMessage(Element messageElement)
 	{	
 		Element rootElement = documentFactory.createElement("combocards");
 		

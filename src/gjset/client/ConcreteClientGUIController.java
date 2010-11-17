@@ -1,6 +1,7 @@
 package gjset.client;
 
 import gjset.data.Card;
+import gjset.tools.MessageHandler;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
@@ -36,11 +37,11 @@ import org.dom4j.tree.DefaultElement;
 /**
  *
  */
-public class ConcreteClientGUIController implements ClientGUIController
+public class ConcreteClientGUIController implements ClientGUIController, MessageHandler
 {
 
 	private ClientGUIModel	model;
-	private GameClient client;
+	private ClientCommunicator client;
 
 	private int playerId;
 	
@@ -49,12 +50,12 @@ public class ConcreteClientGUIController implements ClientGUIController
 	 *
 	 * @param guiModel
 	 */
-	public ConcreteClientGUIController(GameClient client)
+	public ConcreteClientGUIController(ClientCommunicator client)
 	{
 		model = new ClientGUIModel();
 		
 		this.client = client;
-		client.linkGUI(this);
+		client.addMessageHandler(this);
 	}
 
 	/**

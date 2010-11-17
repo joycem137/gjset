@@ -1,6 +1,6 @@
 package gjset.engine;
 
-import gjset.client.GameClient;
+import gjset.client.ConcreteClientCommunicator;
 import gjset.client.gui.MainGamePanel;
 import gjset.data.Card;
 import gjset.data.CardTable;
@@ -42,7 +42,7 @@ import java.net.Socket;
 
 /**
  * This class implements the {@link ClientLinkInterface} to provide the game engine with a link to all {@link MainGamePanel}
- * objects running on remote systems.  It is intended to be used in conjunction with {@link GameClient} objects to complete the
+ * objects running on remote systems.  It is intended to be used in conjunction with {@link ConcreteClientCommunicator} objects to complete the
  * interaction
  * <P>
  * When instantiated, this class opens a TCP/IP server listening on port 4337.

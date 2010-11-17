@@ -1,4 +1,4 @@
-package gjset.client;
+package gjset.tests;
 
 
 import static org.junit.Assert.assertEquals;
@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
+import gjset.client.ClientGUIModel;
 import gjset.data.Card;
 import gjset.data.CardTableData;
 
@@ -25,27 +26,6 @@ import org.junit.Test;
  */
 public class TestGUIModel
 {
-
-	/**
-	 * Called before each test.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception
-	{
-	}
-
-	/**
-	 * Called after each test.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception
-	{
-	}
-
 	/**
 	 * 
 	 * Test that the initial setup of the model is correct.
