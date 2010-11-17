@@ -149,18 +149,17 @@ public class CardTableData
 		return root;
 	}
 
-	public static CardTable parseTable(Element root)
+	private void parseTable(Element root)
 	{
 		//Get the number of rows and columns.
 		String numRowsString = root.element("size").element("rows").getText();
-		int numRows = Integer.parseInt(numRowsString);
+		gridRows = Integer.parseInt(numRowsString);
 		
 		String numColsString = root.element("size").element("cols").getText();
-		int numCols = Integer.parseInt(numColsString);
+		gridCols = Integer.parseInt(numColsString);
 		
-		//Get all of the cards on the table.
-		Vector<Card> cardList = new Vector<Card>();
-		Vector<Card> highlightedCards = new Vector<Card>();
+		int row = 0;
+		int col = 0;
 		
 		List cardElements = root.element("cards").elements("card");
 		Iterator iterator = cardElements.iterator();
@@ -168,14 +167,36 @@ public class CardTableData
 		{
 			Element cardElement = (Element)iterator.next();
 			Card card = new Card(cardElement);
-			cardList.add(card);
+			
+			// Drop the card on the table.
+			addCardToTable(card, row, col);
 			
 			if(cardElement.attributeValue("highlighted", "false") == "true")
 			{
 				highlightedCards.add(card);
 			}
+			
+			// Now update the row and column.
+			col++;
+			if (col >= gridCols)
+			{
+				col = 0;
+				row++;
+			}
 		}
-		
-		return new CardTable(numRows, numCols, cardList, highlightedCards);
+	}
+
+	/**
+	 * Adds the indicated card to the incidate row and column on the screen.
+	 *
+	 * @param card The card to add
+	 * @param row The row to add the card to
+	 * @param col The colum to ad the card to.
+	 */
+	private void addCardToTable(Card card, int row, int col)
+	{
+		cardsOnTable.add(card);
+		cardPositions.add(new Point(row, col));
+		grid[row][col] = card;
 	}
 }

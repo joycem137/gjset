@@ -69,7 +69,7 @@ public class TestGUIModel
 	 * with basic information.  Nothing fancy.
 	 */
 	@Test
-	public void testBasicXMLUpdate()
+	public void testBasicModelUpdate()
 	{	
 		ClientGUIModel model = new ClientGUIModel();
 		model.setPlayerId(1);
@@ -97,17 +97,18 @@ public class TestGUIModel
 
 	/**
 	 * 
-	 * Perform more in depth tests of the card table.
+	 * Perform more in depth tests of the card table to verify that it is working correctly.
 	 *
 	 */
 	@Test
 	public void testCardTable()
 	{
-
 		ClientGUIModel model = new ClientGUIModel();
 		model.setPlayerId(1);
 		
 		Element gameupdateElement = loadBasicUpdate();
+		
+		model.update(gameupdateElement);
 		
 		// Verify the card table.
 		CardTableData cardTable = model.getCardTable();
@@ -124,6 +125,7 @@ public class TestGUIModel
 		assertEquals(Card.COLOR_BLUE, card.getColor());
 		assertEquals(Card.SHAPE_DIAMOND, card.getShape());
 		assertEquals(Card.SHADING_STRIPED, card.getShading());
+		
 		assertFalse(cardTable.isHighlighted(card));
 		
 		// Verify another card.
