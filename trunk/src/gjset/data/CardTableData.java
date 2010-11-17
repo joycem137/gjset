@@ -171,7 +171,7 @@ public class CardTableData
 			// Drop the card on the table.
 			addCardToTable(card, row, col);
 			
-			if(cardElement.attributeValue("highlighted", "false") == "true")
+			if(cardElement.attributeValue("highlighted", "false").equals("true"))
 			{
 				highlightedCards.add(card);
 			}
