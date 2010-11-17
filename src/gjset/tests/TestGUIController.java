@@ -2,11 +2,18 @@ package gjset.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import gjset.client.ClientGUIController;
+import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientGUIController;
 import gjset.data.Card;
 
+import java.net.URL;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,7 +90,7 @@ public class TestGUIController
 	 *
 	 */
 	@Test
-	public void selectCard()
+	public void testSelectCard()
 	{
 		Card card = new Card(1, Card.COLOR_RED, Card.SHADING_NONE, Card.SHAPE_SQUIGGLE);
 		
@@ -102,5 +109,59 @@ public class TestGUIController
 		Card cardNew = new Card(cardElement);
 		
 		assertEquals(card, cardNew);
+	}
+	
+	/**
+	 * Verify that sending a message into the controller updates the model appropriately.
+	 */
+	@Test
+	public void testUpdateModelFromController()
+	{		
+		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIModel model = controller.getClientGUIModel();
+		TestGUIModel.evaluateInitialModelState(model);
+		
+		// Start by sending the ID to the client.
+		DocumentFactory documentFactory = DocumentFactory.getInstance();
+		Element idMessage = documentFactory.createElement("combocards");
+		Element playerIdNode = documentFactory.createElement("playerid");
+		playerIdNode.setText("1");
+		idMessage.add(playerIdNode);
+		client.injectMessage(idMessage);
+		
+		// Now send a basic update out.
+		Element updateMessage = loadSimpleFullUpdate();
+		client.injectMessage(updateMessage);
+		
+		// Verify that we're not creating new models all the time.
+		assertEquals(model, controller.getClientGUIModel());
+		
+		// Test the model out to make sure the update took.
+		TestGUIModel.evaluateBasicModelUpdate(model);
+	}
+	
+	/**
+	 * This loads the basic update XML file.
+	 *
+	 * @return The Element object containing the basic update.
+	 */
+	private Element loadSimpleFullUpdate()
+	{
+		SAXReader reader = new SAXReader();
+        Document document = null;
+		try
+		{
+			String path = "/testfiles/TestGUIController.xml";
+			URL testFileURL = getClass().getResource(path);
+			
+			document = reader.read(testFileURL);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("Could not read test xml file");
+		}
+		
+		assertNotNull(document);
+		return document.getRootElement();
 	}
 }
