@@ -1,7 +1,9 @@
 package gjset.client.gui;
 
+import gjset.client.ClientGUIController;
 import gjset.data.Card;
 import gjset.data.CardTable;
+import gjset.data.CardTableData;
 import gjset.engine.GameEngine;
 import gjset.gui.MainFrame;
 
@@ -10,23 +12,26 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 
 /**
- *
+ * Contains all of the logic necessary for graphically representing a CardTableData object.
  */
 @SuppressWarnings("serial")
 public class CardTablePanel extends JPanel
 {
 	private static final int CARD_BUFFER = 20; // The minimum distance between cards.
 	
+	// The frame that we are working within.
 	private Rectangle playingFrame;
 	
+	// A container JPanel to store CardPanels within.
 	private JPanel cardPane;
 
+	// The controller for passing along to CardPanel objects that we work with.
 	private ClientGUIController controller;
 
 	/**
 	 * Constructs your basic card table.
 	 *
-	 * @param playingFieldArea
+	 * @param controller
 	 */
 	public CardTablePanel(ClientGUIController controller)
 	{
@@ -72,9 +77,9 @@ public class CardTablePanel extends JPanel
 	 * This method will be called any time the highlighting, physical arrangement, or number/composition of
 	 * cards on the table changes.
 	 *
-	 * @param cardTable A CardTable object containing the latest updates on the cards that are on the table.
+	 * @param cardTable A CardTableData object containing the latest updates on the cards that are on the table.
 	 */
-	public void update(CardTable cardTable)
+	public void update(CardTableData cardTable)
 	{
 		//Get the number of rows and cols from the card table data.
 		int gridRows = cardTable.getRows();
@@ -133,7 +138,7 @@ public class CardTablePanel extends JPanel
 
 	/**
 	 * 
-	 * Reset the card table to its pristine condition.  Used when finishing a game.
+	 * Reset the card table to its clean condition.  Used when finishing a game.
 	 *
 	 */
 	public void reset()

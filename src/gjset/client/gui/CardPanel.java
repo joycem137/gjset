@@ -1,5 +1,6 @@
 package gjset.client.gui;
 
+import gjset.client.ClientGUIController;
 import gjset.data.Card;
 import gjset.gui.SymbolImageFactory;
 import gjset.gui.framework.ResourceManager;
@@ -12,22 +13,36 @@ import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
 
 /**
- * This class stores all of the code necessary for drawing cards.
+ * This class stores the necessary code to graphically represent a given Card object.
  */
 @SuppressWarnings("serial")
 public class CardPanel extends JComponent
 {
+	// Store the different images that represent the card itself.
 	private Image cardImage;
 	private Image cardHalo;
 	private Image cardBack;
 	
+	// Store the symbol image factory so that we can always request the latest symbol image based on our carddata.
 	private SymbolImageFactory symbolFactory;
+	
+	// Store the controller so that we can send GUI events to it.
 	private ClientGUIController controller;
 	
+	// Store the state of the card.
 	private boolean highlighted;
 	private boolean faceUp;
+	
+	// Store the current card data on display.
 	private Card cardData;
 	
+	/**
+	 * 
+	 * Create this CardPanel with the indicated data and controller.
+	 *
+	 * @param controller
+	 * @param cardData
+	 */
 	public CardPanel(ClientGUIController controller, Card cardData)
 	{
 		super();
@@ -84,7 +99,6 @@ public class CardPanel extends JComponent
 
 	/**
 	 * Adds all of the action listeners to our class.
-	 * @param controller 
 	 *
 	 */
 	private void addActionListener()
@@ -93,6 +107,7 @@ public class CardPanel extends JComponent
 		{
 			public void mouseReleased(MouseEvent me)
 			{
+				// Verify that the mouse was released inside this card.
 				if(faceUp && contains(me.getPoint()))
 				{
 					// Tell the controller we selected this card.
@@ -105,7 +120,7 @@ public class CardPanel extends JComponent
 	}
 
 	/**
-	 * Set all the basics
+	 * Configure this JPanel with the basic settings.
 	 *
 	 */
 	private void configurePanel()
@@ -126,9 +141,16 @@ public class CardPanel extends JComponent
 		cardBack = resourceManager.getImage("card_back.png");
 	}
 	
+	/**
+	 * 
+	 * Paint this component.
+	 *
+	 * @param g
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	public void paintComponent(Graphics g)
 	{
-		// Draw the card background and abort early.
+		// Draw the card background and abort early if face down.
 		if(!faceUp || cardData == null)
 		{
 			g.drawImage(cardBack, 0, 0, this);
@@ -138,7 +160,7 @@ public class CardPanel extends JComponent
 		// Draw the card background.
 		g.drawImage(cardImage, 0, 0, this);
 		
-		// Draw the halo
+		// Draw the halo if highlighted.
 		if(highlighted)
 		{
 			g.drawImage(cardHalo, 0, 0, this);

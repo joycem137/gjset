@@ -1,46 +1,48 @@
 package gjset.client;
 
-import gjset.client.gui.CardComponent;
-import gjset.client.gui.MainGamePanel;
-import gjset.data.CardTable;
-import gjset.data.Player;
 import gjset.engine.GameEngine;
 import gjset.engine.GameServer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentFactory;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+import org.dom4j.tree.DefaultElement;
+
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton and Andrea Kilpatrick
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -57,23 +59,37 @@ import java.net.SocketAddress;
  * @see GameEngine
  * @see EngineLinkInterface
  */
-public class GameClient implements EngineLinkInterface
+public class GameClient
 {
+	private static final int COMM_VERSION = 1;
+
+	private final DocumentFactory documentFactory;
+	
 	//Stores a link to the UI.
-	private MainGamePanel	gui;
+	private ClientGUIController	gui;
 	
 	//Stores the socket to connect to the server.
 	private Socket	socket;
 	
 	//Tools to read/write to the socket's I/O stream
-	private PrintWriter	writer;
-	private BufferedReader	reader;
+	private XMLWriter	writer;
+	private InputStream input;
+
+	// The destination to connect to.
+	private SocketAddress socketAddress;
 
 	/**
 	 * Blank constructor to assert that nothing is done on object instantiation.
+	 *
+	 * @param hostname A {@link String} containing the IP Address or hostname of the server.
+	 * @param port An <code>int</code> containing the port number of the server to connect to.
 	 */
-	public GameClient()
+	public GameClient(String hostname, int port)
 	{
+		//Create our address to connect to.
+		socketAddress = new InetSocketAddress(hostname, port);
+		
+		documentFactory = DocumentFactory.getInstance();
 	}
 	
 	/**
@@ -81,7 +97,7 @@ public class GameClient implements EngineLinkInterface
 	 *
 	 * @param gui The {@link MainGamePanel} object to forward incoming messages to.
 	 */
-	public void linkGUI(MainGamePanel gui)
+	public void linkGUI(ClientGUIController gui)
 	{
 		this.gui = gui;
 	}
@@ -90,17 +106,11 @@ public class GameClient implements EngineLinkInterface
 	 * Establishes a connection to the game server using the given hostname and port.
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
-	 *
-	 * @param hostname A {@link String} containing the IP Address or hostname of the server.
-	 * @param port An <code>int</code> containing the port number of the server to connect to.
 	 */
-	public void connectToServer(String hostname, int port)
+	public void connectToServer()
 	{
 		try
 		{
-			//Create our address to connect to.
-			SocketAddress socketAddress = new InetSocketAddress(hostname, port);
-			
 			socket = new Socket();
 			
 			//Attempt to connect to the server.
@@ -123,12 +133,14 @@ public class GameClient implements EngineLinkInterface
 		{
 			public void run()
 			{
+				SAXReader reader = new SAXReader();
+				
 				while(socket.isConnected())
 				{
 					try
 					{
 						//Read a line
-						String line = reader.readLine();
+						Document document = reader.read(input);
 						
 						/* 
 						 * Then deal with it.  Note that the handling of messages takes place in this thread,
@@ -138,8 +150,8 @@ public class GameClient implements EngineLinkInterface
 						 * Either that, or we should update this function to kick off a new thread whenever
 						 * we get a message.  But that would require more complex thread management.
 						 */
-						parseMessage(line);
-					} catch (IOException e)
+						parseResponse(document);
+					} catch (DocumentException e)
 					{
 						e.printStackTrace();
 					}
@@ -154,138 +166,57 @@ public class GameClient implements EngineLinkInterface
 	//Used to create the Input/Output stream handling tools for a newly created socket.
 	private void createIOStreams() throws IOException
 	{
-		writer = new PrintWriter(socket.getOutputStream());
-		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	}
-
-	//Sends the indicated message to the server.
-	private void sendMessage(String message)
-	{
-		writer.println(message);
-		writer.flush();
+		writer = new XMLWriter(socket.getOutputStream());
+		input = socket.getInputStream();
 	}
 
 	/**
-	 * Parses incoming messages from the server and deals with them.
+	 * 
+	 * Parse the XML response from the server.
 	 *
-	 * @param line The newline terminated incoming message.
+	 * @param document
 	 */
-	protected void parseMessage(String line)
+	private void parseResponse(Document document)
 	{
-		//Split the line into fields.
-		String messageArray[] = line.split(":");
+				
+	}
+
+	/**
+	 * Send the indicated message over.
+	 *
+	 * @param root
+	 */
+	public void sendMessage(DefaultElement messageElement)
+	{
+		Element fullXMLElement = wrapMessage(messageElement);
+		try
+		{
+			writer.write(fullXMLElement);
+			writer.flush();
+		} catch (IOException e)
+		{
+			System.err.println("Failed to send message");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Wraps a message with enclosing tags and a comm version.
+	 *
+	 * @param messageElement
+	 * @return
+	 */
+	private Element wrapMessage(DefaultElement messageElement)
+	{	
+		Element rootElement = documentFactory.createElement("combocards");
 		
-		//The first field is an ID field indicating what type of message this is.  Check it out.
-		if(messageArray[0].equals("CONFIRM_SET"))
-		{
-			// Display a message indicating that this is a set.
-			gui.getMessageBar().displayMessage("That's a set!");
-		}
-		else if(messageArray[0].equals("END_OF_GAME"))
-		{
-			//Hide the player panel, since the game is over.
-			gui.hidePlayerPanel();
-			
-			//Display victory message.
-			gui.getMessageBar().displayMessage("No sets remain.  YOU WIN!");
-		}
-		else if(messageArray[0].equals("NEW_GAME"))
-		{
-			// Remove any cards that were previously on the table.
-			gui.getCardTable().reset();
-
-			// Show a message indicating that the game has begun.
-			gui.getMessageBar().displayMessage("Welcome to gjSet!");
-
-			// Show the player panel
-			gui.showPlayerPanel();
-		}
-		else if(messageArray[0].equals("NO_NEED_FOR_MORE_CARDS"))
-		{
-			gui.getMessageBar().displayMessage("You don't need to draw more cards.");
-		}
-		else if(messageArray[0].equals("OUT_OF_CARDS_TO_DRAW"))
-		{
-			gui.getMessageBar().displayMessage("There are no more cards to draw.");
-		}
-		else if(messageArray[0].equals("REJECT_SET"))
-		{
-			// Display a message on the gui.
-			gui.getMessageBar().displayMessage("That's not a set!");
-		}
-		else if(messageArray[0].equals("UPDATE_TABLE"))
-		{
-			//The server has sent us an updated table.  The second parameter is a representation of the new table.
-			CardTable table = CardTable.parseTable(messageArray[1]);
-			
-			//Now go and update our table!
-			gui.getCardTable().update(table);
-		}
-		else if(messageArray[0].equals("UPDATE_PLAYER"))
-		{
-			//There's been an update to the player.  Parse the second parameter to create some new player data.
-			Player player = Player.parsePlayer(messageArray);
-			
-			//And now, update the player's data.
-			gui.getPlayer().drawPanel(player);
-		}
-	}
-
-	/**
-	 * Used by the client when the player selects the "No more sets" button.
-	 * This indicates that the player thinks there are no more sets on the board
-	 * and that the engine should react appropriately.
-	 *
-	 * @see gjset.client.EngineLinkInterface#callNoMoreSets()
-	 */
-	public void callNoMoreSets()
-	{
-		sendMessage("NO_MORE_SETS");
-	}
-
-	/**
-	 * Tells the engine that the player wishes to end this game.
-	 * <P>
-	 * At this time, this is a simple method to indicate that a player is quitting the game.
-	 * As multiple players are introduced, this method will be scrapped in favor of a method of
-	 * detecting dropped player and similar issues.
-	 *
-	 * @see gjset.client.EngineLinkInterface#quitGame()
-	 */
-	public void quitGame()
-	{
-		sendMessage("QUIT_GAME");
-	}
-
-	/**
-	 * Tells the engine to select the card represented by the on screen {@link CardComponent} object.
-	 *
-	 * @param card The card that was selected by this player/client.
-	 * @see gjset.client.EngineLinkInterface#selectCard(gjset.client.gui.CardComponent)
-	 */
-	public void selectCard(CardComponent card)
-	{
-		//Set the outgoing message ID
-		String message = "SELECT_CARD:";
+		Element versionElement = documentFactory.createElement("version");
+		versionElement.setText("" + COMM_VERSION);
+		rootElement.add(versionElement);
 		
-		//Add the card's data
-		message += card.getCard().getRepresentation();
+		rootElement.add(messageElement);
 		
-		//Send it out!
-		sendMessage(message);
-	}
-
-	/**
-	 * Tells the engine to start a new game.
-	 * <P>
-	 * At this time, this is all that needs to take place.  This will be overwritten in the future as
-	 * starting new games becomes more complex.
-	 *
-	 * @see gjset.client.EngineLinkInterface#startNewGame()
-	 */
-	public void startNewGame()
-	{
-		sendMessage("NEW_GAME");
+		return rootElement;
 	}
 
 }

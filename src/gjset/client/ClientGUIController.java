@@ -1,11 +1,9 @@
-package gjset.client.gui;
+package gjset.client;
 
 import gjset.data.Card;
 
-
-
 /**
- *
+ * The interface for gui controllers on the client.  Allows different kinds of GUI controllers.
  */
 public interface ClientGUIController
 {
