@@ -9,13 +9,15 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
+import org.dom4j.ElementHandler;
+import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
@@ -61,7 +63,7 @@ import org.dom4j.io.XMLWriter;
  * @see GameEngine
  * @see EngineLinkInterface
  */
-public class ConcreteClientCommunicator implements ClientCommunicator
+public class ConcreteClientCommunicator implements ClientCommunicator, ElementHandler
 {
 	private static final int COMM_VERSION = 1;
 
@@ -79,6 +81,8 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 
 	// The destination to connect to.
 	private SocketAddress socketAddress;
+
+	private Thread listeningThread;
 
 	/**
 	 * Blank constructor to assert that nothing is done on object instantiation.
@@ -109,12 +113,40 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	}
 	
 	/**
+	 * react to the end of a combo cards message.
+	 *
+	 * @param path
+	 * @see org.dom4j.ElementHandler#onEnd(org.dom4j.ElementPath)
+	 */
+	public void onEnd(ElementPath path)
+	{
+		Element message = path.getCurrent();
+		Iterator<MessageHandler> iterator = handlers.iterator();
+		while(iterator.hasNext())
+		{
+			iterator.next().handleMessage(message);
+		}
+	}
+
+	/**
+	 * React to the start of a combocards message.
+	 *
+	 * @param arg0
+	 * @see org.dom4j.ElementHandler#onStart(org.dom4j.ElementPath)
+	 */
+	public void onStart(ElementPath arg0)
+	{
+		// Nothing to do on a message start.
+	}
+
+	/**
 	 * Establishes a connection to the game server using the given hostname and port.
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
 	 */
 	public void connectToServer()
 	{
+		System.out.println("Starting client");
 		try
 		{
 			socket = new Socket();
@@ -125,48 +157,12 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			//Get our I/O streams squared away once we're connected.
 			createIOStreams();
 			
-			startListeningThread();
+			// And then start listening
+			listeningThread.start();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	//Used to listen to start listening to messages incoming from the server.
-	private void startListeningThread()
-	{
-		Thread listeningThread = new Thread(new Runnable()
-		{
-			public void run()
-			{
-				SAXReader reader = new SAXReader();
-				
-				while(socket.isConnected())
-				{
-					try
-					{
-						//Read a line
-						Document document = reader.read(input);
-						
-						/* 
-						 * Then deal with it.  Note that the handling of messages takes place in this thread,
-						 * So message handling should be snappy.  If a message requires a lot of processing,
-						 * it should be started in a separate thread.
-						 * 
-						 * Either that, or we should update this function to kick off a new thread whenever
-						 * we get a message.  But that would require more complex thread management.
-						 */
-						parseResponse(document);
-					} catch (DocumentException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		
-		//Of course, what would be the fun of creating a thread if you didn't make it do anything?
-		listeningThread.start();
 	}
 
 	//Used to create the Input/Output stream handling tools for a newly created socket.
@@ -174,17 +170,26 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	{
 		writer = new XMLWriter(socket.getOutputStream());
 		input = socket.getInputStream();
-	}
-
-	/**
-	 * 
-	 * Parse the XML response from the server.
-	 *
-	 * @param document
-	 */
-	private void parseResponse(Document document)
-	{
-				
+		
+		final SAXReader reader = new SAXReader();
+		reader.addHandler("/combocards", this);
+		
+		Runnable listenForMessage = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					reader.read(input);
+				} catch (DocumentException e)
+				{
+					System.err.println("Error reading input (Possibly because of closed socket)");
+					//e.printStackTrace();
+				}
+			}
+		};
+		
+		listeningThread = new Thread(listenForMessage);
 	}
 
 	/**
