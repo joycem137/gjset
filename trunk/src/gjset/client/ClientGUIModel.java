@@ -131,13 +131,23 @@ public class ClientGUIModel extends Observable
 	
 	/**
 	 * 
-	 * Sets the player id to the indicated value.¯
+	 * Sets the player id to the indicated value.
 	 *
 	 * @param playerId
 	 */
 	public void setPlayerId(int playerId)
 	{
 		this.playerId = playerId;
+	}
+
+	/**
+	 * Return the player Id.
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
 	}
 
 }
