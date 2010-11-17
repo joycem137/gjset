@@ -135,7 +135,7 @@ public class CardTableData
 			for(int c = 0; c < gridCols; c++)
 			{
 				Card card = grid[r][c];
-				Element cardElement = card.getRepresentation();
+				Element cardElement = card.getXMLRepresentation();
 				
 				if(isHighlighted(card))
 				{

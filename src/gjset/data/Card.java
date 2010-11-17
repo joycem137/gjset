@@ -334,7 +334,7 @@ public class Card
 	 *
 	 * @return The representation of this Card
 	 */
-	public Element getRepresentation()
+	public Element getXMLRepresentation()
 	{
 		DefaultElement cardElement =  new DefaultElement("card");
 

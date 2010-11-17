@@ -17,8 +17,6 @@ import java.net.URL;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -125,7 +123,6 @@ public class TestGUIModel
 	 */
 	private Element loadBasicUpdate()
 	{
-
 		SAXReader reader = new SAXReader();
         Document document = null;
 		try

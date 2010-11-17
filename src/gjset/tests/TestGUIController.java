@@ -1,9 +1,12 @@
 package gjset.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientGUIController;
+import gjset.data.Card;
 
+import org.dom4j.Element;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,16 +36,71 @@ public class TestGUIController
 		ClientGUIController controller = new ConcreteClientGUIController(client);
 		
 		assertNotNull(controller.getClientGUIModel());
-		
+		assertEquals(controller, client.getHandler());
 	}
 	
 	/**
 	 * 
-	 * This method tests whether or not sets can be called.
+	 * This method tests whether or not set calling works.
 	 *
 	 */
 	@Test
 	public void testCallSet()
 	{
+		ClientGUIController controller = new ConcreteClientGUIController(client);
+		controller.callSet();
+		
+		Element message = client.getLastMessage();
+		
+		assertNotNull(message);
+		
+		assertEquals("command", message.getName());
+		assertEquals("callset", message.attributeValue("type", ""));
+	}
+	
+	/**
+	 * 
+	 * This method tests whether or not card drawing works.
+	 *
+	 */
+	@Test
+	public void drawMoreCards()
+	{
+		ClientGUIController controller = new ConcreteClientGUIController(client);
+		controller.drawMoreCards();
+		
+		Element message = client.getLastMessage();
+		
+		assertNotNull(message);
+		
+		assertEquals("command", message.getName());
+		assertEquals("drawcards", message.attributeValue("type", ""));
+	}
+	
+	/**
+	 * 
+	 * This method tests whether or not card selection works.
+	 *
+	 */
+	@Test
+	public void selectCard()
+	{
+		Card card = new Card(1, Card.COLOR_RED, Card.SHADING_NONE, Card.SHAPE_SQUIGGLE);
+		
+		ClientGUIController controller = new ConcreteClientGUIController(client);
+		controller.selectCard(card);
+		
+		Element message = client.getLastMessage();
+		
+		assertNotNull(message);
+		
+		assertEquals("command", message.getName());
+		assertEquals("selectcard", message.attributeValue("type", ""));
+		
+		Element cardElement = message.element("card");
+		
+		Card cardNew = new Card(cardElement);
+		
+		assertEquals(card, cardNew);
 	}
 }
