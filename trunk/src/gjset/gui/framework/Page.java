@@ -31,8 +31,10 @@ import javax.swing.JPanel;
  */
 
 /**
- *
+ * A page represents a more or less full screen interface that will be dropped onto the screen.
+ * Pages can be managed and swapped as needed to display themselves.
  */
+@SuppressWarnings("serial")
 public abstract class Page extends JPanel
 {
 	

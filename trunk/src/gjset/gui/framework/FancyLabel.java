@@ -39,6 +39,7 @@ import javax.swing.SwingConstants;
  * This basically acts as a normal JLabel, except that instead of being
  * limited to the basic styles, this adds a whole bunch of extra.
  */
+@SuppressWarnings("serial")
 public class FancyLabel extends JComponent
 {
 	public static final int NORMAL = 0;

@@ -36,8 +36,12 @@ import javax.swing.JComponent;
  */
 
 /**
- *
+ * Border objects are objects that can be dropped on the screen to display a border over something.
+ * 
+ * They are used like an ordinary JComponent.  Any objects that should be displayed on top of the
+ * border should be added to the border itself.  Otherwise, they can be added below the border.
  */
+@SuppressWarnings("serial")
 public class Border extends JComponent
 {
 	private Image cornerUL;
