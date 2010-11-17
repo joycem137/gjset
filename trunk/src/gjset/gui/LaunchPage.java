@@ -1,9 +1,10 @@
 package gjset.gui;
 
 
-import gjset.client.gui.ClientGUIController;
-import gjset.client.gui.ClientGUIModel;
-import gjset.client.gui.ConcreteClientGUIController;
+import gjset.GameConstants;
+import gjset.client.ClientGUIController;
+import gjset.client.ConcreteClientGUIController;
+import gjset.client.GameClient;
 import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
@@ -95,11 +96,12 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ClientGUIModel guiModel = new ClientGUIModel();
-				ClientGUIController controller = new ConcreteClientGUIController(guiModel);
+				GameClient client = new GameClient("127.0.0.1", GameConstants.GAME_PORT);
+				ClientGUIController controller = new ConcreteClientGUIController(client);
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
 				
 				mainFrame.loadPage(page);
+				client.connectToServer();
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		

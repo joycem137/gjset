@@ -7,56 +7,43 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import org.dom4j.Element;
+
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008-2010 Artless Entertainment
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class CardTable
+public class CardTable extends CardTableData
 {
-	private List<Point>			cardPositions;				// Store the row and cols of all the cards in the above list.
-
-	// Store all of the cards on the table.
-	private List<Card>			cardsOnTable;				// The actual list of cards.
-	private List<Card>			highlightedCards;			//Show all of the highlighted cards.
-	
-	// Store the geometry of where the cards belong.
-	private Card[][]			grid;						// The actual grid of cards.
-	private int					gridRows;					// How many rows we are currently using.
-	private int					gridCols;					// How many cols we are currently using.
-
-	public static final int		CARD_LIMIT	= 21;		// max number of cards on the table at a time	
-	public static final int		ROW_LIMIT	= 7;		// max number of rows on the table at a time	
-	
 	private CardTableObservable observable;
 	
 	/**
 	 * Private class used to call <code>setChanged</code> whenever <code>notifyObservers</code> gets called.
 	 * 
-	 * @author joycem
 	 *
 	 */
 	private class CardTableObservable extends Observable
@@ -67,27 +54,19 @@ public class CardTable
 			super.notifyObservers();
 		}
 	}
-
+	
 	public CardTable()
 	{
+		super();
+		
 		//Create our observable object.
 		observable = new CardTableObservable();
-
-		// And initialize the places to store the positions of cards.
-		cardPositions = new Vector<Point>();
-
-		// Create the grid on which to place cards.
-		grid = new Card[3][ROW_LIMIT];
-		gridRows = 0;
-		gridCols = 0;
-
-		// Create the vectors for holding cards.
-		cardsOnTable = new Vector<Card>();
-		highlightedCards = new Vector<Card>();
 	}
 
 	public CardTable(int numRows, int numCols, Vector<Card> cardList, Vector<Card> highlightedCards)
 	{		
+		super();
+		
 		//Initialize the places to store the positions of cards.
 		cardPositions = new Vector<Point>();
 
@@ -118,11 +97,6 @@ public class CardTable
 	public void addObserver(Observer o)
 	{
 		observable.addObserver(o);
-	}
-
-	public boolean isHighlighted(Card card)
-	{
-		return highlightedCards.contains(card);
 	}
 
 	public void setHighlight(Card card, boolean value)
@@ -358,88 +332,5 @@ public class CardTable
 		gridCols = Math.max(col + 1, gridCols);
 
 		//System.out.println("Added card to " + row + ", " + col + ".  Grid size is " + gridRows + ", " + gridCols);
-	}
-
-	/**
-	 * 
-	 * @return numCards - The number of cards currently on the table.
-	 */
-	public int getNumCards()
-	{
-		return cardsOnTable.size();
-	}
-
-	public List<Card> getCards()
-	{
-		return cardsOnTable;
-	}
-
-	public int getRows()
-	{
-		return gridRows;
-	}
-
-	public int getCols()
-	{
-		return gridCols;
-	}
-
-	public Card getCardAt(int row, int col)
-	{
-		return grid[row][col];
-	}
-
-	public String getRepresentation()
-	{
-		String representation = new String();
-		
-		//Define the table.
-		representation += "" + gridRows;
-		representation += "" + gridCols;
-		
-		//Describe each card on the table.
-		for(int r = 0; r < gridRows; r++)
-		{
-			for(int c = 0; c < gridCols; c++)
-			{
-				Card card = grid[r][c];
-				representation += card.getRepresentation();
-				if(isHighlighted(card))
-				{
-					representation += "1";
-				}
-				else
-				{
-					representation += "0";
-				}
-			}
-		}
-		
-		return representation;
-	}
-
-	public static CardTable parseTable(String representation)
-	{
-		//Get the number of rows and columns.
-		int numRows = representation.charAt(0) - '0';
-		int numCols = representation.charAt(1) - '0';
-		
-		//Get all of the cards on the table.
-		Vector<Card> cardList = new Vector<Card>();
-		Vector<Card> highlightedCards = new Vector<Card>();
-
-		for(int i = 0; i < numRows * numCols; i++)
-		{
-			String cardRepresentation = representation.substring(2 + i * 5, 6 + i * 5);
-			Card card = Card.parseCard(cardRepresentation);
-			cardList.add(card);
-			
-			if(representation.charAt(6 + i * 5) == '1')
-			{
-				highlightedCards.add(card);
-			}
-		}
-		
-		return new CardTable(numRows, numCols, cardList, highlightedCards);
 	}
 }

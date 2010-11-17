@@ -1,5 +1,7 @@
 package gjset.client.gui;
 
+import gjset.client.ClientGUIController;
+import gjset.client.ClientGUIModel;
 import gjset.gui.MainFrame;
 import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.BigButton;

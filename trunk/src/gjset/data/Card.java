@@ -1,31 +1,34 @@
 package gjset.data;
 
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
+
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -40,7 +43,6 @@ package gjset.data;
  * 1. Create a card based on specific parameters for each of the four different properties for a card.<BR>
  * 2. Create a blank card whose properties are yet to be defined.
  * 
- * @author Joyce Murton
  */
 public class Card
 {
@@ -73,7 +75,6 @@ public class Card
 	 * Constructs a card with no properties set so that its properties can be added later.  <BR>
 	 * Note that until those properties are set, this card is invalid.
 	 *
-	 * @author Joyce Murton
 	 */
 	public Card()
 	{
@@ -88,7 +89,6 @@ public class Card
 	 * 
 	 * Constructs a card with the indicated values.
 	 *
-	 * @author Joyce Murton
 	 * @param number The number of shapes to be on the card.
 	 * @param color The color of the shapes on the card.
 	 * @param shading The shading of the shapes on the card.
@@ -101,6 +101,16 @@ public class Card
 		this.color = color;
 		this.shading = shading;
 		this.shape = shape;
+	}
+
+	/**
+	 * This creates a card using the information stored in an XML element.
+	 *
+	 * @param cardElement
+	 */
+	public Card(Element cardElement)
+	{
+		parseCard(cardElement);
 	}
 
 	/**
@@ -126,7 +136,6 @@ public class Card
 	 * 2 - Blue
 	 * 3 - Green
 	 *
-	 * @author Joyce Murton
 	 * @return The color property of the card.
 	 */
 	public int getColor()
@@ -144,7 +153,6 @@ public class Card
 	 * 2 - Squiggle
 	 * 3 - Diamond
 	 *
-	 * @author Joyce Murton
 	 * @return The shape property of the card.
 	 */
 	public int getShape()
@@ -162,7 +170,6 @@ public class Card
 	 * 2 - Full (Also can be described as filled)
 	 * 3 - Striped (Shape has vertical stripes in its interior.)
 	 *
-	 * @author Joyce Murton
 	 * @return The shading property of the card.
 	 */
 	public int getShading()
@@ -325,28 +332,55 @@ public class Card
 	 * Returns a representation of the card as a {@link String}.  This representation is a unique parsable string that 
 	 * can be transformed back into a {@link Card} object using the static {@link #parseCard} method.
 	 *
-	 * @author Joyce Murton
 	 * @return The representation of this Card
 	 */
-	public String getRepresentation()
+	public Element getRepresentation()
 	{
-		return "" + number + color + shading + shape;
+		DefaultElement cardElement =  new DefaultElement("card");
+
+		cardElement.add(createElement("number", number));
+		cardElement.add(createElement("color", color));
+		cardElement.add(createElement("shape", shape));
+		cardElement.add(createElement("shading", shading));
+		
+		return cardElement;
+	}
+	
+	/**
+	 * 
+	 * Creates an element with the indicated tag and value.
+	 *
+	 * @param tag
+	 * @param value
+	 * @return
+	 */
+	private Element createElement(String tag, int value)
+	{
+		DefaultElement element = new DefaultElement(tag);
+		element.setText("" + value);
+		
+		return element;
 	}
 
 	/**
 	 * 
 	 * Constructs a new {@link Card} object using the format returned by <code>getRepresentation</code>.
 	 *
-	 * @author Joyce Murton
 	 * @param representation The {@link String} representation of the Card.
 	 * @return The new Card object represented by the <code>representation</code> String.
 	 */
-	public static Card parseCard(String representation)
+	public void parseCard(Element cardElement)
 	{	
-		int number = representation.charAt(0) - '0';
-		int color = representation.charAt(1) - '0';
-		int shading = representation.charAt(2) - '0';
-		int shape = representation.charAt(3) - '0';
-		return new Card(number, color, shading, shape);
+		String numberText = cardElement.element("number").getText();
+		number = Integer.parseInt(numberText);
+		
+		String colorText = cardElement.element("color").getText();
+		color = Integer.parseInt(colorText);
+		
+		String shadingText = cardElement.element("shading").getText();
+		shading = Integer.parseInt(shadingText);
+		
+		String shapeText = cardElement.element("shape").getText();
+		shape = Integer.parseInt(shapeText);
 	}
 }
