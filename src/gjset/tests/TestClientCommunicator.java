@@ -1,6 +1,7 @@
 package gjset.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
 import gjset.client.ConcreteClientCommunicator;
@@ -22,7 +23,7 @@ public class TestClientCommunicator
 	private MockServer server;
 	
 	/**
-	 * Sets up the socket server that will be used to communicate with the client communicato.
+	 * Sets up the socket server that will be used to communicate with the client communicator.
 	 */
 	@Before
 	public void setUp()
@@ -46,6 +47,17 @@ public class TestClientCommunicator
 	public void tearDown()
 	{
 		server.destroy();
+		server = null;
+		client = null;
+		handler = null;
+		
+		try
+		{
+			Thread.sleep(200);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -60,7 +72,7 @@ public class TestClientCommunicator
 		
 		try
 		{
-			Thread.sleep(500);
+			Thread.sleep(100);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
@@ -69,10 +81,45 @@ public class TestClientCommunicator
 		
 		Element messageReceived = server.getLastMessage();
 		
+		assertNotNull(messageReceived);
+		
 		Element mockMessage = wrapMessage(message.createCopy());
 
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(mockMessage, messageReceived));
+	}
+	
+	/**
+	 * 
+	 * Verify that the communicator can receive messages.
+	 *
+	 */
+	@Test
+	public void testReceiveMessage()
+	{
+		DocumentFactory documentFactory = DocumentFactory.getInstance();
+		Element message = documentFactory.createElement("testing");
+		Element fullMessage = wrapMessage(message);
+		
+		server.sendMessage(fullMessage);
+		
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+			fail("Interuppted sleep");
+		}
+		
+		// Verify that the client received the message.
+		Element lastMessage = handler.getLastMessage();
+		
+		assertNotNull(lastMessage);
+		
+		NodeComparator comparator = new NodeComparator();
+		
+		assertEquals(0, comparator.compare(fullMessage, lastMessage));
 	}
 
 	/**

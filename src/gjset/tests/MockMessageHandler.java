@@ -22,4 +22,14 @@ public class MockMessageHandler implements MessageHandler
 		this.message = message;
 	}
 
+	/**
+	 * Returns the last sent message.
+	 *
+	 * @return
+	 */
+	public Element getLastMessage()
+	{
+		return message;
+	}
+
 }
