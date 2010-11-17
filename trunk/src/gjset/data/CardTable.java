@@ -7,8 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-import org.dom4j.Element;
-
 /* 
  *  LEGAL STUFF
  * 

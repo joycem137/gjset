@@ -5,7 +5,6 @@ import gjset.tools.MessageHandler;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
-import org.dom4j.tree.DefaultElement;
 
 /* 
  *  LEGAL STUFF

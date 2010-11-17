@@ -1,7 +1,5 @@
 package gjset.tests;
 
-import gjset.tests.MockServer.ClientHandler;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -21,7 +19,6 @@ import org.dom4j.io.XMLWriter;
 public class MockServer
 {
 	private ServerSocket serverSocket;
-	private Socket clientSocket;
 	private ClientHandler client;
 	
 	private Element lastMessage;
@@ -91,8 +88,6 @@ public class MockServer
 	 */
 	private void handleNewClient(Socket clientSocket)
 	{
-		this.clientSocket = clientSocket;
-
 		//Get our I/O streams.
 		client = new ClientHandler(clientSocket, this);
 	}
@@ -112,7 +107,6 @@ public class MockServer
 	class ClientHandler implements ElementHandler
 	{
 		private final Socket socket;
-		private final MockServer server;
 		
 		//Tools to read/write to the socket's I/O stream
 		private XMLWriter	writer;
@@ -123,7 +117,6 @@ public class MockServer
 		{
 			System.out.println("Spawning client");
 			this.socket = socket;
-			this.server = server;
 
 			createIOStreams();
 			
