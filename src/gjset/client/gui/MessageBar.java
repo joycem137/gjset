@@ -45,6 +45,7 @@ import javax.swing.JComponent;
  * <P>
  * It may be overwritten in the future with a better messaging system. 
  */
+@SuppressWarnings("serial")
 public class MessageBar extends JComponent
 {
 	//Stores the offscreen image buffer to write messages to.
