@@ -3,6 +3,7 @@ package gjset.client;
 import gjset.data.Card;
 import gjset.tools.MessageHandler;
 
+import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
@@ -39,7 +40,7 @@ import org.dom4j.tree.DefaultElement;
  */
 public class ConcreteClientGUIController implements ClientGUIController, MessageHandler
 {
-
+	DocumentFactory documentFactory;
 	private ClientGUIModel	model;
 	private ClientCommunicator client;
 
@@ -52,6 +53,8 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public ConcreteClientGUIController(ClientCommunicator client)
 	{
+		
+		documentFactory = DocumentFactory.getInstance();
 		model = new ClientGUIModel();
 		
 		this.client = client;
@@ -76,7 +79,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void callSet()
 	{
-		DefaultElement root = new DefaultElement("command");
+		Element root = documentFactory.createElement("command");
 		root.addAttribute("type", "callset");
 		client.sendMessage(root);
 	}
@@ -88,7 +91,9 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void drawMoreCards()
 	{
-		// Do nothing yet.
+		Element root = documentFactory.createElement("command");
+		root.addAttribute("type", "drawcards");
+		client.sendMessage(root);
 	}
 
 	/**
@@ -99,7 +104,11 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void selectCard(Card cardData)
 	{
-		System.out.println("Yay! Card " + cardData + " selected!");
+		Element root = documentFactory.createElement("command");
+		root.addAttribute("type", "selectcard");
+		root.add(cardData.getXMLRepresentation());
+		
+		client.sendMessage(root);
 	}
 	
 	/**

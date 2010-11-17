@@ -11,28 +11,49 @@ import gjset.tools.MessageHandler;
 public class MockClientCommunicator implements ClientCommunicator
 {
 
+	private MessageHandler handler;
+	private Element message;
+
 	/**
-	 * TODO: Describe overridden method
+	 * Grab the message handler.
 	 *
 	 * @param gui
 	 * @see gjset.client.ClientCommunicator#addMessageHandler(gjset.tools.MessageHandler)
 	 */
-	public void addMessageHandler(MessageHandler gui)
+	public void addMessageHandler(MessageHandler handler)
 	{
-		// TODO Auto-generated method stub
-
+		this.handler = handler;
 	}
 
 	/**
-	 * TODO: Describe overridden method
+	 * Pretend to send the indicated message.
 	 *
 	 * @param messageElement
 	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.Element)
 	 */
-	public void sendMessage(Element messageElement)
+	public void sendMessage(Element message)
 	{
-		// TODO Auto-generated method stub
+		this.message = message;
+	}
 
+	/**
+	 * returns the message handler assigned to this client.
+	 *
+	 * @return
+	 */
+	public MessageHandler getHandler()
+	{
+		return handler;
+	}
+
+	/**
+	 * Returns the last mesasge sent using the sendMessage method.
+	 *
+	 * @return
+	 */
+	public Element getLastMessage()
+	{
+		return message;
 	}
 
 }
