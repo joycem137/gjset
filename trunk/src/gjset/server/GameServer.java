@@ -1,12 +1,10 @@
-package gjset.engine;
+package gjset.server;
 
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.gui.MainGamePanel;
 import gjset.data.Card;
-import gjset.data.CardTable;
 import gjset.data.Player;
-import gjset.engine.gui.ServerConsole;
-import gjset.engine.server.PlayerClientHandler;
+import gjset.server.gui.ServerConsole;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -49,7 +47,7 @@ import java.net.Socket;
  * Once a client connects, all events in the game engine will be transmitted to the clients through this class.
  * <P>
  * This class also provides support for handling incoming messages from the UI to the engine, forwarding all incoming messages to the
- * linked {@link GameEngine} object.
+ * linked {@link ServerGameController} object.
  * 
  * @see MainGamePanel
  * @see ClientLinkInterface
@@ -64,7 +62,7 @@ public class GameServer implements ClientLinkInterface
 
 	private PlayerClientHandler	playerClientHandler;
 
-	private GameEngine	gc;
+	private ServerGameController	gc;
 
 	/**
 	 * 
@@ -118,11 +116,11 @@ public class GameServer implements ClientLinkInterface
 	 * This class provides additional functionality by listening to the client sockets
 	 * and forwarding incoming messages from those clients to the game engine.
 	 * <P>
-	 * This method links the indicated {@link GameEngine} object to this object for this purpose.
+	 * This method links the indicated {@link ServerGameController} object to this object for this purpose.
 	 *
 	 * @param gc The GameEngine object to send client's messages to.
 	 */
-	public void linkGameController(GameEngine gc)
+	public void linkGameController(ServerGameController gc)
 	{
 		this.gc = gc;
 	}
@@ -225,7 +223,7 @@ public class GameServer implements ClientLinkInterface
 	 * to the player/client. 
 	 *
 	 * @param table
-	 * @see gjset.engine.ClientLinkInterface#updateTable(gjset.data.CardTable)
+	 * @see gjset.engine.ClientLinkInterface#updateTable(gjset.server.CardTable)
 	 */
 	public void updateTable(CardTable table)
 	{

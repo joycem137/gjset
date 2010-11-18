@@ -1,7 +1,7 @@
 package gjset.client;
 
-import gjset.engine.GameEngine;
-import gjset.engine.GameServer;
+import gjset.server.ServerGameController;
+import gjset.server.GameServer;
 import gjset.tools.MessageHandler;
 
 import java.io.IOException;
@@ -50,18 +50,14 @@ import org.dom4j.io.XMLWriter;
  */
 
 /**
- * This class implements the {@link EngineLinkInterface} to provide a player/client UI with a link to a {@link GameEngine}
- * object running a remote system.  It is intended to be used in conjunction with a {@link GameServer} object to complete the
- * interaction
+ * This class handles all communication between the client and the server.
  * <P>
  * When the {@link #connectToServer} method is called, this class opens a TCP/IP connection to a TCP/IP server hosting the game engine.
  * Subsequent UI actions on the part of the user will be transmitted to the engine through this class.
  * <P>
  * This class also provides support for handling incoming messages from the engine to the UI, forwarding all incoming messages to the
- * linked {@link MainGamePanel} object.
+ * linked {@link ClientGUIController} object.
  * 
- * @see GameEngine
- * @see EngineLinkInterface
  */
 public class ConcreteClientCommunicator implements ClientCommunicator, ElementHandler
 {

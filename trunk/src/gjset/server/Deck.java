@@ -1,31 +1,31 @@
-package gjset.engine;
+package gjset.server;
 
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import gjset.data.Card;
@@ -37,7 +37,7 @@ import java.util.Vector;
  * Once the deck is exhausted, it can be reshuffled into a completely new arrangement of cards, without having to create a new deck.
  * 
  * @see Card
- * @see GameEngine
+ * @see ServerGameController
  */
 public class Deck
 {
@@ -144,7 +144,7 @@ public class Deck
 	 *
 	 * @return The number of cards remaining in the shuffled deck.
 	 */
-	public int remainingCards()
+	public int getRemainingCards()
 	{
 		return shuffledDeck.size();
 	}
