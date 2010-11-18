@@ -1,4 +1,4 @@
-package gjset.engine.gui;
+package gjset.server.gui;
 
 /* 
  *  LEGAL STUFF
@@ -28,18 +28,19 @@ package gjset.engine.gui;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class ServerConsole
+public class CommandLineConsole extends ServerConsole
 {
-	private static ServerConsole console;
-	public abstract void message(String string);
-	public abstract void errorMessage(String string);
 
-	public static ServerConsole getDefaultConsole()
+	@Override
+	public void errorMessage(String string)
 	{
-		if(console == null)
-		{
-			console = new CommandLineConsole();
-		}
-		return console;
+		System.err.println(string);
 	}
+
+	@Override
+	public void message(String string)
+	{
+		System.out.println(string);
+	}
+
 }

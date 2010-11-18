@@ -1,10 +1,11 @@
-package gjset.data;
+package gjset.server;
+
+import gjset.data.Card;
+import gjset.data.CardTableData;
 
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 
 /* 
@@ -37,28 +38,9 @@ import java.util.Vector;
 
 public class CardTable extends CardTableData
 {
-	private CardTableObservable observable;
-	
-	/**
-	 * Private class used to call <code>setChanged</code> whenever <code>notifyObservers</code> gets called.
-	 * 
-	 *
-	 */
-	private class CardTableObservable extends Observable
-	{
-		public void notifyObservers()
-		{
-			super.setChanged();
-			super.notifyObservers();
-		}
-	}
-	
 	public CardTable()
 	{
 		super();
-		
-		//Create our observable object.
-		observable = new CardTableObservable();
 	}
 
 	public CardTable(int numRows, int numCols, Vector<Card> cardList, Vector<Card> highlightedCards)
@@ -91,11 +73,6 @@ public class CardTable extends CardTableData
 			}
 		}
 	}
-	
-	public void addObserver(Observer o)
-	{
-		observable.addObserver(o);
-	}
 
 	public void setHighlight(Card card, boolean value)
 	{
@@ -107,13 +84,10 @@ public class CardTable extends CardTableData
 		{
 			highlightedCards.remove(card);
 		}
-		
-		observable.notifyObservers();
 	}
 	
 	public void addCards(Vector<Card> cards)
 	{
-
 		// Now position the cards on the grid.
 		Iterator<Card> iterator = cards.iterator();
 
@@ -162,9 +136,6 @@ public class CardTable extends CardTableData
 				row = 0;
 			}
 		}
-
-		// Finally, update the layout with the latest data.
-		observable.notifyObservers();
 	}
 
 	public void replaceCards(List<Card> selectedCards, List<Card> newCards)
@@ -199,9 +170,6 @@ public class CardTable extends CardTableData
 			// Deal the card to the table.
 			dealCardToTable(newCard, removedPositions.get(i));
 		}
-
-		// Then we update the layout.
-		observable.notifyObservers();
 	}
 
 	/**
@@ -218,9 +186,6 @@ public class CardTable extends CardTableData
 		cardsOnTable.clear();
 		cardPositions.clear();
 		highlightedCards.clear();
-
-		// Clean up the screen.
-		observable.notifyObservers();
 	}
 
 	/**
@@ -275,9 +240,6 @@ public class CardTable extends CardTableData
 		grid = newGrid;
 		cardPositions.clear();
 		cardPositions = newPositions;
-
-		// Redraw the table.
-		observable.notifyObservers();
 	}
 
 	private void moveCard(Card[][] newGrid, int row, int col, int newRow, int newCol)

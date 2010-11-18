@@ -2,10 +2,10 @@ package gjset.client.gui;
 
 import gjset.client.ClientGUIController;
 import gjset.data.Card;
-import gjset.data.CardTable;
 import gjset.data.CardTableData;
-import gjset.engine.GameEngine;
 import gjset.gui.MainFrame;
+import gjset.server.CardTable;
+import gjset.server.ServerGameController;
 
 import java.awt.Rectangle;
 
@@ -73,7 +73,7 @@ public class CardTablePanel extends JPanel
 
 	/**
 	 * 
-	 * This method should be called any time the {@link CardTable} data changes within the {@link GameEngine}.
+	 * This method should be called any time the {@link CardTable} data changes within the {@link ServerGameController}.
 	 * This method will be called any time the highlighting, physical arrangement, or number/composition of
 	 * cards on the table changes.
 	 *

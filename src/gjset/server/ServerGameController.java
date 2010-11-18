@@ -1,36 +1,35 @@
-package gjset.engine;
+package gjset.server;
 
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008, 2009 Joyce Murton and Andrea Kilpatrick
+ *  gjSet is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import gjset.GameConstants;
 import gjset.data.Card;
-import gjset.data.CardTable;
-import gjset.data.Player;
 
 import java.util.Iterator;
 import java.util.List;
@@ -38,24 +37,14 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-/**
- * This is the "brains" behind the operation. In the Model-View-Controller architecture, this is handling both the Controller and Model
- * aspects.  The GameEngine object gets a {@link ClientLinkInterface} object to communicate with the client to send updates to the UI
- * whenever something changes.  If something happens on the client, the {@link MainGamePanel} object sends a message to this object informing it
- * of the event, and the GameEngine reacts appropriately.
- * 
- * The Model portion of the GameEngine is stored in 3 objects:  The {@link Deck}, the {@link CardTable}, and the {@link Player}.
- * Each stores pertinent data about what the current state of the game is.
- */
-public class GameEngine implements Observer
-{
-	private Deck					deck;					// Stores the deck of cards.
-	private ClientLinkInterface		client;					// The gui interface.
-	private boolean					gameActive;				// Indicates whether there is an active game or not.
+import org.dom4j.Element;
 
-	private Vector<Card>			selectedCards;			// Stores the current set of selected cards.
-	private CardTable				cardTable;
-	private Player					player;					// player data for this game.
+/**
+ * 
+ */
+public class ServerGameController implements Observer
+{	
+	private GameModel model;
 	
 	/**
 	 * Create a GameEngine with a link to the {@link MainGamePanel} using the {@link ClientLinkInterface} parameter passed in.
@@ -64,52 +53,9 @@ public class GameEngine implements Observer
 	 *
 	 * @param client The link to the {@PlayerUI}.
 	 */
-	public GameEngine(ClientLinkInterface client)
+	public ServerGameController()
 	{
-		//Store a link to the player interface
-		this.client = client;
-		
-		// There is no active game at this time.
-		gameActive = false;
-
-		// Create the deck.
-		deck = new Deck();
-		selectedCards = new Vector<Card>();
-		
-		//Create the card table.
-		cardTable = new CardTable();
-		
-		//Add this as an observer to the CardTable.
-		cardTable.addObserver(this);
-		
-		//Create a player.
-		player = new Player(1);
-	}
-
-	/**
-	 * 
-	 * Tell the player's UI to do whatever it needs to do to show that a new game has been started.
-	 *
-	 */
-	public void newGame()
-	{
-		// Shuffle the cards
-		deck.shuffle();
-		
-		// reset the scores
-		player.resetScore();
-
-		//Start a new game on the interface.
-		client.displayNewGame();
-		
-		//Clear the card table.
-		cardTable.removeCards();
-		
-		//Deal 12 cards to the table.
-		cardTable.addCards(deck.drawCards(12));
-		
-		// Set the game active flag to true.
-		gameActive = true;
+		model = new GameModel();
 	}
 
 	/**
@@ -121,9 +67,29 @@ public class GameEngine implements Observer
 	 *
 	 * @param card The selected card.
 	 */
-	public void selectCard(Card card)
-	{
-		if (!gameActive) return; // Do nothing if the game isn't running.
+	public Element selectCard(int playerId, Card card)
+	{	
+		int gameState = model.getGameState();
+		
+		if(gameState == GameConstants.GAME_STATE_IDLE)
+		{
+			// Call set.
+			model.callSet(playerId);
+			
+			// Select the card.
+			model.toggleCardSelection(card);
+		}
+		else if(gameState == GameConstants.GAME_STATE_SET_CALLED
+				&& playerId == model.getSetCallerId())
+		{
+			// Allow the next card to be selected.
+			model.toggleCardSelection(card);
+		}
+		else
+		{
+			// Abort early if we can't select a card.
+			return;
+		}
 
 		// Check to see if the indicated card has already been highlighted.
 		if (cardTable.isHighlighted(card))
@@ -153,12 +119,12 @@ public class GameEngine implements Observer
 					client.updatePlayer(player);
 
 					// Check to see if we can draw more cards.
-					if (deck.remainingCards() > 0 && cardTable.getNumCards() <= 12)
+					if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
 					{
 						// Draw the new cards and place them on the table.
 						cardTable.replaceCards(selectedCards, deck.drawCards(3));
 						
-						if (deck.remainingCards() == 0)
+						if (deck.getRemainingCards() == 0)
 						{
 							client.indicateOutOfCardsToDraw();
 						}
@@ -201,7 +167,7 @@ public class GameEngine implements Observer
 		System.out.println("Checking for end of game.");
 
 		// If there are still cards in the deck, the game is not yet over.
-		if (deck.remainingCards() > 0) return;
+		if (deck.getRemainingCards() > 0) return;
 
 		// Now check all the cards to see if there are any sets there.
 		List<Card> cards = cardTable.getCards();
@@ -302,17 +268,6 @@ public class GameEngine implements Observer
 	}
 
 	/**
-	 * 
-	 * Currently a placeholder, this function will perform the behavior of "calling set," which means locking out
-	 * any other players that have not called set.
-	 *
-	 */
-	public void callSet()
-	{
-		//Nothing to do at this time.
-	}
-
-	/**
 	 * Used by the client when the player selects the "No more sets" button.
 	 * This indicates that the player thinks there are no more sets on the board
 	 * and that the engine should react appropriately.
@@ -322,7 +277,7 @@ public class GameEngine implements Observer
 		// If the game is not active, do nothing.
 		if (!gameActive) return;
 
-		if (deck.remainingCards() < 3)
+		if (deck.getRemainingCards() < 3)
 		{
 			client.indicateOutOfCardsToDraw();
 		}
@@ -340,7 +295,7 @@ public class GameEngine implements Observer
 			cardTable.addCards(deck.drawCards(3));
 
 			// Check to see if the game might be over.
-			if (deck.remainingCards() == 0)
+			if (deck.getRemainingCards() == 0)
 			{
 				checkForEndofGame();
 			}
@@ -352,28 +307,22 @@ public class GameEngine implements Observer
 	}
 
 	/**
-	 * 
-	 * Currently a placeholder method, this method will do whatever is necessary for a player to quit a game and remove the player
-	 * from the game.
+	 * Handle any changes coming in from the model
 	 *
+	 * @param arg0
+	 * @param arg1
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void quitGame()
+	public void update(Observable observable, Object obj)
 	{
-		//Nothing to do at this time.
+		// Handle a change from the model.
 	}
-
+	
 	/**
-	 * Implements the update method of the <code>Observer</code> interface.  
-	 * This is currently used by the <code>CardTable</code> to update the <code>GameController</code> with
-	 * the latest updates to the <code>CardTable</code>'s data.
-	 * 
-	 * @param o At this time, this is only going to be the <code>CardTable<code> object.
-	 * @param arg Not used. 
-	 * @see Observer, Observable
+	 * Handle a message incoming from the server.
 	 */
-	public void update(Observable o, Object arg)
+	public void handleMessage(Element message)
 	{
-		//Update the client's card table.
-		client.updateTable(cardTable);
+		// Do things like call set, select cards, etc.
 	}
 }

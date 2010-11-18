@@ -1,7 +1,6 @@
-package gjset.engine.server;
+package gjset.server;
 
-import gjset.engine.GameServer;
-import gjset.engine.gui.ServerConsole;
+import gjset.server.gui.ServerConsole;
 
 import java.io.BufferedReader;
 import java.io.IOException;
