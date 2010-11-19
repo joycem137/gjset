@@ -3,6 +3,7 @@ package gjset.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
 import gjset.server.GameServer;
@@ -15,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
+ * Verify that the game server is working correctly.
  */
 public class TestGameServer
 {
@@ -43,6 +44,14 @@ public class TestGameServer
 		// Start the threads up
 		server.listenForClients();
 		client.connectToServer();
+		
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -101,7 +110,7 @@ public class TestGameServer
 	
 	/**
 	 * 
-	 * Verify that the communicator can receive messages.
+	 * Verify that the client receives messages from the server.
 	 *
 	 */
 	@Test
@@ -130,6 +139,32 @@ public class TestGameServer
 		
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(fullMessage, lastMessage));
+	}
+	
+	/**
+	 * Verify that the client gets an ID upon connecting.
+	 */
+	@Test
+	public void testInitialization()
+	{
+		// First verify that we got an id.
+		assertTrue(client.getPlayerId() > 0);
+		
+		// Next verify that we get that id when we're receiving messages from this client.
+		DocumentFactory documentFactory = DocumentFactory.getInstance();
+		Element message = documentFactory.createElement("testingsend");
+		client.sendMessage(message);
+		
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+			fail("Interuppted sleep");
+		}
+		
+		assertEquals(client.getPlayerId(), handler.getLastClientId());
 	}
 
 	/**

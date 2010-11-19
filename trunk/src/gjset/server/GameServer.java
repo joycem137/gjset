@@ -2,7 +2,6 @@ package gjset.server;
 
 import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
-import gjset.tests.MockServerMessageHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -130,8 +129,8 @@ public class GameServer
 	private void handleNewClient(Socket socket)
 	{
 		// Get the next player Id
-		int playerId = maxId;
 		maxId++;
+		int playerId = maxId;
 		
 		// Create the new client handler.
 		PlayerClientHandler client = new PlayerClientHandler(socket, this, console, playerId);

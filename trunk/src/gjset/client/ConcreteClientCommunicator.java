@@ -247,5 +247,4 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			e.printStackTrace();
 		}
 	}
-
 }

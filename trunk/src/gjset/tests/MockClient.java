@@ -32,6 +32,7 @@ public class MockClient
 	private XMLWriter writer;
 	private BufferedReader reader;
 	private SAXReader XMLreader;
+	private int playerId;
 
 	/**
 	 * Create a client that will connect to the indicated port.
@@ -44,6 +45,8 @@ public class MockClient
 		socketAddress = new InetSocketAddress(hostname, port);
 		
 		documentFactory = DocumentFactory.getInstance();
+		
+		playerId = 0;
 	}
 	
 	/**
@@ -54,6 +57,15 @@ public class MockClient
 	public void receiveMessage(Element message)
 	{
 		this.lastMessage = message;
+		
+		Element playerIdElement = message.element("playerid");
+		if(playerIdElement != null)
+		{
+			String playerIdString = playerIdElement.getText();
+			System.out.println("Got player id message of " + playerIdString);
+			
+			playerId = Integer.parseInt(playerIdString);
+		}
 	}
 
 	/**
@@ -187,6 +199,16 @@ public class MockClient
 	public Element getLastMessage()
 	{
 		return lastMessage;
+	}
+
+	/**
+	 * Return the player Id for this client.
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
 	}
 
 }
