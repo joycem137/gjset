@@ -39,7 +39,7 @@ import org.dom4j.Element;
 /**
  * This class handles all operations for the server.  Whenever something changes, all players are updated.
  */
-public class ServerGameController
+public class ServerGameController implements ServerMessageHandler
 {	
 	private GameModel model;
 	private DocumentFactory documentFactory;
@@ -49,10 +49,14 @@ public class ServerGameController
 	 * Create a ServerGameController
 	 * 
 	 * This constructor instantiates and initializes all of the game model data.
+	 * @param server 
 	 *
 	 */
-	public ServerGameController()
+	public ServerGameController(GameServer server)
 	{
+		this.server = server;
+		server.addMessageHandler(this);
+		
 		model = new GameModel();
 		documentFactory = DocumentFactory.getInstance();
 	}
@@ -183,5 +187,16 @@ public class ServerGameController
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Start a new game and update the players with the relevant information.
+	 *
+	 */
+	public void startNewGame()
+	{
+		model.startNewGame();
+		
+		updateAllPlayers();
 	}
 }
