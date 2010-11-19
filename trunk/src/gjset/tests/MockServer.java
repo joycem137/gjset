@@ -1,15 +1,17 @@
 package gjset.tests;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.ElementHandler;
-import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
@@ -104,13 +106,13 @@ public class MockServer
 		client.sendMessage(messageElement);
 	}
 	
-	class ClientHandler implements ElementHandler
+	class ClientHandler
 	{
 		private final Socket socket;
 		
 		//Tools to read/write to the socket's I/O stream
 		private XMLWriter	writer;
-		private InputStream input;
+		private BufferedReader reader;
 		private Thread listeningThread;
 		
 		public ClientHandler(Socket socket, MockServer server)
@@ -129,6 +131,7 @@ public class MockServer
 			try
 			{
 				writer.write(message);
+				writer.write("\n");
 				writer.flush();
 			} catch (IOException e)
 			{
@@ -146,7 +149,7 @@ public class MockServer
 			try
 			{
 				writer = new XMLWriter(socket.getOutputStream());
-				input = socket.getInputStream();
+				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			} catch (UnsupportedEncodingException e1)
 			{
 				e1.printStackTrace();
@@ -155,8 +158,7 @@ public class MockServer
 				e1.printStackTrace();
 			}
 			
-			final SAXReader reader = new SAXReader();
-			reader.addHandler("/combocards", this);
+			final SAXReader XMLreader = new SAXReader();
 			
 			Runnable listenForMessage = new Runnable()
 			{
@@ -164,13 +166,28 @@ public class MockServer
 				{
 					try
 					{
-						reader.read(input);
-						System.out.println("Finished reading input from client");
+						String textReceived = reader.readLine();
+						while(socket.isConnected() && textReceived != null)
+						{
+							// Create an input stream to allow the XML parser to read from the string.
+							InputStream stringInput = new ByteArrayInputStream(textReceived.getBytes());
+							Document document = XMLreader.read(stringInput);
+							
+							// Now receive teh message.
+							receiveMessage(document.getRootElement());
+							
+							// Then go looking for the next message.
+							textReceived = reader.readLine();		
+						}
+					} catch (IOException e)
+					{
+						System.err.println("IO Exception reading input in client. (Possibly because of closed socket.)");
+						//e.printStackTrace();
 					} catch (DocumentException e)
 					{
-						System.err.println("Error reading input (May be because of closed socket)");
+						System.err.println("Document Exception parsing text in client.");
 						//e.printStackTrace();
-					}
+					}	
 				}
 			};
 			
@@ -180,25 +197,12 @@ public class MockServer
 		/**
 		 * Listen for the end of the combocards element.
 		 *
-		 * @param path
-		 * @see org.dom4j.ElementHandler#onEnd(org.dom4j.ElementPath)
+		 * @param message
 		 */
-		public void onEnd(ElementPath path)
+		public void receiveMessage(Element message)
 		{
-			lastMessage = path.getCurrent();
+			lastMessage = message;
 			System.out.println("Got message " + lastMessage);
-		}
-
-		/**
-		 * Does not do anything in this implementation.
-		 *
-		 * @param arg0
-		 * @see org.dom4j.ElementHandler#onStart(org.dom4j.ElementPath)
-		 */
-		public void onStart(ElementPath arg0)
-		{
-			// Nothing to do here.
-			System.out.println("Message started " + arg0);
 		}
 
 		/**

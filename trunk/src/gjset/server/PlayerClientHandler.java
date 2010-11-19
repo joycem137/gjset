@@ -3,54 +3,57 @@ package gjset.server;
 import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
+import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
-import org.dom4j.ElementHandler;
-import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class PlayerClientHandler implements ElementHandler
+public class PlayerClientHandler
 {
 	private GameServer	server;
 	private ServerConsole	console;
 	
 	private Socket	socket;
 	private XMLWriter writer;
-	private InputStream input;
+	private BufferedReader reader;
 	
 	private Thread listeningThread;
 	private int playerId;
@@ -90,11 +93,19 @@ public class PlayerClientHandler implements ElementHandler
 	//Used to create the Input/Output stream handling tools for a newly created socket.
 	private void createIOStreams() throws IOException
 	{
-		writer = new XMLWriter(socket.getOutputStream());
-		input = socket.getInputStream();
+		try
+		{
+			writer = new XMLWriter(socket.getOutputStream());
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (UnsupportedEncodingException e1)
+		{
+			e1.printStackTrace();
+		} catch (IOException e1)
+		{
+			e1.printStackTrace();
+		}
 		
-		final SAXReader reader = new SAXReader();
-		reader.addHandler("/combocards", this);
+		final SAXReader XMLreader = new SAXReader();
 		
 		Runnable listenForMessage = new Runnable()
 		{
@@ -102,12 +113,28 @@ public class PlayerClientHandler implements ElementHandler
 			{
 				try
 				{
-					reader.read(input);
+					String textReceived = reader.readLine();
+					while(socket.isConnected() && textReceived != null)
+					{
+						// Create an input stream to allow the XML parser to read from the string.
+						InputStream stringInput = new ByteArrayInputStream(textReceived.getBytes());
+						Document document = XMLreader.read(stringInput);
+						
+						// Now receive the message.
+						receiveMessage(document.getRootElement());
+						
+						// Then go looking for the next message.
+						textReceived = reader.readLine();		
+					}
+				} catch (IOException e)
+				{
+					System.err.println("IO Exception reading input in client handler. (Possibly because of closed socket.)");
+					//e.printStackTrace();
 				} catch (DocumentException e)
 				{
-					System.err.println("Error reading input (Possibly because of closed socket)");
+					System.err.println("Document Exception parsing text in client handler.");
 					//e.printStackTrace();
-				}
+				}	
 			}
 		};
 		
@@ -136,6 +163,7 @@ public class PlayerClientHandler implements ElementHandler
 		try
 		{
 			writer.write(fullXMLElement);
+			writer.write("\n");
 			writer.flush();
 		} catch (IOException e)
 		{
@@ -162,27 +190,32 @@ public class PlayerClientHandler implements ElementHandler
 		
 		return rootElement;
 	}
-
+	
 	/**
-	 * Handle an incoming message from the client.
+	 * 
+	 * Handle receiving the message.
 	 *
-	 * @param arg0
-	 * @see org.dom4j.ElementHandler#onEnd(org.dom4j.ElementPath)
+	 * @param message
 	 */
-	public void onEnd(ElementPath path)
+	public void receiveMessage(Element message)
 	{
-		server.receiveMessage(this, path.getCurrent());
+		server.receiveMessage(this, message);
 	}
 
 	/**
-	 * Handle the start of a particular element.
+	 * Shut down this client handler.
 	 *
-	 * @param arg0
-	 * @see org.dom4j.ElementHandler#onStart(org.dom4j.ElementPath)
 	 */
-	public void onStart(ElementPath path)
+	public void destroy()
 	{
-		// Nothing to do.
+		try
+		{
+			socket.close();
+			listeningThread.interrupt();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

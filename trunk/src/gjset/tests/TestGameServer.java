@@ -1,10 +1,11 @@
 package gjset.tests;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
-import gjset.client.ConcreteClientCommunicator;
+import gjset.server.GameServer;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -14,29 +15,33 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class performs tests on the communicator.
+ *
  */
-public class TestClientCommunicator
+public class TestGameServer
 {
-	private MockMessageHandler handler;
-	private ConcreteClientCommunicator client;
-	private MockServer server;
+	private GameServer server;
+	private MockClient client;
+	private MockServerMessageHandler handler;
 	
 	/**
-	 * Sets up the socket server that will be used to communicate with the client communicator.
+	 * Create the server, hook it up, and start listening to it.
+	 *
+	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp()
+	public void setUp() throws Exception
 	{
-		handler = new MockMessageHandler();
-		client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
-		client.addMessageHandler(handler);
+		server = new GameServer();
 		
-		server = new MockServer(GameConstants.GAME_PORT);
+		// Add our mock message handler.
+		handler = new MockServerMessageHandler();
+		server.addMessageHandler(handler);
 		
-		// Now connect everybody.
+		// Create the client.
+		client = new MockClient("127.0.0.1", GameConstants.GAME_PORT);
+		
+		// Start the threads up
 		server.listenForClients();
-		
 		client.connectToServer();
 	}
 	
@@ -47,13 +52,15 @@ public class TestClientCommunicator
 	public void tearDown()
 	{
 		server.destroy();
+		client.destroy();
+		
 		server = null;
 		client = null;
 		handler = null;
 		
 		try
 		{
-			Thread.sleep(200);
+			Thread.sleep(300);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
@@ -61,10 +68,12 @@ public class TestClientCommunicator
 	}
 	
 	/**
-	 * Test that the communicator can send messages.
+	 * 
+	 * Try sending a message to the server and see if the handler gets it.
+	 *
 	 */
 	@Test
-	public void testSendMessage()
+	public void testSendMessageToServer()
 	{
 		DocumentFactory documentFactory = DocumentFactory.getInstance();
 		Element message = documentFactory.createElement("testingsend");
@@ -79,7 +88,7 @@ public class TestClientCommunicator
 			fail("Sleep interrupted.");
 		}
 		
-		Element messageReceived = server.getLastMessage();
+		Element messageReceived = handler.getLastMessage();
 		
 		assertNotNull(messageReceived);
 		
@@ -87,6 +96,7 @@ public class TestClientCommunicator
 
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(mockMessage, messageReceived));
+		
 	}
 	
 	/**
@@ -95,13 +105,12 @@ public class TestClientCommunicator
 	 *
 	 */
 	@Test
-	public void testReceiveMessage()
+	public void testReceiveMessageFromServer()
 	{
 		DocumentFactory documentFactory = DocumentFactory.getInstance();
 		Element message = documentFactory.createElement("testingrecv");
-		Element fullMessage = wrapMessage(message);
 		
-		server.sendMessage(fullMessage);
+		server.sendMessage(message);
 		
 		try
 		{
@@ -113,12 +122,13 @@ public class TestClientCommunicator
 		}
 		
 		// Verify that the client received the message.
-		Element lastMessage = handler.getLastMessage();
+		Element lastMessage = client.getLastMessage();
 		
 		assertNotNull(lastMessage);
 		
-		NodeComparator comparator = new NodeComparator();
+		Element fullMessage = wrapMessage(message);
 		
+		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(fullMessage, lastMessage));
 	}
 
@@ -142,4 +152,5 @@ public class TestClientCommunicator
 		
 		return rootElement;
 	}
+
 }
