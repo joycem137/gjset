@@ -144,7 +144,7 @@ public class ServerGameController implements ServerMessageHandler
 		if(responseElement != null)
 		{
 			// Add the original command so that the client can cross reference it, if necessary.
-			responseElement.add(message.createCopy());
+			responseElement.add(commandElement.createCopy());
 			
 			// Send the result back to the player that sent it in.
 			client.sendMessage(responseElement);
@@ -245,5 +245,15 @@ public class ServerGameController implements ServerMessageHandler
 		model = null;
 		server = null;
 		documentFactory = null;
+	}
+
+	/**
+	 * Return the game model used by this controller. (Currently just used for test purposes.)
+	 *
+	 * @return
+	 */
+	public GameModel getModel()
+	{
+		return model;
 	}
 }
