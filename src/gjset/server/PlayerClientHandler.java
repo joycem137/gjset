@@ -1,12 +1,19 @@
 package gjset.server;
 
+import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.net.Socket;
+
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentFactory;
+import org.dom4j.Element;
+import org.dom4j.ElementHandler;
+import org.dom4j.ElementPath;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
 /* 
  *  LEGAL STUFF
@@ -36,67 +43,146 @@ import java.net.Socket;
  *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class PlayerClientHandler
+public class PlayerClientHandler implements ElementHandler
 {
-	private Socket	socket;
-	private PrintWriter	writer;
 	private GameServer	server;
-	private BufferedReader	reader;
 	private ServerConsole	console;
+	
+	private Socket	socket;
+	private XMLWriter writer;
+	private InputStream input;
+	
+	private Thread listeningThread;
+	private int playerId;
+	
+	private DocumentFactory documentFactory;
 
-	public PlayerClientHandler(Socket socketIn, GameServer serverIn, ServerConsole consoleIn)
+	public PlayerClientHandler(Socket socketIn, GameServer serverIn, ServerConsole consoleIn, int playerId)
 	{
 		this.socket = socketIn;
 		this.server = serverIn;
 		this.console = consoleIn;
+		this.playerId = playerId;
+		
+		documentFactory = DocumentFactory.getInstance();
 		
 		//Get our I/O streams.
 		try
-		{
-			writer = new PrintWriter(socket.getOutputStream());
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		{	
+			createIOStreams();
 		} catch (IOException e)
 		{
 			console.errorMessage("Could not obtain I/O streams for client socket.");
 			e.printStackTrace();
 		}
-		
-		//Start the listening thread.
-		Thread listeningThread = new Thread(new Runnable()
-		{
-			public void run()
-			{
-				while(socket.isConnected())
-				{
-					String line;
-					try
-					{
-						line = reader.readLine();
-						server.parseMessage(line);
-					} catch (IOException e)
-					{
-						console.errorMessage("Error reading message from client.");
-						e.printStackTrace();
-						try
-						{
-							socket.close();
-						} catch (IOException e1)
-						{
-							console.errorMessage("Error closing socket after read error.");
-							e1.printStackTrace();
-						}
-						server.playerDisconnected();
-					}
-				}
-			}
-		});
+	}
+	
+	/**
+	 * 
+	 * Executes the listening thread.
+	 *
+	 */
+	public void startListening()
+	{
 		listeningThread.start();
 	}
 
-	public void sendMessage(String message)
+	//Used to create the Input/Output stream handling tools for a newly created socket.
+	private void createIOStreams() throws IOException
 	{
-		writer.println(message);
-		writer.flush();
+		writer = new XMLWriter(socket.getOutputStream());
+		input = socket.getInputStream();
+		
+		final SAXReader reader = new SAXReader();
+		reader.addHandler("/combocards", this);
+		
+		Runnable listenForMessage = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					reader.read(input);
+				} catch (DocumentException e)
+				{
+					System.err.println("Error reading input (Possibly because of closed socket)");
+					//e.printStackTrace();
+				}
+			}
+		};
+		
+		listeningThread = new Thread(listenForMessage);
+	}
+
+	/**
+	 * Return the id for this player.
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
+	}
+
+	/**
+	 * This command sends the indicated XML to the server, appending the appropriate information.
+	 *
+	 * @param messageElement
+	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
+	 */
+	public void sendMessage(Element messageElement)
+	{
+		Element fullXMLElement = wrapMessage(messageElement);
+		try
+		{
+			writer.write(fullXMLElement);
+			writer.flush();
+		} catch (IOException e)
+		{
+			System.err.println("Failed to send message");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Wraps a message with enclosing tags and a comm version.
+	 *
+	 * @param messageElement
+	 * @return
+	 */
+	private Element wrapMessage(Element messageElement)
+	{	
+		Element rootElement = documentFactory.createElement("combocards");
+		
+		Element versionElement = documentFactory.createElement("version");
+		versionElement.setText("" + GameConstants.COMM_VERSION);
+		rootElement.add(versionElement);
+		
+		rootElement.add(messageElement);
+		
+		return rootElement;
+	}
+
+	/**
+	 * Handle an incoming message from the client.
+	 *
+	 * @param arg0
+	 * @see org.dom4j.ElementHandler#onEnd(org.dom4j.ElementPath)
+	 */
+	public void onEnd(ElementPath path)
+	{
+		server.receiveMessage(this, path.getCurrent());
+	}
+
+	/**
+	 * Handle the start of a particular element.
+	 *
+	 * @param arg0
+	 * @see org.dom4j.ElementHandler#onStart(org.dom4j.ElementPath)
+	 */
+	public void onStart(ElementPath path)
+	{
+		// Nothing to do.
 	}
 
 }

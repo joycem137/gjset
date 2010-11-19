@@ -1,7 +1,6 @@
 package gjset.client;
 
-import gjset.server.ServerGameController;
-import gjset.server.GameServer;
+import gjset.GameConstants;
 import gjset.tools.MessageHandler;
 
 import java.io.IOException;
@@ -61,8 +60,6 @@ import org.dom4j.io.XMLWriter;
  */
 public class ConcreteClientCommunicator implements ClientCommunicator, ElementHandler
 {
-	private static final int COMM_VERSION = 1;
-
 	private final DocumentFactory documentFactory;
 	
 	//Stores all message handlers.
@@ -220,7 +217,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator, ElementHa
 		Element rootElement = documentFactory.createElement("combocards");
 		
 		Element versionElement = documentFactory.createElement("version");
-		versionElement.setText("" + COMM_VERSION);
+		versionElement.setText("" + GameConstants.COMM_VERSION);
 		rootElement.add(versionElement);
 		
 		rootElement.add(messageElement);
