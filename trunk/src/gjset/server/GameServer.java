@@ -129,6 +129,7 @@ public class GameServer
 	private void handleNewClient(Socket socket)
 	{
 		// Get the next player Id
+		maxId++;
 		int playerId = maxId;
 		
 		// Create the new client handler.
