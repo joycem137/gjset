@@ -60,12 +60,14 @@ public class PlayerClientHandler
 	
 	private DocumentFactory documentFactory;
 
-	public PlayerClientHandler(Socket socketIn, GameServer serverIn, ServerConsole consoleIn, int playerId)
+	public PlayerClientHandler(Socket socket, GameServer server, ServerConsole console, int playerId)
 	{
-		this.socket = socketIn;
-		this.server = serverIn;
-		this.console = consoleIn;
+		this.socket = socket;
+		this.server = server;
+		this.console = console;
 		this.playerId = playerId;
+		
+		console.message("Creating client handler with id " + playerId);
 		
 		documentFactory = DocumentFactory.getInstance();
 		
