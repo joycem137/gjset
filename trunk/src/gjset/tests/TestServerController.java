@@ -1,10 +1,14 @@
 package gjset.tests;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import gjset.GameConstants;
+import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
+import gjset.data.CardTableData;
+import gjset.server.GameModel;
 import gjset.server.GameServer;
 import gjset.server.ServerGameController;
 
@@ -14,12 +18,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
+ * Exercise the server's controller to verify that its behavior is correct.
  */
 public class TestServerController
 {
 	private MockMessageHandler clientHandler;
-	private MockServerMessageHandler serverHandler;
 	
 	private ConcreteClientCommunicator client;
 	private ConcreteClientGUIController clientController;
@@ -35,10 +38,6 @@ public class TestServerController
 	{
 		// Create the server!
 		server = new GameServer();
-		
-		// Add an extra message handler in there.
-		serverHandler = new MockServerMessageHandler();
-		server.addMessageHandler(serverHandler);
 		
 		serverController = new ServerGameController(server);
 		
@@ -81,7 +80,6 @@ public class TestServerController
 			
 			server = null;
 			client = null;
-			serverHandler = null;
 			clientHandler = null;
 			serverController = null;
 			clientController = null;
@@ -108,6 +106,85 @@ public class TestServerController
 		Element gameupdateElement = lastMessage.element("gameupdate");
 		
 		assertNotNull(gameupdateElement);
+	}
+	
+	/**
+	 * Verify that starting a new game works correctly on the server.
+	 */
+	@Test
+	public void testStartNewGame()
+	{
+		serverController.startNewGame();
+		
+		try
+		{
+			Thread.sleep(200);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		GameModel serverModel = serverController.getModel();
+		CardTableData serverCardTable = serverModel.getCardTable();
+		
+		// Verify things on the server.
+		assertEquals(69, serverModel.getDeck().getRemainingCards());
+		assertEquals(12, serverCardTable.getNumCards());
+		assertEquals(3, serverCardTable.getRows());
+		assertEquals(4, serverCardTable.getCols());
+	
+		ClientGUIModel clientModel = clientController.getModel();
+		CardTableData clientCardTable = clientModel.getCardTable();
+		
+		// Verify things on the client.
+		assertEquals(69, clientModel.getCardsInDeck());
+		assertEquals(12, clientCardTable.getNumCards());
+		assertEquals(3, clientCardTable.getRows());
+		assertEquals(4, clientCardTable.getCols());
+	}
+	
+	/**
+	 * Verify that we can draw cards from a new game.
+	 */
+	@Test
+	public void testDrawingCards()
+	{
+		serverController.startNewGame();
+		
+		try
+		{
+			Thread.sleep(200);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Send the command from the client.
+		clientController.drawMoreCards();
+		
+		try
+		{
+			Thread.sleep(400);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Verify the changes on the server.
+		GameModel serverModel = serverController.getModel();
+		CardTableData serverCardTable = serverModel.getCardTable();
+		assertEquals(66, serverModel.getDeck().getRemainingCards());
+		assertEquals(15, serverCardTable.getNumCards());
+		assertEquals(3, serverCardTable.getRows());
+		assertEquals(5, serverCardTable.getCols());
+		
+		// Verify the changes on the client.
+		ClientGUIModel clientModel = clientController.getModel();
+		CardTableData clientCardTable = clientModel.getCardTable();
+		assertEquals(66, clientModel.getCardsInDeck());
+		assertEquals(15, clientCardTable.getNumCards());
+		assertEquals(3, clientCardTable.getRows());
+		assertEquals(5, clientCardTable.getCols());
 	}
 
 }

@@ -124,7 +124,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 			playerId = Integer.parseInt(playerIdString);
 			model.setPlayerId(playerId);
 		}
-		else
+		else if (root.element("gameupdate") != null)
 		{
 			Element updateElement = root.element("gameupdate");
 			model.update(updateElement);
@@ -149,6 +149,17 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	{
 		model = null;
 		client = null;
+		playerId = 0;
+	}
+
+	/**
+	 * Return the model to allow for inspection.
+	 *
+	 * @return
+	 */
+	public ClientGUIModel getModel()
+	{
+		return model;
 	}
 
 }
