@@ -16,4 +16,11 @@ public interface ServerMessageHandler
 	 */
 	void handleMessage(PlayerClientHandler client, Element message);
 
+	/**
+	 * Perform whatever actions are required to deal with a new client.
+	 *
+	 * @param client
+	 */
+	void handleNewClient(PlayerClientHandler client);
+
 }

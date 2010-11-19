@@ -140,6 +140,13 @@ public class GameServer
 		
 		// Start the client listening.
 		client.startListening();
+		
+		// Inform the message handlers of the new client.
+		Iterator<ServerMessageHandler> iterator = handlers.iterator();
+		while(iterator.hasNext())
+		{
+			iterator.next().handleNewClient(client);
+		}
 	}
 
 	/**

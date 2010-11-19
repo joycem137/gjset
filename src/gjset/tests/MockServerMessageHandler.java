@@ -10,7 +10,6 @@ import gjset.server.ServerMessageHandler;
  */
 public class MockServerMessageHandler implements ServerMessageHandler
 {
-
 	private int lastClientId;
 	private Element lastMessage;
 
@@ -45,6 +44,17 @@ public class MockServerMessageHandler implements ServerMessageHandler
 	public int getLastClientId()
 	{
 		return lastClientId;
+	}
+
+	/**
+	 * Handle a new client.
+	 *
+	 * @param client
+	 * @see gjset.server.ServerMessageHandler#handleNewClient(gjset.server.PlayerClientHandler)
+	 */
+	public void handleNewClient(PlayerClientHandler client)
+	{
+		// Do nothing.
 	}
 
 }

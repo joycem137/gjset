@@ -95,7 +95,7 @@ public class TestRealClientServerComm
 	 * Test that the real client communicator gets a player id when connecting to the real server.
 	 */
 	@Test
-	public void testInitialization()
+	public void testPlayerId()
 	{
 		// Then make sure the client has the right id.
 		assertTrue(controller.getPlayerId() > 0);
