@@ -1,7 +1,7 @@
 package gjset.server;
 
-import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
+import gjset.tools.MessageUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -175,7 +175,7 @@ public class PlayerClientHandler
 	 */
 	public void sendMessage(Element messageElement)
 	{
-		Element fullXMLElement = wrapMessage(messageElement);
+		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
 		try
 		{
 			writer.write(fullXMLElement);
@@ -186,25 +186,6 @@ public class PlayerClientHandler
 			System.err.println("Failed to send message");
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Wraps a message with enclosing tags and a comm version.
-	 *
-	 * @param messageElement
-	 * @return
-	 */
-	private Element wrapMessage(Element messageElement)
-	{	
-		Element rootElement = documentFactory.createElement("combocards");
-		
-		Element versionElement = documentFactory.createElement("version");
-		versionElement.setText("" + GameConstants.COMM_VERSION);
-		rootElement.add(versionElement);
-		
-		rootElement.add(messageElement);
-		
-		return rootElement;
 	}
 	
 	/**

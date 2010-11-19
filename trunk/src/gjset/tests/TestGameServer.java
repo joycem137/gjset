@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
 import gjset.server.GameServer;
+import gjset.tools.MessageUtils;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -101,7 +102,7 @@ public class TestGameServer
 		
 		assertNotNull(messageReceived);
 		
-		Element mockMessage = wrapMessage(message.createCopy());
+		Element mockMessage = MessageUtils.wrapMessage(message.createCopy());
 
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(mockMessage, messageReceived));
@@ -135,7 +136,7 @@ public class TestGameServer
 		
 		assertNotNull(lastMessage);
 		
-		Element fullMessage = wrapMessage(message);
+		Element fullMessage = MessageUtils.wrapMessage(message);
 		
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(fullMessage, lastMessage));
@@ -165,27 +166,6 @@ public class TestGameServer
 		}
 		
 		assertEquals(client.getPlayerId(), handler.getLastClientId());
-	}
-
-	/**
-	 * Wraps a message with enclosing tags and a comm version.
-	 *
-	 * @param messageElement
-	 * @return
-	 */
-	private Element wrapMessage(Element messageElement)
-	{	
-		DocumentFactory documentFactory = DocumentFactory.getInstance();
-		
-		Element rootElement = documentFactory.createElement("combocards");
-		
-		Element versionElement = documentFactory.createElement("version");
-		versionElement.setText("1");
-		rootElement.add(versionElement);
-		
-		rootElement.add(messageElement);
-		
-		return rootElement;
 	}
 
 }
