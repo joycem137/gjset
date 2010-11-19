@@ -2,6 +2,7 @@ package gjset.server;
 
 import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
+import gjset.tests.MockServerMessageHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -163,6 +164,58 @@ public class GameServer
 		while(iterator.hasNext())
 		{
 			iterator.next().handleMessage(client, message);
+		}
+	}
+
+	/**
+	 * Destroy the server, shutting down all behaviors.
+	 *
+	 */
+	public void destroy()
+	{
+		console.message("Destroying server");
+		
+		Iterator<PlayerClientHandler> iterator = clients.iterator();
+		while(iterator.hasNext())
+		{
+			iterator.next().destroy();	
+		}
+		
+		clients = null;
+		handlers = null;
+		
+		listeningThread.interrupt();
+		try
+		{
+			serverSocket.close();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add a message handler to the server to receive incoming messages.
+	 *
+	 * @param handler
+	 */
+	public void addMessageHandler(ServerMessageHandler handler)
+	{
+		handlers.add(handler);
+	}
+
+	/**
+	 * Tell every client to send this message.
+	 *
+	 * @param fullMessage
+	 */
+	public void sendMessage(Element fullMessage)
+	{
+		Iterator<PlayerClientHandler> iterator = clients.iterator();
+		
+		while(iterator.hasNext())
+		{
+			iterator.next().sendMessage(fullMessage.createCopy());
 		}
 	}
 }
