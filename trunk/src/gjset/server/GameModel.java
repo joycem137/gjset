@@ -184,4 +184,15 @@ public class GameModel extends Observable
 		
 		return card3;
 	}
+
+	/**
+	 * TODO: Describe method
+	 *
+	 * @return
+	 */
+	public int getSetCallerId()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

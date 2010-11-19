@@ -159,6 +159,19 @@ public class ServerGameController implements ServerMessageHandler
 	}
 
 	/**
+	 * Send a game update to the new client.
+	 *
+	 * @param client
+	 * @see gjset.server.ServerMessageHandler#handleNewClient(gjset.server.PlayerClientHandler)
+	 */
+	public void handleNewClient(PlayerClientHandler client)
+	{
+		Element gameupdate = buildGameUpdate();
+		
+		client.sendMessage(gameupdate);
+	}
+
+	/**
 	 * send game updates to all of the players.
 	 *
 	 */
@@ -179,14 +192,37 @@ public class ServerGameController implements ServerMessageHandler
 	}
 
 	/**
-	 * TODO: Describe method
+	 * Create the game update to send to the clients.
 	 *
 	 * @return
 	 */
 	private Element buildGameUpdate()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Element root = documentFactory.createElement("gameupdate");
+		
+		// Start with the deck size.
+		Element deckElement = documentFactory.createElement("deck");
+		deckElement.setText("" + model.getDeck().getRemainingCards());
+		root.add(deckElement);
+		
+		// Move onto the game state.
+		Element gameStateElement = documentFactory.createElement("gamestate");
+		gameStateElement.setText("" + model.getGameState());
+		root.add(gameStateElement);
+		
+		// Include the set caller if appropriate.
+		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED)
+		{
+			Element setCallerElement = documentFactory.createElement("setcaller");
+			setCallerElement.setText("" + model.getSetCallerId());
+			gameStateElement.add(setCallerElement);
+		}
+		
+		// Then the card table.
+		Element cardTableElement = model.getCardTable().getRepresentation();
+		root.add(cardTableElement);
+		
+		return root;
 	}
 
 	/**
@@ -198,5 +234,16 @@ public class ServerGameController implements ServerMessageHandler
 		model.startNewGame();
 		
 		updateAllPlayers();
+	}
+
+	/**
+	 * Destroy this object.
+	 *
+	 */
+	public void destroy()
+	{
+		model = null;
+		server = null;
+		documentFactory = null;
 	}
 }
