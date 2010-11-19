@@ -3,13 +3,15 @@ package gjset.gui;
 
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
-import gjset.client.ConcreteClientGUIController;
 import gjset.client.ConcreteClientCommunicator;
+import gjset.client.ConcreteClientGUIController;
 import gjset.client.gui.PlayGamePage;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
+import gjset.server.GameServer;
+import gjset.server.ServerGameController;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -96,11 +98,23 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// First create the server.
+				GameServer server = new GameServer();
+				ServerGameController serverController = new ServerGameController(server);
+				server.listenForClients();
+				
+				// Tell the game to start right away.
+				serverController.startNewGame();
+				
+				// Then create the client.
 				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 				ClientGUIController controller = new ConcreteClientGUIController(client);
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
 				
+				// Load the actual page
 				mainFrame.loadPage(page);
+				
+				// And now connect the client!
 				client.connectToServer();
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
