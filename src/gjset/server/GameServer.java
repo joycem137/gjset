@@ -129,7 +129,6 @@ public class GameServer
 	private void handleNewClient(Socket socket)
 	{
 		// Get the next player Id
-		maxId++;
 		int playerId = maxId;
 		
 		// Create the new client handler.
@@ -206,15 +205,15 @@ public class GameServer
 	/**
 	 * Tell every client to send this message.
 	 *
-	 * @param fullMessage
+	 * @param message
 	 */
-	public void sendMessage(Element fullMessage)
+	public void sendMessage(Element message)
 	{
 		Iterator<PlayerClientHandler> iterator = clients.iterator();
 		
 		while(iterator.hasNext())
 		{
-			iterator.next().sendMessage(fullMessage.createCopy());
+			iterator.next().sendMessage(message.createCopy());
 		}
 	}
 }

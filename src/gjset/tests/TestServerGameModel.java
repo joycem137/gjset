@@ -8,8 +8,6 @@ import gjset.data.Card;
 import gjset.data.CardTableData;
 import gjset.server.GameModel;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**

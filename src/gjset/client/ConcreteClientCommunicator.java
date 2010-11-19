@@ -1,7 +1,7 @@
 package gjset.client;
 
-import gjset.GameConstants;
 import gjset.tools.MessageHandler;
+import gjset.tools.MessageUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -62,8 +62,6 @@ import org.dom4j.io.XMLWriter;
  */
 public class ConcreteClientCommunicator implements ClientCommunicator
 {
-	private final DocumentFactory documentFactory;
-	
 	//Stores all message handlers.
 	private List<MessageHandler> handlers;
 	
@@ -92,7 +90,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		//Create our address to connect to.
 		socketAddress = new InetSocketAddress(hostname, port);
 		
-		documentFactory = DocumentFactory.getInstance();
+		DocumentFactory.getInstance();
 		
 		handlers = new Vector<MessageHandler>();
 	}
@@ -200,7 +198,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	@Override
 	public void sendMessage(Element messageElement)
 	{
-		Element fullXMLElement = wrapMessage(messageElement);
+		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
 		try
 		{
 			writer.write(fullXMLElement);
@@ -211,25 +209,6 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			System.err.println("Failed to send message");
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Wraps a message with enclosing tags and a comm version.
-	 *
-	 * @param messageElement
-	 * @return
-	 */
-	private Element wrapMessage(Element messageElement)
-	{	
-		Element rootElement = documentFactory.createElement("combocards");
-		
-		Element versionElement = documentFactory.createElement("version");
-		versionElement.setText("" + GameConstants.COMM_VERSION);
-		rootElement.add(versionElement);
-		
-		rootElement.add(messageElement);
-		
-		return rootElement;
 	}
 
 	/**
