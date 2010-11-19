@@ -190,7 +190,7 @@ public class PlayGamePage extends Page implements Observer
 		
 		// Determine if we can call set or draw more cards.
 		drawButton.setDisabled(!model.canDrawCards());
-		callSetButton.setDisabled(model.canCallSet());
+		callSetButton.setDisabled(!model.canCallSet());
 		
 		// Update the card table
 		cardTablePanel.update(model.getCardTable());
