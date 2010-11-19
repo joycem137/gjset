@@ -75,16 +75,6 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * 
-	 *
-	 * @param playerId
-	 */
-	public void callSet(int playerId)
-	{
-		
-	}
-
-	/**
 	 * Return the current state of the game.
 	 *
 	 * @return
@@ -112,5 +102,86 @@ public class GameModel extends Observable
 	public CardTable getCardTable()
 	{
 		return cardTable;
+	}
+
+	/**
+	 * Draw more cards from the deck and place them on the card table.
+	 *
+	 */
+	public void drawCards()
+	{
+		// Draw 3 new cards to add to the table.
+		cardTable.addCards(deck.drawCards(3));
+
+		// Check to see if the game might be over.
+		if (deck.getRemainingCards() == 0)
+		{
+			checkForEndofGame();
+		}
+	}
+
+	/*
+	 * This method checks to see if the game is over.  
+	 * The game is considered over when the deck is empty and there are no sets on the board.
+	 */
+	private void checkForEndofGame()
+	{
+		// If there are still cards in the deck, the game is not yet over.
+		if (deck.getRemainingCards() > 0) return;
+
+		// Now check all the cards to see if there are any sets there.
+		List<Card> cards = cardTable.getCards();
+		
+		for (int i = 0; i < cards.size(); i++)
+		{
+			Card card1 = cards.get(i);
+			for (int j = i + 1; j < cards.size(); j++)
+			{
+				Card card2 = cards.get(j);
+				//System.out.println("Checking " + card1 + " and " + card2);
+				Card testCard = finishSet(card1, card2);
+				//System.out.println("Found " + testCard);
+
+				// If the remaining cards contains the test card, the game is still on.
+				if (cards.contains(testCard)) return;
+				//System.out.println("But the card was not on the table.");
+			}
+		}
+
+		// We made it this far, there are no sets remaining.
+		gameState = GameConstants.GAME_STATE_GAME_OVER;
+	}
+
+	/*
+	 * This function takes two cards and returns the only possible card that completes the set.
+	 * 
+	 * This method is used to determine if there are any sets on the table.
+	 * 
+	 */
+	private Card finishSet(Card card1, Card card2)
+	{
+		Card card3 = new Card();
+		// Generate each property on the card.
+		for (int property = 1; property <= 4; property++)
+		{
+			// Check if the first two cards match. If they do, then the third card will also match.
+			if (card1.getProperty(property) == card2.getProperty(property))
+			{
+				card3.setProperty(property, card1.getProperty(property));
+			}
+			else
+			{
+				// The cards differ. Find out which value they are not using.
+				for (int value = 1; value < 4; value++)
+				{
+					if (card1.getProperty(property) != value && card2.getProperty(property) != value)
+					{
+						card3.setProperty(property, value);
+					}
+				}
+			}
+		}
+		
+		return card3;
 	}
 }
