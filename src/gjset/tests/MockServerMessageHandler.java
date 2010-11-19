@@ -37,4 +37,14 @@ public class MockServerMessageHandler implements ServerMessageHandler
 		return lastMessage;
 	}
 
+	/**
+	 * Return the last client id we received a message from.
+	 *
+	 * @return
+	 */
+	public int getLastClientId()
+	{
+		return lastClientId;
+	}
+
 }

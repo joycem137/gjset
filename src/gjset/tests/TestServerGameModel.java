@@ -17,27 +17,6 @@ import org.junit.Test;
  */
 public class TestServerGameModel
 {
-
-	/**
-	 * TODO: Describe method
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception
-	{
-	}
-
-	/**
-	 * TODO: Describe method
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception
-	{
-	}
-
 	/**
 	 * 
 	 * Verify that the initial configuration of the game model is correct.
@@ -51,6 +30,11 @@ public class TestServerGameModel
 		assertEquals(GameConstants.GAME_STATE_NOT_STARTED, model.getGameState());
 	}
 	
+	/**
+	 * 
+	 * Verify that starting a new game works correctly in the model.
+	 *
+	 */
 	@Test
 	public void testStartingNewGame()
 	{
@@ -72,7 +56,4 @@ public class TestServerGameModel
 		Card card = cardTable.getCardAt(2,1);
 		assertNotNull(card);
 	}
-	
-	
-		
 }

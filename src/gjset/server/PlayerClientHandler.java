@@ -87,7 +87,23 @@ public class PlayerClientHandler
 	 */
 	public void startListening()
 	{
+		// Start listening.
 		listeningThread.start();
+		
+		// Now that we're listening, initialize the other end.
+		sendInitializationMessage();
+	}
+
+	/**
+	 * Send a message to the client indicating our version and its player id.
+	 *
+	 */
+	private void sendInitializationMessage()
+	{
+		Element message = documentFactory.createElement("playerid");
+		message.addText("" + playerId);
+		
+		sendMessage(message);
 	}
 
 	//Used to create the Input/Output stream handling tools for a newly created socket.

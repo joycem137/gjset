@@ -52,7 +52,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public ConcreteClientGUIController(ClientCommunicator client)
 	{
-		
+		playerId = 0;
 		documentFactory = DocumentFactory.getInstance();
 		model = new ClientGUIModel();
 		
@@ -129,6 +129,26 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 			Element updateElement = root.element("gameupdate");
 			model.update(updateElement);
 		}
+	}
+
+	/**
+	 * Returns the player Id.  (Used for testing only at this time.)
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
+	}
+
+	/**
+	 * Destroy this controller.
+	 *
+	 */
+	public void destroy()
+	{
+		model = null;
+		client = null;
 	}
 
 }
