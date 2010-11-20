@@ -65,6 +65,10 @@ public class PlayGamePage extends Page implements Observer
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
 		super();
+
+		// Obtain the game controller
+		this.controller = controller;
+		controller.getClientGUIModel().addObserver(this);
 		
 		this.mainFrame = mainFrame;
 		lnf = SimpleLookAndFeel.getLookAndFeel();
@@ -74,10 +78,6 @@ public class PlayGamePage extends Page implements Observer
 		createCardTable();
 		createDeck();
 		createButtons();
-
-		// Obtain the game controller
-		this.controller = controller;
-		controller.getClientGUIModel().addObserver(this);
 	}
 	
 	/**
