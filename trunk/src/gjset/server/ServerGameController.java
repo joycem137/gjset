@@ -33,7 +33,8 @@ import gjset.data.Card;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -41,7 +42,7 @@ import org.dom4j.Element;
 /**
  * This class handles all operations for the server.  Whenever something changes, all players are updated.
  */
-public class ServerGameController implements ServerMessageHandler
+public class ServerGameController implements ServerMessageHandler, Observer
 {	
 	private GameModel model;
 	private DocumentFactory documentFactory;
@@ -60,6 +61,8 @@ public class ServerGameController implements ServerMessageHandler
 		server.addMessageHandler(this);
 		
 		model = new GameModel();
+		model.addObserver(this);
+		
 		documentFactory = DocumentFactory.getInstance();
 	}
 
@@ -133,6 +136,24 @@ public class ServerGameController implements ServerMessageHandler
 		Element gameupdate = buildGameUpdate();
 		
 		client.sendMessage(gameupdate);
+	}
+
+	/**
+	 * After a change event from the model, update all of the players.
+	 *
+	 * @param arg0
+	 * @param arg1
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable modelObservable, Object updateType)
+	{
+		Boolean updateWasSolicited = (Boolean)updateType;
+		
+		// Only update for unsolicited updates.  Solicited updates can fend for themselves.
+		if(updateType != null && !updateWasSolicited.booleanValue())
+		{
+			updateAllPlayers();
+		}
 	}
 
 	/**
