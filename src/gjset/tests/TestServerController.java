@@ -9,7 +9,6 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
-import gjset.data.Card;
 import gjset.data.CardTableData;
 import gjset.server.GameModel;
 import gjset.server.GameServer;

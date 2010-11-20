@@ -33,6 +33,7 @@ import gjset.data.Card;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -60,6 +61,99 @@ public class ServerGameController implements ServerMessageHandler
 		
 		model = new GameModel();
 		documentFactory = DocumentFactory.getInstance();
+	}
+
+	/**
+	 * Start a new game and update the players with the relevant information.
+	 *
+	 */
+	public void startNewGame()
+	{
+		model.startNewGame();
+		
+		updateAllPlayers();
+	}
+
+	/**
+	 * Handle a message incoming from the server.
+	 */
+	public void handleMessage(PlayerClientHandler client, Element message)
+	{
+		// Start by getting the player id.
+		int playerId = client.getPlayerId();
+		
+		// Now see if this was a command.
+		Element responseElement = null;
+		Element commandElement = message.element("command");
+		if(commandElement != null)
+		{
+			String commandType = commandElement.attributeValue("type", "");
+			if(commandType.equals("drawcards"))
+			{
+				responseElement = drawCards();
+			}
+			else if(commandType.equals("callset"))
+			{
+				responseElement = callSet(playerId);
+			}
+			else if(commandType.equals("selectcard"))
+			{
+				Element cardElement = commandElement.element("card");
+				Card card = new Card(cardElement);
+				responseElement = toggleSelection(playerId, card);
+			}
+		}
+		
+		// See if we need to send a response to the player.
+		if(responseElement != null)
+		{
+			// Add the original command so that the client can cross reference it, if necessary.
+			responseElement.add(commandElement.createCopy());
+			
+			// Send the result back to the player that sent it in.
+			client.sendMessage(responseElement);
+			
+			// Check to see if we need to update all players with new data.
+			String result = responseElement.attributeValue("result", "false");
+			if(result.equals("success"))
+			{
+				updateAllPlayers();
+			}
+		}
+	}
+
+	/**
+	 * Send a game update to the new client.
+	 *
+	 * @param client
+	 * @see gjset.server.ServerMessageHandler#handleNewClient(gjset.server.PlayerClientHandler)
+	 */
+	public void handleNewClient(PlayerClientHandler client)
+	{
+		Element gameupdate = buildGameUpdate();
+		
+		client.sendMessage(gameupdate);
+	}
+
+	/**
+	 * Destroy this object.
+	 *
+	 */
+	public void destroy()
+	{
+		model = null;
+		server = null;
+		documentFactory = null;
+	}
+
+	/**
+	 * Return the game model used by this controller. (Currently just used for test purposes.)
+	 *
+	 * @return
+	 */
+	public GameModel getModel()
+	{
+		return model;
 	}
 
 	/**
@@ -135,7 +229,9 @@ public class ServerGameController implements ServerMessageHandler
 	 */
 	private Element toggleSelection(int playerId, Card card)
 	{
+		// First toggle selection on the card.
 		int gameState = model.getGameState();
+		Element commandResponse = null;
 		
 		if(gameState == GameConstants.GAME_STATE_IDLE)
 		{
@@ -145,7 +241,7 @@ public class ServerGameController implements ServerMessageHandler
 			// Select the card.
 			model.toggleCardSelection(card);
 			
-			return getCommandResponse(true, null);
+			commandResponse = getCommandResponse(true, null);
 		}
 		else if(gameState == GameConstants.GAME_STATE_SET_CALLED
 				&& playerId == model.getSetCallerId())
@@ -153,13 +249,39 @@ public class ServerGameController implements ServerMessageHandler
 			// Allow the next card to be selected.
 			model.toggleCardSelection(card);
 			
-			return getCommandResponse(true, null);
+			commandResponse = getCommandResponse(true, null);
 		}
 		else
 		{
 			// Abort early if we can't select a card.
-			return getCommandResponse(false, "You can't select cards");
+			commandResponse = getCommandResponse(false, "You can't select cards");
 		}
+		
+		// Now see if we've got 3 cards selected.
+		List<Card> selectedCards = model.getCardTable().getSelectedCards();
+		if(selectedCards.size() == 3)
+		{
+			// We do have 3 cards!  Check for a set!
+			Element messageAddendum = documentFactory.createElement("setresult");
+			
+			// Check if this is a set.
+			boolean setSelected = model.resolveSet();
+			if(setSelected)
+			{
+				// Append a message about the result of the set.
+				messageAddendum.addAttribute("isset", "true");
+			}
+			else
+			{	
+				// Append a message about the result of the set.
+				messageAddendum.addAttribute("isset", "false");
+			}
+			
+			commandResponse.add(messageAddendum);
+		}
+		
+		
+		return commandResponse;
 	}
 
 	/**
@@ -192,67 +314,6 @@ public class ServerGameController implements ServerMessageHandler
 		}
 		
 		return responseElement;
-	}
-
-	/**
-	 * Handle a message incoming from the server.
-	 */
-	public void handleMessage(PlayerClientHandler client, Element message)
-	{
-		// Start by getting the player id.
-		int playerId = client.getPlayerId();
-		
-		// Now see if this was a command.
-		Element responseElement = null;
-		Element commandElement = message.element("command");
-		if(commandElement != null)
-		{
-			String commandType = commandElement.attributeValue("type", "");
-			if(commandType.equals("drawcards"))
-			{
-				responseElement = drawCards();
-			}
-			else if(commandType.equals("callset"))
-			{
-				responseElement = callSet(playerId);
-			}
-			else if(commandType.equals("selectcard"))
-			{
-				Element cardElement = commandElement.element("card");
-				Card card = new Card(cardElement);
-				responseElement = toggleSelection(playerId, card);
-			}
-		}
-		
-		// See if we need to send a response to the player.
-		if(responseElement != null)
-		{
-			// Add the original command so that the client can cross reference it, if necessary.
-			responseElement.add(commandElement.createCopy());
-			
-			// Send the result back to the player that sent it in.
-			client.sendMessage(responseElement);
-			
-			// Check to see if we need to update all players with new data.
-			String result = responseElement.attributeValue("result", "false");
-			if(result.equals("success"))
-			{
-				updateAllPlayers();
-			}
-		}
-	}
-
-	/**
-	 * Send a game update to the new client.
-	 *
-	 * @param client
-	 * @see gjset.server.ServerMessageHandler#handleNewClient(gjset.server.PlayerClientHandler)
-	 */
-	public void handleNewClient(PlayerClientHandler client)
-	{
-		Element gameupdate = buildGameUpdate();
-		
-		client.sendMessage(gameupdate);
 	}
 
 	/**
@@ -307,37 +368,5 @@ public class ServerGameController implements ServerMessageHandler
 		root.add(cardTableElement);
 		
 		return root;
-	}
-
-	/**
-	 * Start a new game and update the players with the relevant information.
-	 *
-	 */
-	public void startNewGame()
-	{
-		model.startNewGame();
-		
-		updateAllPlayers();
-	}
-
-	/**
-	 * Destroy this object.
-	 *
-	 */
-	public void destroy()
-	{
-		model = null;
-		server = null;
-		documentFactory = null;
-	}
-
-	/**
-	 * Return the game model used by this controller. (Currently just used for test purposes.)
-	 *
-	 * @return
-	 */
-	public GameModel getModel()
-	{
-		return model;
 	}
 }

@@ -45,7 +45,7 @@ public class CardTableData
 
 	// Store all of the cards on the table.
 	protected List<Card>			cardsOnTable;				// The actual list of cards.
-	protected List<Card>			highlightedCards;			//Show all of the highlighted cards.
+	protected Vector<Card>			selectedCards;				//Show all of the highlighted cards.
 	
 	// Store the geometry of where the cards belong.
 	protected Card[][]			grid;						// The actual grid of cards.
@@ -67,7 +67,7 @@ public class CardTableData
 
 		// Create the vectors for holding cards.
 		cardsOnTable = new Vector<Card>();
-		highlightedCards = new Vector<Card>();
+		selectedCards = new Vector<Card>();
 	}
 	
 	public CardTableData(Element root)
@@ -78,7 +78,7 @@ public class CardTableData
 
 	public boolean isHighlighted(Card card)
 	{
-		return highlightedCards.contains(card);
+		return selectedCards.contains(card);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class CardTableData
 			
 			if(cardElement.attributeValue("highlighted", "false").equals("true"))
 			{
-				highlightedCards.add(card);
+				selectedCards.add(card);
 			}
 			
 			// Now update the row and column.
