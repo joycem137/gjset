@@ -9,11 +9,14 @@ import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 /* 
@@ -78,8 +81,25 @@ public class PlayGamePage extends Page implements Observer
 		createCardTable();
 		createDeck();
 		createButtons();
+		createKeyboardListener();
 	}
 	
+	/**
+	 * Check for incoming keyboard commands.
+	 *
+	 */
+	private void createKeyboardListener()
+	{
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "keyCallSet");
+		getActionMap().put("keyCallSet", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.callSet();
+			}
+		});
+	}
+
 	/**
 	 * Create the objects that are going to lie on the table.
 	 *
