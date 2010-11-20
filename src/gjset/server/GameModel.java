@@ -3,6 +3,7 @@ package gjset.server;
 import gjset.GameConstants;
 import gjset.data.Card;
 import gjset.data.Player;
+import gjset.tools.CountdownTimer;
 
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,9 @@ public class GameModel extends Observable
 	// Right now there's only a single player.
 	private List<Player> players;
 	
+	private CountdownTimer setTimer;
+	private static final int SET_TIME = 1500;
+	
 	public GameModel()
 	{
 		// There is no active game at this time.
@@ -47,6 +51,15 @@ public class GameModel extends Observable
 		
 		// Set the default set caller id
 		setCallerId = 0;
+		
+		// Create a set timer to abort an incoming set.
+		setTimer = new CountdownTimer(SET_TIME, new Runnable()
+		{
+			public void run()
+			{
+				handleSetTimeout();
+			}
+		});
 	}
 
 	/**
@@ -134,6 +147,10 @@ public class GameModel extends Observable
 		{
 			checkForEndofGame();
 		}
+		
+		// Notify observers that the model has changed.
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -145,6 +162,12 @@ public class GameModel extends Observable
 	{
 		gameState = GameConstants.GAME_STATE_SET_CALLED;
 		setCallerId = playerId;
+		
+		setTimer.start();
+		
+		// Notify observers that the model has changed.
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -155,6 +178,10 @@ public class GameModel extends Observable
 	public void toggleCardSelection(Card card)
 	{
 		cardTable.toggleSelection(card);
+		
+		// Notify observers that the model has changed.
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -166,13 +193,14 @@ public class GameModel extends Observable
 	 */
 	public boolean resolveSet()
 	{
+		// Start by clearing the set timer.
+		setTimer.cancel();
+		
 		List<Card> selectedCards = cardTable.getSelectedCards();
 		boolean isASet = checkForSet(selectedCards);
 		
 		if(isASet)
 		{
-			// First take the selected cards and remove them from the card table.
-			
 			// Check to see if we can draw more cards.
 			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
 			{
@@ -200,7 +228,28 @@ public class GameModel extends Observable
 		// Check to see if this is the end of the game.
 		checkForEndofGame();
 		
+		// Notify observers that the model has changed.
+		setChanged();
+		notifyObservers();
+		
 		return isASet;
+	}
+
+	/**
+	 * Deal with the fact that no set was called within the alotted time.
+	 *
+	 */
+	private void handleSetTimeout()
+	{
+		// Change the game state.
+		gameState = GameConstants.GAME_STATE_IDLE;
+		
+		// De-select the cards.
+		cardTable.unSelectCards();
+		
+		// Notify observers that the model has changed.
+		setChanged();
+		notifyObservers(new Boolean(false));
 	}
 
 	// This function checks a vector of cards to determine if they are a set.
