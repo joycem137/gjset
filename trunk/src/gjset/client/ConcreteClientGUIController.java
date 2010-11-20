@@ -61,6 +61,16 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 
 	/**
+	 * Return the model to allow for inspection.
+	 *
+	 * @return
+	 */
+	public ClientGUIModel getModel()
+	{
+		return model;
+	}
+
+	/**
 	 * Returns the model that this controller is using.
 	 *
 	 * @return
@@ -69,6 +79,28 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	public ClientGUIModel getClientGUIModel()
 	{
 		return model;
+	}
+
+	/**
+	 * Returns the player Id.  (Used for testing only at this time.)
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
+	}
+
+	/**
+	 * Request that the server start a new game.
+	 *
+	 * @see gjset.client.ClientGUIController#startNewGame()
+	 */
+	public void startNewGame()
+	{
+		Element root = documentFactory.createElement("command");
+		root.addAttribute("type", "newgame");
+		client.sendMessage(root);
 	}
 
 	/**
@@ -103,11 +135,14 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void selectCard(Card cardData)
 	{
-		Element root = documentFactory.createElement("command");
-		root.addAttribute("type", "selectcard");
-		root.add(cardData.getXMLRepresentation());
-		
-		client.sendMessage(root);
+		if(model.canSelectCards())
+		{
+			Element root = documentFactory.createElement("command");
+			root.addAttribute("type", "selectcard");
+			root.add(cardData.getXMLRepresentation());
+			
+			client.sendMessage(root);
+		}
 	}
 	
 	/**
@@ -132,34 +167,18 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 
 	/**
-	 * Returns the player Id.  (Used for testing only at this time.)
-	 *
-	 * @return
-	 */
-	public int getPlayerId()
-	{
-		return playerId;
-	}
-
-	/**
 	 * Destroy this controller.
 	 *
 	 */
 	public void destroy()
 	{
+		//model.destroy();
+		//client.destroy();
+		
 		model = null;
 		client = null;
+		documentFactory = null;
 		playerId = 0;
-	}
-
-	/**
-	 * Return the model to allow for inspection.
-	 *
-	 * @return
-	 */
-	public ClientGUIModel getModel()
-	{
-		return model;
 	}
 
 }

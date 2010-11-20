@@ -105,6 +105,10 @@ public class ServerGameController implements ServerMessageHandler, Observer
 				Card card = new Card(cardElement);
 				responseElement = toggleSelection(playerId, card);
 			}
+			else if(commandType.equals("newgame"))
+			{
+				startNewGame();
+			}
 		}
 		
 		// See if we need to send a response to the player.

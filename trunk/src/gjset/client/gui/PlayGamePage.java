@@ -1,5 +1,6 @@
 package gjset.client.gui;
 
+import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.gui.MainFrame;
@@ -214,6 +215,12 @@ public class PlayGamePage extends Page implements Observer
 		
 		// Update the card table
 		cardTablePanel.update(model.getCardTable());
+		
+		// See if we need to display the game over screen.
+		if(model.getGameState() == GameConstants.GAME_STATE_GAME_OVER)
+		{
+			controller.startNewGame();
+		}
 		
 		repaint();
 	}
