@@ -33,7 +33,7 @@ public class GameModel extends Observable
 	private List<Player> players;
 	
 	private CountdownTimer setTimer;
-	private static final int SET_TIME = 1500;
+	private static final int SET_TIME = 2500;
 	
 	public GameModel()
 	{

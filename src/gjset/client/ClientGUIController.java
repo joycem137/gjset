@@ -34,4 +34,10 @@ public interface ClientGUIController
 	 */
 	void selectCard(Card cardData);
 
+	/**
+	 * Requests a new game from the server.
+	 *
+	 */
+	void startNewGame();
+
 }
