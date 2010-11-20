@@ -78,4 +78,23 @@ public class TestServerGameModel
 		assertEquals(3, cardTable.getRows());
 		assertEquals(5, cardTable.getCols());
 	}
+	
+	/**
+	 * Verify that we can call set on the model.
+	 */
+	@Test
+	public void testCallSet()
+	{
+		GameModel model = new GameModel();
+		model.startNewGame();
+		
+		assertEquals(0, model.getSetCallerId());
+		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
+		
+		int playerId = 1;
+		model.callSet(playerId);
+		
+		assertEquals(playerId, model.getSetCallerId());
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, model.getGameState());
+	}
 }
