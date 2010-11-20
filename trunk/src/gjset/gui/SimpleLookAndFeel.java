@@ -126,4 +126,9 @@ public class SimpleLookAndFeel
 	{
 		return new Color(243, 232, 175);
 	}
+
+	public Color getPlayerPanelBackgroundColor()
+	{
+		return new Color(0, 0, 0, 130);
+	}
 }
