@@ -9,6 +9,7 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
+import gjset.data.Card;
 import gjset.data.CardTableData;
 import gjset.server.GameModel;
 import gjset.server.GameServer;
@@ -236,5 +237,93 @@ public class TestServerController
 		assertTrue(clientModel.canSelectCards());
 		
 	}
+	
+	/**
+	 * Verify that card selection works correctly.
+	 */
+	@Test
+	public void testCardSelection()
+	{
+		
+		// Start the game.
+		serverController.startNewGame();
+		
+		try
+		{
+			Thread.sleep(200);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Get the data from the client.
+		ClientGUIModel clientModel = clientController.getModel();
+		CardTableData clientCardTable = clientModel.getCardTable();
+		
+		// Send the command from the client.
+		clientController.selectCard(clientCardTable.getCardAt(0,0));
 
+		try
+		{
+			Thread.sleep(400);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Start by verifying that set has been called.
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, clientModel.getGameState());
+		assertTrue(clientModel.canSelectCards());
+		assertFalse(clientModel.canDrawCards());
+		assertFalse(clientModel.canCallSet());
+		
+		clientCardTable = clientModel.getCardTable();
+		
+		// Now verify that the card is highlighted.
+		assertTrue(clientCardTable.isHighlighted(clientCardTable.getCardAt(0,0)));
+		
+		// We'll continue by selecting another card.
+		clientController.selectCard(clientCardTable.getCardAt(0,1));
+
+		try
+		{
+			Thread.sleep(400);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Start by verifying that set is still called.
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, clientModel.getGameState());
+		assertTrue(clientModel.canSelectCards());
+		assertFalse(clientModel.canDrawCards());
+		assertFalse(clientModel.canCallSet());
+		
+		clientCardTable = clientModel.getCardTable();
+		
+		// Now verify that the card is highlighted.
+		assertTrue(clientCardTable.isHighlighted(clientCardTable.getCardAt(0,1)));
+		
+		// Then deselect the original.
+		clientController.selectCard(clientCardTable.getCardAt(0,0));
+
+		try
+		{
+			Thread.sleep(400);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Start by verifying that set is still called.
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, clientModel.getGameState());
+		assertTrue(clientModel.canSelectCards());
+		assertFalse(clientModel.canDrawCards());
+		assertFalse(clientModel.canCallSet());
+		
+		clientCardTable = clientModel.getCardTable();
+		
+		// Now verify that the card is highlighted.
+		assertFalse(clientCardTable.isHighlighted(clientCardTable.getCardAt(0,0)));
+	}
 }

@@ -242,6 +242,23 @@ public class CardTable extends CardTableData
 		cardPositions = newPositions;
 	}
 
+	/**
+	 * Toggle selection of the indicated card.
+	 *
+	 * @param card
+	 */
+	public void toggleSelection(Card card)
+	{
+		if(highlightedCards.contains(card))
+		{
+			highlightedCards.remove(card);
+		}
+		else
+		{
+			highlightedCards.add(card);
+		}
+	}
+
 	private void moveCard(Card[][] newGrid, int row, int col, int newRow, int newCol)
 	{
 		// System.out.println("Moving card from " + row + ", " + col + " to " + newRow + ", " + newCol);
