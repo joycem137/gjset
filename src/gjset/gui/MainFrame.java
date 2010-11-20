@@ -5,6 +5,8 @@ import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 
@@ -14,29 +16,29 @@ import javax.swing.JPanel;
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of gjSet.
+ *  This file is part of Combo Cards.
  *  
- *  gjSet is Copyright 2008-2009 Joyce Murton and Andrea Kilpatrick
+ *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
  *  The Set Game, card design, and basic game mechanics of the Set Game are
  *  registered trademarks of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
- *  but the authors of gjSet are very grateful for
+ *  but the authors of Combo Cards are very grateful for
  *  them creating such an excellent card game.
  *  
- *  gjSet is free software: you can redistribute it and/or modify
+ *  Combo Cards is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *   
- *  gjSet is distributed in the hope that it will be useful,
+ *  Combo Cards is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details
  *   
  *  You should have received a copy of the GNU General Public License
- *  along with gjSet.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -48,12 +50,14 @@ import javax.swing.JPanel;
 public class MainFrame extends JFrame
 {
 	// Keyboard components
-	private KeyStrokeFactory	keyStrokeFactory;
+	private KeyStrokeFactory keyStrokeFactory;
 	
 	private JPanel rootPanel;
 	private Page currentPage;
 	
-	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 14, 996, 522);
+	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 14, 996, 524);
+	public static final Rectangle CONTROL_PANEL_AREA = new Rectangle(89, 582, 846, 185);
+	public static final Rectangle TEXT_AREA = new Rectangle(16, 545, 992, 37);
 
 	public MainFrame()
 	{
@@ -109,7 +113,7 @@ public class MainFrame extends JFrame
 		rootPanel.setLocation(0, 0);
 		rootPanel.setSize(1024, 768);
 		
-		// Turn of resizability.  I'm a control freak. :)
+		// Turn off resizability.  I'm a control freak. :)
 		setResizable(false);
 		
 		// Finish constructing the window.
@@ -141,4 +145,20 @@ public class MainFrame extends JFrame
 	{
 		loadPage(new LaunchPage(PLAYING_FIELD_AREA, this));
 	}
+	
+	/*
+	 * This is used to show the various areas of the screen for positioning. 
+	 * 
+	public void paint(Graphics g)
+	{
+		Image backgroundImage = ResourceManager.getInstance().getImage("window_main.png");
+		g.drawImage(backgroundImage, 0, 0, this);
+		
+		Graphics2D g2 = (Graphics2D)g;
+		
+		g2.setColor(new Color(255, 0, 0, 120));
+		g2.fill(CONTROL_PANEL_AREA);
+	}
+	*/
+	
 }
