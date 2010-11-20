@@ -91,7 +91,8 @@ public class ClientGUIModel extends Observable
 	 */
 	public boolean canDrawCards()
 	{
-		return deckSize > 0 && cardTableData.getCols() < 7;
+		return gameState == GameConstants.GAME_STATE_IDLE
+			&& deckSize > 0 && cardTableData.getCols() < 7;
 	}
 	
 	/**

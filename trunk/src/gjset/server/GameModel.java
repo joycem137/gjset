@@ -11,6 +11,12 @@ import java.util.Vector;
 
 /**
  * This class stores all of the information used to represent the game.
+ * 
+ * Note that the model does not do any checking internally for whether or not
+ * a particular action is valid.  It assumes that anyone that is manipulating this data
+ * knows what they're doing.
+ * 
+ * Generally speaking, the controller is graced with the need to verify the validity of incoming actions.
  */
 public class GameModel extends Observable
 {
@@ -20,6 +26,7 @@ public class GameModel extends Observable
 	
 	// Stores the current state of the game.
 	private int gameState;
+	private int setCallerId;
 
 	// Keep a list of what cards are currently selected.
 	private List<Card> selectedCards; 
@@ -41,6 +48,9 @@ public class GameModel extends Observable
 		
 		// Create a default player
 		players = new Vector<Player>();
+		
+		// Set the default set caller id
+		setCallerId = 0;
 	}
 
 	/**
@@ -186,13 +196,23 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * TODO: Describe method
+	 * Return the id of the player that called set.
 	 *
 	 * @return
 	 */
 	public int getSetCallerId()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return setCallerId;
+	}
+
+	/**
+	 * Cause the model to engage call set mode for the indicated player.
+	 *
+	 * @param playerId
+	 */
+	public void callSet(int playerId)
+	{
+		gameState = GameConstants.GAME_STATE_SET_CALLED;
+		setCallerId = playerId;
 	}
 }

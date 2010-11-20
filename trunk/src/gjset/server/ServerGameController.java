@@ -68,9 +68,8 @@ public class ServerGameController implements ServerMessageHandler
 	 */
 	private Element drawCards()
 	{
-		Element responseElement = documentFactory.createElement("commandresponse");
 		boolean success = false;
-		String failureReason = "";
+		String failureReason = null;
 		
 		int gameState = model.getGameState();
 		
@@ -104,6 +103,40 @@ public class ServerGameController implements ServerMessageHandler
 			failureReason = "Game is not idle.";
 		}
 		
+		return getCommandResponse(success, failureReason);
+	}
+	
+	/**
+	 * Request that this player calls set.
+	 *
+	 * @return
+	 */
+	private Element callSet(int playerId)
+	{
+		// Verify that we can actually call set.
+		if(model.getGameState() == GameConstants.GAME_STATE_IDLE)
+		{
+			model.callSet(playerId);
+			return getCommandResponse(true, null);
+		}
+		else
+		{
+			return getCommandResponse(false, "Set has already been called");
+		}
+	}
+
+	/**
+	 * Return your basic success response.
+	 *
+	 * @param success  True if successful, false if not.
+	 * @param reason Adds a reason that can be added to the command response.
+	 * 
+	 * @return
+	 */
+	private Element getCommandResponse(boolean success, String reason)
+	{
+		String failureReason = "";
+		
 		// Create our response
 		String resultText = "failed";
 		if(success)
@@ -111,15 +144,19 @@ public class ServerGameController implements ServerMessageHandler
 			resultText = "success";
 		}
 		
+		Element responseElement = documentFactory.createElement("commandresponse");
 		responseElement.addAttribute("result", resultText);
 		
-		Element reasonElement = documentFactory.createElement("reason");
-		reasonElement.setText(failureReason);
-		responseElement.add(reasonElement);
+		if(reason != null)
+		{
+			Element reasonElement = documentFactory.createElement("reason");
+			reasonElement.setText(failureReason);
+			responseElement.add(reasonElement);
+		}
 		
 		return responseElement;
 	}
-	
+
 	/**
 	 * Handle a message incoming from the server.
 	 */
@@ -137,6 +174,10 @@ public class ServerGameController implements ServerMessageHandler
 			if(commandType.equals("drawcards"))
 			{
 				responseElement = drawCards();
+			}
+			else if(commandType.equals("callset"))
+			{
+				responseElement = callSet(playerId);
 			}
 		}
 		
@@ -215,7 +256,7 @@ public class ServerGameController implements ServerMessageHandler
 		{
 			Element setCallerElement = documentFactory.createElement("setcaller");
 			setCallerElement.setText("" + model.getSetCallerId());
-			gameStateElement.add(setCallerElement);
+			root.add(setCallerElement);
 		}
 		
 		// Then the card table.

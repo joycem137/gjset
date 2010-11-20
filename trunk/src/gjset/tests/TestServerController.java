@@ -2,7 +2,9 @@ package gjset.tests;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
@@ -141,6 +143,10 @@ public class TestServerController
 		assertEquals(12, clientCardTable.getNumCards());
 		assertEquals(3, clientCardTable.getRows());
 		assertEquals(4, clientCardTable.getCols());
+		
+		assertTrue(clientModel.canCallSet());
+		assertTrue(clientModel.canDrawCards());
+		assertTrue(clientModel.canSelectCards());
 	}
 	
 	/**
@@ -185,6 +191,50 @@ public class TestServerController
 		assertEquals(15, clientCardTable.getNumCards());
 		assertEquals(3, clientCardTable.getRows());
 		assertEquals(5, clientCardTable.getCols());
+	}
+	
+	/**
+	 * Verify that calling set actually works correctly.
+	 */
+	@Test
+	public void testCallSet()
+	{
+		serverController.startNewGame();
+		
+		try
+		{
+			Thread.sleep(200);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Send the command from the client.
+		clientController.callSet();
+		
+		try
+		{
+			Thread.sleep(400);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Verify the changes on the server.
+		GameModel serverModel = serverController.getModel();
+		
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, serverModel.getGameState());
+		assertEquals(clientController.getPlayerId(), serverModel.getSetCallerId());
+		
+		// Verify the changes on the client.
+		ClientGUIModel clientModel = clientController.getModel();
+		
+		assertEquals(GameConstants.GAME_STATE_SET_CALLED, clientModel.getGameState());
+		
+		assertFalse(clientModel.canCallSet());
+		assertFalse(clientModel.canDrawCards());
+		assertTrue(clientModel.canSelectCards());
+		
 	}
 
 }
