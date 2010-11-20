@@ -2,12 +2,16 @@ package gjset.tests;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import gjset.GameConstants;
 import gjset.data.Card;
 import gjset.data.CardTableData;
+import gjset.server.CardTable;
 import gjset.server.GameModel;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,6 +19,17 @@ import org.junit.Test;
  */
 public class TestServerGameModel
 {
+	GameModel model;
+	
+	/**
+	 * 
+	 */
+	@Before
+	public void setUp()
+	{
+		model = new GameModel();
+	}
+	
 	/**
 	 * 
 	 * Verify that the initial configuration of the game model is correct.
@@ -23,7 +38,6 @@ public class TestServerGameModel
 	@Test
 	public void testInitialConfiguration()
 	{
-		GameModel model = new GameModel();
 		
 		assertEquals(GameConstants.GAME_STATE_NOT_STARTED, model.getGameState());
 	}
@@ -36,7 +50,6 @@ public class TestServerGameModel
 	@Test
 	public void testStartingNewGame()
 	{
-		GameModel model = new GameModel();
 		model.startNewGame();
 		
 		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
@@ -61,7 +74,6 @@ public class TestServerGameModel
 	@Test
 	public void testDrawingCards()
 	{
-		GameModel model = new GameModel();
 		CardTableData cardTable = model.getCardTable();
 		
 		model.startNewGame();
@@ -85,7 +97,6 @@ public class TestServerGameModel
 	@Test
 	public void testCallSet()
 	{
-		GameModel model = new GameModel();
 		model.startNewGame();
 		
 		assertEquals(0, model.getSetCallerId());
@@ -96,5 +107,46 @@ public class TestServerGameModel
 		
 		assertEquals(playerId, model.getSetCallerId());
 		assertEquals(GameConstants.GAME_STATE_SET_CALLED, model.getGameState());
+	}
+	
+	/**
+	 * Verify that selecting cards works correctly.
+	 */
+	@Test
+	public void testSelectCard()
+	{
+		model.startNewGame();
+		
+		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
+		
+		// Get an example card.
+		CardTable cardTable = model.getCardTable();
+		Card card = cardTable.getCardAt(0,0);
+		
+		assertFalse(cardTable.isHighlighted(card));
+		
+		int playerId = 1;
+		
+		// Now select the card.
+		model.toggleCardSelection(card);
+		
+		// Verify that the card is now highlighted.
+		assertTrue(cardTable.isHighlighted(card));
+		
+		// Select another card.
+		Card card2 = cardTable.getCardAt(0,1);
+		
+		// Verify that it isn't already highlighted.
+		assertFalse(cardTable.isHighlighted(card2));
+		
+		model.toggleCardSelection(card2);
+		
+		// Verify that the second card is highlighted.
+		assertTrue(cardTable.isHighlighted(card2));
+		
+		// Now test card deselection
+		model.toggleCardSelection(card);
+		
+		assertFalse(cardTable.isHighlighted(card));
 	}
 }

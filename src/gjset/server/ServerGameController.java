@@ -29,6 +29,7 @@ package gjset.server;
  */
 
 import gjset.GameConstants;
+import gjset.data.Card;
 
 import java.util.Iterator;
 import java.util.List;
@@ -126,6 +127,42 @@ public class ServerGameController implements ServerMessageHandler
 	}
 
 	/**
+	 * Request card selection for the indicated player.
+	 *
+	 * @param playerId
+	 * @param card
+	 * @return
+	 */
+	private Element toggleSelection(int playerId, Card card)
+	{
+		int gameState = model.getGameState();
+		
+		if(gameState == GameConstants.GAME_STATE_IDLE)
+		{
+			// Call set.
+			model.callSet(playerId);
+			
+			// Select the card.
+			model.toggleCardSelection(card);
+			
+			return getCommandResponse(true, null);
+		}
+		else if(gameState == GameConstants.GAME_STATE_SET_CALLED
+				&& playerId == model.getSetCallerId())
+		{
+			// Allow the next card to be selected.
+			model.toggleCardSelection(card);
+			
+			return getCommandResponse(true, null);
+		}
+		else
+		{
+			// Abort early if we can't select a card.
+			return getCommandResponse(false, "You can't select cards");
+		}
+	}
+
+	/**
 	 * Return your basic success response.
 	 *
 	 * @param success  True if successful, false if not.
@@ -178,6 +215,12 @@ public class ServerGameController implements ServerMessageHandler
 			else if(commandType.equals("callset"))
 			{
 				responseElement = callSet(playerId);
+			}
+			else if(commandType.equals("selectcard"))
+			{
+				Element cardElement = commandElement.element("card");
+				Card card = new Card(cardElement);
+				responseElement = toggleSelection(playerId, card);
 			}
 		}
 		

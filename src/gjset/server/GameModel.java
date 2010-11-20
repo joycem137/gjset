@@ -27,9 +27,6 @@ public class GameModel extends Observable
 	// Stores the current state of the game.
 	private int gameState;
 	private int setCallerId;
-
-	// Keep a list of what cards are currently selected.
-	private List<Card> selectedCards; 
 	
 	// Right now there's only a single player.
 	private List<Player> players;
@@ -41,7 +38,6 @@ public class GameModel extends Observable
 
 		// Create the deck.
 		deck = new Deck();
-		selectedCards = new Vector<Card>();
 		
 		//Create the card table.
 		cardTable = new CardTable();
@@ -214,5 +210,15 @@ public class GameModel extends Observable
 	{
 		gameState = GameConstants.GAME_STATE_SET_CALLED;
 		setCallerId = playerId;
+	}
+
+	/**
+	 * Toggle selection on the indicated card. 
+	 *
+	 * @param card
+	 */
+	public void toggleCardSelection(Card card)
+	{
+		cardTable.toggleSelection(card);
 	}
 }
