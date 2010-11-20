@@ -54,7 +54,7 @@ public class CardTable extends CardTableData
 		grid = new Card[3][ROW_LIMIT];
 		
 		//Just grab the highlighted cards list outright.
-		this.highlightedCards = highlightedCards;
+		this.selectedCards = highlightedCards;
 		
 		//Now set our grid size.
 		gridRows = numRows;
@@ -74,18 +74,16 @@ public class CardTable extends CardTableData
 		}
 	}
 
-	public void setHighlight(Card card, boolean value)
+	/**
+	 * Return the list of selected cards.
+	 *
+	 * @return
+	 */
+	public List<Card> getSelectedCards()
 	{
-		if(value)
-		{
-			highlightedCards.add(card);
-		}
-		else
-		{
-			highlightedCards.remove(card);
-		}
+		return selectedCards;
 	}
-	
+
 	public void addCards(Vector<Card> cards)
 	{
 		// Now position the cards on the grid.
@@ -185,7 +183,7 @@ public class CardTable extends CardTableData
 		// Reset the list of cards.
 		cardsOnTable.clear();
 		cardPositions.clear();
-		highlightedCards.clear();
+		selectedCards.clear();
 	}
 
 	/**
@@ -249,14 +247,23 @@ public class CardTable extends CardTableData
 	 */
 	public void toggleSelection(Card card)
 	{
-		if(highlightedCards.contains(card))
+		if(selectedCards.contains(card))
 		{
-			highlightedCards.remove(card);
+			selectedCards.remove(card);
 		}
 		else
 		{
-			highlightedCards.add(card);
+			selectedCards.add(card);
 		}
+	}
+
+	/**
+	 * Un select all cards.
+	 *
+	 */
+	public void unSelectCards()
+	{
+		selectedCards.removeAllElements();
 	}
 
 	private void moveCard(Card[][] newGrid, int row, int col, int newRow, int newCol)

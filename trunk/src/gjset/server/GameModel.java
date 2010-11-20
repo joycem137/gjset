@@ -50,6 +50,46 @@ public class GameModel extends Observable
 	}
 
 	/**
+	 * Return the current state of the game.
+	 *
+	 * @return
+	 */
+	public int getGameState()
+	{
+		return gameState;
+	}
+
+	/**
+	 * Return the deck.
+	 *
+	 * @return
+	 */
+	public Deck getDeck()
+	{
+		return deck;
+	}
+
+	/**
+	 * Return the card table we're using.
+	 *
+	 * @return
+	 */
+	public CardTable getCardTable()
+	{
+		return cardTable;
+	}
+
+	/**
+	 * Return the id of the player that called set.
+	 *
+	 * @return
+	 */
+	public int getSetCallerId()
+	{
+		return setCallerId;
+	}
+
+	/**
 	 * 
 	 * Start a new game.
 	 *
@@ -81,36 +121,6 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Return the current state of the game.
-	 *
-	 * @return
-	 */
-	public int getGameState()
-	{
-		return gameState;
-	}
-
-	/**
-	 * Return the deck.
-	 *
-	 * @return
-	 */
-	public Deck getDeck()
-	{
-		return deck;
-	}
-
-	/**
-	 * Return the card table we're using.
-	 *
-	 * @return
-	 */
-	public CardTable getCardTable()
-	{
-		return cardTable;
-	}
-
-	/**
 	 * Draw more cards from the deck and place them on the card table.
 	 *
 	 */
@@ -118,12 +128,114 @@ public class GameModel extends Observable
 	{
 		// Draw 3 new cards to add to the table.
 		cardTable.addCards(deck.drawCards(3));
-
+	
 		// Check to see if the game might be over.
 		if (deck.getRemainingCards() == 0)
 		{
 			checkForEndofGame();
 		}
+	}
+
+	/**
+	 * Cause the model to engage call set mode for the indicated player.
+	 *
+	 * @param playerId
+	 */
+	public void callSet(int playerId)
+	{
+		gameState = GameConstants.GAME_STATE_SET_CALLED;
+		setCallerId = playerId;
+	}
+
+	/**
+	 * Toggle selection on the indicated card. 
+	 *
+	 * @param card
+	 */
+	public void toggleCardSelection(Card card)
+	{
+		cardTable.toggleSelection(card);
+	}
+
+	/**
+	 * Resolve the selected cards to determine if they're a set.
+	 * 
+	 * Assumes there are three cards already selected.  If there are not 3 cards there, it will break.
+	 *
+	 * @return Return true if this actually was a set.
+	 */
+	public boolean resolveSet()
+	{
+		List<Card> selectedCards = cardTable.getSelectedCards();
+		boolean isASet = checkForSet(selectedCards);
+		
+		if(isASet)
+		{
+			// First take the selected cards and remove them from the card table.
+			
+			// Check to see if we can draw more cards.
+			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
+			{
+				// Draw the new cards and place them on the table.
+				cardTable.replaceCards(selectedCards, deck.drawCards(3));
+			}
+			else
+			{
+				// There are no cards left to draw. Just remove the selected ones.
+				cardTable.removeCards(selectedCards);
+			}
+			
+			// De-select active cards.
+			cardTable.unSelectCards();
+		}
+		else
+		{
+			// De-select the cards.
+			cardTable.unSelectCards();
+		}
+		
+		// For now, we immediately return to the idle state.
+		gameState = GameConstants.GAME_STATE_IDLE;
+		
+		// Check to see if this is the end of the game.
+		checkForEndofGame();
+		
+		return isASet;
+	}
+
+	// This function checks a vector of cards to determine if they are a set.
+	private boolean checkForSet(List<Card> cards)
+	{
+		// Check each property
+		for (int property = 1; property <= 4; property++)
+		{
+			// System.out.println("Checking property " + property);
+
+			// Check the first two cards against each other.
+			if (cards.get(0).getProperty(property) == cards.get(1).getProperty(property))
+			{
+				// System.out.println("The first two cards match in this property!");
+				// The first two cards match. The next two should match as well.
+				if (cards.get(1).getProperty(property) != cards.get(2).getProperty(property))
+				{
+					// System.out.println("But the second two do not.  This is not a set.");
+					return false;
+				}
+			}
+			else
+			{
+				// System.out.println("The first two cards do not match in this property!");
+				// The first two cards do not match. The next two should not match either.
+				if (cards.get(1).getProperty(property) == cards.get(2).getProperty(property)
+						|| cards.get(0).getProperty(property) == cards.get(2).getProperty(property))
+				{
+					// System.out.println("But there are two that do.  This is not a set.");
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/*
@@ -134,7 +246,7 @@ public class GameModel extends Observable
 	{
 		// If there are still cards in the deck, the game is not yet over.
 		if (deck.getRemainingCards() > 0) return;
-
+	
 		// Now check all the cards to see if there are any sets there.
 		List<Card> cards = cardTable.getCards();
 		
@@ -147,13 +259,13 @@ public class GameModel extends Observable
 				//System.out.println("Checking " + card1 + " and " + card2);
 				Card testCard = finishSet(card1, card2);
 				//System.out.println("Found " + testCard);
-
+	
 				// If the remaining cards contains the test card, the game is still on.
 				if (cards.contains(testCard)) return;
 				//System.out.println("But the card was not on the table.");
 			}
 		}
-
+	
 		// We made it this far, there are no sets remaining.
 		gameState = GameConstants.GAME_STATE_GAME_OVER;
 	}
@@ -189,36 +301,5 @@ public class GameModel extends Observable
 		}
 		
 		return card3;
-	}
-
-	/**
-	 * Return the id of the player that called set.
-	 *
-	 * @return
-	 */
-	public int getSetCallerId()
-	{
-		return setCallerId;
-	}
-
-	/**
-	 * Cause the model to engage call set mode for the indicated player.
-	 *
-	 * @param playerId
-	 */
-	public void callSet(int playerId)
-	{
-		gameState = GameConstants.GAME_STATE_SET_CALLED;
-		setCallerId = playerId;
-	}
-
-	/**
-	 * Toggle selection on the indicated card. 
-	 *
-	 * @param card
-	 */
-	public void toggleCardSelection(Card card)
-	{
-		cardTable.toggleSelection(card);
 	}
 }
