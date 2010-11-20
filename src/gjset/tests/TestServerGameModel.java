@@ -125,8 +125,6 @@ public class TestServerGameModel
 		
 		assertFalse(cardTable.isHighlighted(card));
 		
-		int playerId = 1;
-		
 		// Now select the card.
 		model.toggleCardSelection(card);
 		
