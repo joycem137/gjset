@@ -89,6 +89,8 @@ public class PlayerClientHandler
 	 */
 	public void startListening()
 	{
+		console.message("Starting to listen to client");
+		
 		// Start listening.
 		listeningThread.start();
 		
@@ -102,6 +104,8 @@ public class PlayerClientHandler
 	 */
 	private void sendInitializationMessage()
 	{
+		console.message("Initializing client");
+		
 		Element message = documentFactory.createElement("playerid");
 		message.addText("" + playerId);
 		
