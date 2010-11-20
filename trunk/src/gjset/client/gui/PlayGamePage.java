@@ -65,6 +65,7 @@ public class PlayGamePage extends Page implements Observer
 	private BigButton callSetButton;
 	private BigButton drawButton;
 	private CardTablePanel cardTablePanel;
+	private PlayerPanel playerPanel;
 
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
@@ -82,9 +83,10 @@ public class PlayGamePage extends Page implements Observer
 		createCardTable();
 		createDeck();
 		createButtons();
+		createPlayerPanel();
 		createKeyboardListener();
 	}
-	
+
 	/**
 	 * Check for incoming keyboard commands.
 	 *
@@ -99,6 +101,16 @@ public class PlayGamePage extends Page implements Observer
 				controller.callSet();
 			}
 		});
+	}
+	
+	/**
+	 * Create the player's information panel.
+	 *
+	 */
+	private void createPlayerPanel()
+	{
+		playerPanel = new PlayerPanel();
+		add(playerPanel);
 	}
 
 	/**
