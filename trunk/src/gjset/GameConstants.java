@@ -14,4 +14,6 @@ public class GameConstants
 	public static final int GAME_PORT = 15563;
 	
 	public static final String COMM_VERSION = "1";
+	
+	public static final int MAX_PLAYERS = 8;
 }

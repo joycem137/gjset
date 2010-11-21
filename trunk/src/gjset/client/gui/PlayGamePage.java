@@ -13,13 +13,14 @@ import gjset.gui.framework.Page;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -69,6 +70,7 @@ public class PlayGamePage extends Page implements Observer
 	private BigButton drawButton;
 	private CardTablePanel cardTablePanel;
 	private PlayerPanel playerPanel;
+	private List<OtherPlayerPanel> otherPlayerPanels;
 
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
@@ -115,14 +117,29 @@ public class PlayGamePage extends Page implements Observer
 	private void createOtherPlayerPanels()
 	{
 		int INSET = 5;
-		
-		JPanel panel = new OtherPlayerPanel();
-		
-		// locate the panel.		
 		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
-		panel.setLocation(playingFrame.x + INSET, playingFrame.y + INSET);
 		
-		add(panel);
+		otherPlayerPanels = new Vector<OtherPlayerPanel>();
+		
+		for(int i = 0; i < GameConstants.MAX_PLAYERS - 1; i++)
+		{
+			OtherPlayerPanel panel = new OtherPlayerPanel();
+			
+			int x = playingFrame.x + INSET;
+			
+			if( i % 2 == 1 )
+			{
+				x = (playingFrame.y + playingFrame.width) - INSET - panel.getWidth();
+			}
+			
+			int y = playingFrame.y + (i / 2) * (panel.getHeight() + 2) + INSET;
+			
+			// locate the panel.
+			panel.setLocation(x, y);
+			
+			add(panel);
+			otherPlayerPanels.add(panel);
+		}
 	}
 
 	/**
