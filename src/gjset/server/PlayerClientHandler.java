@@ -1,5 +1,6 @@
 package gjset.server;
 
+import gjset.data.Player;
 import gjset.server.gui.ServerConsole;
 import gjset.tools.MessageUtils;
 
@@ -56,18 +57,17 @@ public class PlayerClientHandler
 	private BufferedReader reader;
 	
 	private Thread listeningThread;
-	private int playerId;
 	
 	private DocumentFactory documentFactory;
+	private Player player;
 
-	public PlayerClientHandler(Socket socket, GameServer server, ServerConsole console, int playerId)
+	public PlayerClientHandler(Socket socket, GameServer server, ServerConsole console)
 	{
 		this.socket = socket;
 		this.server = server;
 		this.console = console;
-		this.playerId = playerId;
 		
-		console.message("Creating client handler with id " + playerId);
+		console.message("Creating client handler");
 		
 		documentFactory = DocumentFactory.getInstance();
 		
@@ -93,9 +93,6 @@ public class PlayerClientHandler
 		
 		// Start listening.
 		listeningThread.start();
-		
-		// Now that we're listening, initialize the other end.
-		sendInitializationMessage();
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class PlayerClientHandler
 		console.message("Initializing client");
 		
 		Element message = documentFactory.createElement("playerid");
-		message.addText("" + playerId);
+		message.addText("" + getPlayerId());
 		
 		sendMessage(message);
 	}
@@ -170,7 +167,27 @@ public class PlayerClientHandler
 	 */
 	public int getPlayerId()
 	{
-		return playerId;
+		if(player != null)
+		{
+			return player.getId();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Set the player to associate with this client.
+	 *
+	 * @param player
+	 */
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+		
+		// Now that we're listening, initialize the other end.
+		sendInitializationMessage();
 	}
 
 	/**

@@ -163,9 +163,15 @@ public class Player
 		
 		Element pointsElement = documentFactory.createElement("points");
 		pointsElement.setText("" + points);
+		playerElement.add(pointsElement);
 		
 		Element penaltyElement = documentFactory.createElement("penalty");
 		penaltyElement.setText("" + penalty);
+		playerElement.add(penaltyElement);
+		
+		Element nameElement = documentFactory.createElement("name");
+		nameElement.setText(name);
+		playerElement.add(nameElement);
 		
 		return playerElement;
 	}	

@@ -138,8 +138,12 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 */
 	public void handleNewClient(PlayerClientHandler client)
 	{
-		Element gameupdate = buildGameUpdate();
+		// Create a new player in the model.
+		Player player = model.addNewPlayer();
+		client.setPlayer(player);
 		
+		// Update the client.
+		Element gameupdate = buildGameUpdate();
 		client.sendMessage(gameupdate);
 	}
 
@@ -382,15 +386,15 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		root.add(gameStateElement);
 		
 		// Now do the players.
-		/*Element playersElement = documentFactory.createElement("players");
+		Element playersElement = documentFactory.createElement("players");
 		
-		Iterator<Player> iterator = players.iterator();
+		Iterator<Player> iterator = model.getPlayers().iterator();
 		while(iterator.hasNext())
 		{
 			Player player = iterator.next();
 			playersElement.add(player.getXMLRepresentation());
 		}
-		root.add(playersElement);*/
+		root.add(playersElement);
 		
 		// Include the set caller if appropriate.
 		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED)

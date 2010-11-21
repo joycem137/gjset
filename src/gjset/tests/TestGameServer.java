@@ -141,31 +141,5 @@ public class TestGameServer
 		NodeComparator comparator = new NodeComparator();
 		assertEquals(0, comparator.compare(fullMessage, lastMessage));
 	}
-	
-	/**
-	 * Verify that the client gets an ID upon connecting.
-	 */
-	@Test
-	public void testInitialization()
-	{
-		// First verify that we got an id.
-		assertTrue(client.getPlayerId() > 0);
-		
-		// Next verify that we get that id when we're receiving messages from this client.
-		DocumentFactory documentFactory = DocumentFactory.getInstance();
-		Element message = documentFactory.createElement("testingsend");
-		client.sendMessage(message);
-		
-		try
-		{
-			Thread.sleep(100);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-			fail("Interuppted sleep");
-		}
-		
-		assertEquals(client.getPlayerId(), handler.getLastClientId());
-	}
 
 }

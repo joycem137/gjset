@@ -54,8 +54,6 @@ public class GameServer
 
 	private Thread listeningThread;
 
-	private int maxId;
-
 	/**
 	 * 
 	 * Starts the server and prepares it to start listening for incoming connections.
@@ -68,8 +66,6 @@ public class GameServer
 		
 		clients = new Vector<PlayerClientHandler>();
 		handlers = new Vector<ServerMessageHandler>();
-		
-		maxId = 0;
 		
 		//Create the server socket.
 		try
@@ -127,13 +123,9 @@ public class GameServer
 	 */
 	
 	private void handleNewClient(Socket socket)
-	{
-		// Get the next player Id
-		maxId++;
-		int playerId = maxId;
-		
+	{	
 		// Create the new client handler.
-		PlayerClientHandler client = new PlayerClientHandler(socket, this, console, playerId);
+		PlayerClientHandler client = new PlayerClientHandler(socket, this, console);
 		
 		// Store it.
 		clients.add(client);
