@@ -170,7 +170,7 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createButtons()
 	{
-		callSetButton = createButtonAndLabel(new AbstractAction("Call Set")
+		callSetButton = createButtonAndLabel(new AbstractAction("Combo")
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
