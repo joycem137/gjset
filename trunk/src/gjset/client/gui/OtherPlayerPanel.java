@@ -1,6 +1,7 @@
-package gjset.gui;
+package gjset.client.gui;
 
 import gjset.data.Player;
+import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.ResourceManager;
 
 import java.awt.Graphics;
