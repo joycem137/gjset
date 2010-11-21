@@ -30,6 +30,7 @@ package gjset.server;
 
 import gjset.GameConstants;
 import gjset.data.Card;
+import gjset.data.Player;
 
 import java.util.Iterator;
 import java.util.List;
@@ -379,6 +380,17 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		Element gameStateElement = documentFactory.createElement("gamestate");
 		gameStateElement.setText("" + model.getGameState());
 		root.add(gameStateElement);
+		
+		// Now do the players.
+		/*Element playersElement = documentFactory.createElement("players");
+		
+		Iterator<Player> iterator = players.iterator();
+		while(iterator.hasNext())
+		{
+			Player player = iterator.next();
+			playersElement.add(player.getXMLRepresentation());
+		}
+		root.add(playersElement);*/
 		
 		// Include the set caller if appropriate.
 		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED)

@@ -2,8 +2,12 @@ package gjset.client;
 
 import gjset.GameConstants;
 import gjset.data.CardTableData;
+import gjset.data.Player;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
+import java.util.Vector;
 
 import org.dom4j.Element;
 
@@ -17,6 +21,7 @@ public class ClientGUIModel extends Observable
 	private int playerId;
 	private int gameState;
 	private int deckSize;
+	private List<Player> players;
 	
 	private CardTableData cardTableData;
 	
@@ -53,6 +58,36 @@ public class ClientGUIModel extends Observable
 	}
 
 	/**
+	 * Returns the card table associated with this model.
+	 *
+	 * @return
+	 */
+	public CardTableData getCardTable()
+	{
+		return cardTableData;
+	}
+
+	/**
+	 * Return the player Id.
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		return playerId;
+	}
+
+	/**
+	 * Return the array of players.
+	 *
+	 * @return
+	 */
+	public List<Player> getPlayers()
+	{
+		return players;
+	}
+
+	/**
 	 * 
 	 * Returns true if the player is allowed to select cards on this client.
 	 *
@@ -75,16 +110,6 @@ public class ClientGUIModel extends Observable
 	}
 
 	/**
-	 * Returns the card table associated with this model.
-	 *
-	 * @return
-	 */
-	public CardTableData getCardTable()
-	{
-		return cardTableData;
-	}
-
-	/**
 	 * Returns true if the GUI is able to request a drawing of cards.
 	 *
 	 * @return
@@ -94,15 +119,37 @@ public class ClientGUIModel extends Observable
 		return gameState == GameConstants.GAME_STATE_IDLE
 			&& deckSize > 0 && cardTableData.getCols() < 7;
 	}
-	
+
+	/**
+	 * 
+	 * Sets the player id to the indicated value.
+	 *
+	 * @param playerId
+	 */
+	public void setPlayerId(int playerId)
+	{
+		this.playerId = playerId;
+	}
+
 	/**
 	 * 
 	 * Receive server data and convert it back into reasonable data.
 	 *
 	 * @param data - An XML Node containing the model information.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void update(Element modelElement)
 	{
+		// Get the players.
+		players = new Vector<Player>();
+		Element playersElement = modelElement.element("players");
+		Iterator iterator = playersElement.elements("player").iterator();
+		while(iterator.hasNext())
+		{
+			Element playerElement = (Element)iterator.next();
+			players.add(new Player(playerElement));
+		}
+		
 		// Get the deck size.
 		String deckText = modelElement.element("deck").getText();
 		deckSize = Integer.parseInt(deckText);
@@ -128,27 +175,6 @@ public class ClientGUIModel extends Observable
 		
 		setChanged();
 		notifyObservers();
-	}
-	
-	/**
-	 * 
-	 * Sets the player id to the indicated value.
-	 *
-	 * @param playerId
-	 */
-	public void setPlayerId(int playerId)
-	{
-		this.playerId = playerId;
-	}
-
-	/**
-	 * Return the player Id.
-	 *
-	 * @return
-	 */
-	public int getPlayerId()
-	{
-		return playerId;
 	}
 
 }
