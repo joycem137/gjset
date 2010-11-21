@@ -8,8 +8,11 @@ import static org.junit.Assert.assertTrue;
 import gjset.GameConstants;
 import gjset.data.Card;
 import gjset.data.CardTableData;
+import gjset.data.Player;
 import gjset.server.CardTable;
 import gjset.server.GameModel;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -146,5 +149,45 @@ public class TestServerGameModel
 		model.toggleCardSelection(card);
 		
 		assertFalse(cardTable.isHighlighted(card));
+	}
+	
+	/**
+	 * Test the player management.
+	 */
+	@Test
+	public void testPlayerManagement()
+	{
+		// First try adding a bunch of new players.
+		Player player1 = model.addNewPlayer();
+		assertNotNull(player1);
+		player1.setName("Test 1");
+		
+		Player player2 = model.addNewPlayer();
+		assertNotNull(player2);
+		player2.setName("Test 2");
+		
+		Player player3 = model.addNewPlayer();
+		assertNotNull(player3);
+		player3.setName("Test 3");
+		
+		Player player4 = model.addNewPlayer();
+		assertNotNull(player4);
+		player4.setName("Test 4");
+		
+		// Check the configuration of one of the players.
+		assertEquals("Test 1", player1.getName());
+		assertEquals(1, player1.getId());
+		assertEquals(0, player1.getPoints());
+		assertEquals(0, player1.getPenalty());
+		assertEquals(0, player1.getScore());
+		
+		// Now get the full list of players from the model.
+		List<Player> players = model.getPlayers();
+		
+		// And test it.
+		assertNotNull(players);
+		
+		assertEquals(4, players.size());
+		assertEquals(player3, players.get(2));
 	}
 }
