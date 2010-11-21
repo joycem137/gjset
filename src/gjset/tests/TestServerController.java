@@ -224,7 +224,7 @@ public class TestServerController
 		GameModel serverModel = serverController.getModel();
 		
 		assertEquals(GameConstants.GAME_STATE_SET_CALLED, serverModel.getGameState());
-		assertEquals(clientController.getPlayerId(), serverModel.getSetCallerId());
+		assertEquals(clientController.getPlayerId(), serverModel.getSetCaller().getId());
 		
 		// Verify the changes on the client.
 		ClientGUIModel clientModel = clientController.getModel();
