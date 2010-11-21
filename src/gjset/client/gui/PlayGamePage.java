@@ -3,8 +3,8 @@ package gjset.client.gui;
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
+import gjset.data.Player;
 import gjset.gui.MainFrame;
-import gjset.gui.OtherPlayerPanel;
 import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.BigButton;
 import gjset.gui.framework.FancyLabel;
@@ -13,6 +13,7 @@ import gjset.gui.framework.Page;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -257,6 +258,9 @@ public class PlayGamePage extends Page implements Observer
 	{
 		ClientGUIModel model = (ClientGUIModel) observable;
 		
+		// Update the players.
+		updatePlayers(model);
+		
 		// Update the deck
 		int cardsInDeck = model.getCardsInDeck();
 		deckPanel.updateSize(cardsInDeck);
@@ -275,5 +279,42 @@ public class PlayGamePage extends Page implements Observer
 		}
 		
 		repaint();
+	}
+
+	/**
+	 * Update the player panels using the list from the model.
+	 *
+	 * @param players
+	 */
+	private void updatePlayers(ClientGUIModel model)
+	{
+		List<Player> players = model.getPlayers();
+		
+		int otherPlayerPanelIndex = 0;
+		Iterator<Player> iterator = players.iterator();
+		while(iterator.hasNext())
+		{
+			Player player = iterator.next();
+			if(player.getId() == model.getPlayerId())
+			{
+				// Update the player panel.
+				playerPanel.updatePlayerData(player);
+			}
+			else
+			{
+				// Update the "other" player panels.
+				OtherPlayerPanel panel = otherPlayerPanels.get(otherPlayerPanelIndex);
+				panel.updatePlayerData(player);
+				panel.setVisible(true);
+				
+				otherPlayerPanelIndex++;
+			}
+		}
+		
+		// Hide all of the remaining other player panels.
+		for(int i = otherPlayerPanelIndex; i < GameConstants.MAX_PLAYERS - 1; i++)
+		{
+			otherPlayerPanels.get(i).setVisible(false);
+		}
 	}
 }

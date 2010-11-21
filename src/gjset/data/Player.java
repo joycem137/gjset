@@ -108,6 +108,16 @@ public class Player
 		return name;
 	}
 
+	/**
+	 * Return the id for this player.
+	 *
+	 * @return
+	 */
+	public int getId()
+	{
+		return id;
+	}
+
 	public void addPoints(int x)
 	{
 		points += x;
