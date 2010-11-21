@@ -3,6 +3,7 @@ package gjset.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientGUIController;
@@ -42,7 +43,7 @@ public class TestGUIController
 	{
 		ClientGUIController controller = new ConcreteClientGUIController(client);
 		
-		assertNotNull(controller.getClientGUIModel());
+		assertNotNull(controller.getModel());
 		assertEquals(controller, client.getHandler());
 	}
 	
@@ -92,9 +93,14 @@ public class TestGUIController
 	@Test
 	public void testSelectCard()
 	{
-		Card card = new Card(1, Card.COLOR_RED, Card.SHADING_NONE, Card.SHAPE_SQUIGGLE);
 		
 		ClientGUIController controller = new ConcreteClientGUIController(client);
+		
+		// Now send a basic update out to get the controller in a state to handle card selection
+		Element updateMessage = loadSimpleFullUpdate();
+		client.injectMessage(updateMessage);
+
+		Card card = new Card(1, Card.COLOR_RED, Card.SHADING_NONE, Card.SHAPE_SQUIGGLE);
 		controller.selectCard(card);
 		
 		Element message = client.getLastMessage();
@@ -118,7 +124,7 @@ public class TestGUIController
 	public void testUpdateModelFromController()
 	{		
 		ClientGUIController controller = new ConcreteClientGUIController(client);
-		ClientGUIModel model = controller.getClientGUIModel();
+		ClientGUIModel model = controller.getModel();
 		TestGUIModel.evaluateInitialModelState(model);
 		
 		// Start by sending the ID to the client.
@@ -137,7 +143,7 @@ public class TestGUIController
 		client.injectMessage(updateMessage);
 		
 		// Verify that we're not creating new models all the time.
-		assertEquals(model, controller.getClientGUIModel());
+		assertEquals(model, controller.getModel());
 		
 		// Test the model out to make sure the update took.
 		TestGUIModel.evaluateBasicModelUpdate(model);

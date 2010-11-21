@@ -61,22 +61,12 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 
 	/**
-	 * Return the model to allow for inspection.
-	 *
-	 * @return
-	 */
-	public ClientGUIModel getModel()
-	{
-		return model;
-	}
-
-	/**
 	 * Returns the model that this controller is using.
 	 *
 	 * @return
-	 * @see gjset.client.ClientGUIController#getClientGUIModel()
+	 * @see gjset.client.ClientGUIController#getModel()
 	 */
-	public ClientGUIModel getClientGUIModel()
+	public ClientGUIModel getModel()
 	{
 		return model;
 	}

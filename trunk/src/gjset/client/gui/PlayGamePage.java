@@ -79,7 +79,7 @@ public class PlayGamePage extends Page implements Observer
 
 		// Obtain the game controller
 		this.controller = controller;
-		controller.getClientGUIModel().addObserver(this);
+		controller.getModel().addObserver(this);
 		
 		this.mainFrame = mainFrame;
 		lnf = SimpleLookAndFeel.getLookAndFeel();
