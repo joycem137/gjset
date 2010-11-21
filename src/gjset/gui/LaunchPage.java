@@ -108,7 +108,9 @@ public class LaunchPage extends DialogPage
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Load Join a game page.
+				// Switch to the join a game page.
+				JoinAGamePage page = new JoinAGamePage(mainFrame);
+				mainFrame.loadPage(page);
 			}
 		}, new Rectangle(usableArea.x, 100, usableArea.width, 40));
 		
