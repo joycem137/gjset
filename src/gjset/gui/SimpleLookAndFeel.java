@@ -90,7 +90,7 @@ public class SimpleLookAndFeel
 
 	public Font getDialogInputFont()
 	{
-		return defaultFont.deriveFont(13.0f);
+		return defaultFont.deriveFont(17.0f);
 	}
 
 	public Color getDialogTitleFG()
@@ -99,6 +99,16 @@ public class SimpleLookAndFeel
 	}
 	
 	public Color getDialogTitleBG()
+	{
+		return Color.black;
+	}
+	
+	public Font getDialogButtonFont()
+	{
+		return defaultFont.deriveFont(14.0f);
+	}
+
+	public Color getDialogButtonTextColor()
 	{
 		return Color.black;
 	}
