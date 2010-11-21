@@ -1,5 +1,8 @@
 package gjset.data;
 
+import org.dom4j.DocumentFactory;
+import org.dom4j.Element;
+
 /* 
  *  LEGAL STUFF
  * 
@@ -49,9 +52,9 @@ public class Player
 	// Create a player based on player number.
 	public Player(int number)
 	{
+		this();
+		
 		// Clear the values for the player.
-		this.points = 0;
-		this.penalty = 0;
 		this.id = number;
 		this.name = "Player " + number;
 	}
@@ -59,30 +62,30 @@ public class Player
 	// Create a named player.
 	public Player(String name)
 	{
+		this();
+		
 		// Set the player details.
-		this.points = 0;
-		this.penalty = 0;
-		this.id = 0;
 		this.name = name;
 	}
 
 	// Create a named, numbered player.
 	public Player(String name, int number)
 	{
+		this();
+		
 		// Set the player details.
-		this.points = 0;
-		this.penalty = 0;
 		this.id = number;
 		this.name = name;
 	}
 
-	
-	public Player(int points, int penalty, int id, String name)
+	/**
+	 * Build a player from the indicated player element.
+	 *
+	 * @param playerElement
+	 */
+	public Player(Element element)
 	{
-		this.points = points;
-		this.penalty = penalty;
-		this.id = id;
-		this.name = name;
+		parsePlayer(element);
 	}
 
 	public int getScore()
@@ -129,22 +132,50 @@ public class Player
 	public void setId (int x)
 	{
 		id = x;
-		if (name == "") {
+		if (name == "")
+		{
 			name = "Player " + id;
 		}
 	}
 
-	public String getRepresentation()
+	/**
+	 * 
+	 * Build the player using the indicated player element.
+	 *
+	 * @param playerElement
+	 */
+	private void parsePlayer(Element playerElement)
 	{
-		return "" + points + ":" + penalty + ":" + id + ":" + name + ":";
+		String idString = playerElement.attributeValue("id", "0");
+		id = Integer.parseInt(idString);
+		
+		String pointsString = playerElement.element("points").getText();
+		points = Integer.parseInt(pointsString);
+		
+		String penaltyString = playerElement.element("penalty").getText();
+		penalty = Integer.parseInt(penaltyString);
+		
+		name = playerElement.element("name").getText();
 	}
 
-	public static Player parsePlayer(String[] messageArray)
+	/**
+	 * Return a representation of the player.
+	 *
+	 * @return
+	 */
+	public Element getXMLRepresentation()
 	{
-		int points = Integer.parseInt(messageArray[1]);
-		int penalty = Integer.parseInt(messageArray[2]);
-		int id = Integer.parseInt(messageArray[3]);
-		String name = messageArray[4];
-		return new Player(points, penalty, id, name);
+		DocumentFactory documentFactory = DocumentFactory.getInstance();
+		
+		Element playerElement = documentFactory.createElement("player");
+		playerElement.addAttribute("id", "" + id);
+		
+		Element pointsElement = documentFactory.createElement("points");
+		pointsElement.setText("" + points);
+		
+		Element penaltyElement = documentFactory.createElement("penalty");
+		penaltyElement.setText("" + penalty);
+		
+		return playerElement;
 	}	
 }

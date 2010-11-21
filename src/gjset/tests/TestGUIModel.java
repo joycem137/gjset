@@ -11,8 +11,10 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.data.Card;
 import gjset.data.CardTableData;
+import gjset.data.Player;
 
 import java.net.URL;
+import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -136,6 +138,40 @@ public class TestGUIModel
 		assertEquals(Card.SHADING_NONE, card.getShading());
 		
 		assertTrue(cardTable.isHighlighted(card));
+	}
+	
+	@Test
+	public void testPlayerData()
+	{
+		ClientGUIModel model = new ClientGUIModel();
+		model.setPlayerId(2);
+		
+		Element gameupdateElement = loadBasicUpdate();
+		
+		model.update(gameupdateElement);
+		
+		// Get the list of players from the model.
+		List<Player> players = model.getPlayers();
+		
+		assertNotNull(players);
+		
+		// Make sure we have enough players.
+		assertEquals(3, players.size());
+		
+		// Then make sure the players are correct.
+		Player player1 = players.get(0);
+		
+		assertEquals("Player 1", player1.getName());
+		assertEquals(12, player1.getPoints());
+		assertEquals(6, player1.getPenalty());
+		assertEquals(6, player1.getScore());
+		
+		Player player3 = players.get(2);
+		
+		assertEquals("Player 3", player3.getName());
+		assertEquals(0, player3.getPoints());
+		assertEquals(0, player3.getPenalty());
+		assertEquals(0, player3.getScore());
 	}
 	
 	/**
