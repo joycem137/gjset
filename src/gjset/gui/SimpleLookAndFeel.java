@@ -131,4 +131,16 @@ public class SimpleLookAndFeel
 	{
 		return new Color(0, 0, 0, 130);
 	}
+
+	public Font getPlayerPanelNameFont()
+	{
+		Font playerNameFont = defaultFont.deriveFont(21.0f);
+		
+		return playerNameFont;
+	}
+
+	public Color getPlayerPanelNameColor()
+	{
+		return new Color(235, 235, 125);
+	}
 }
