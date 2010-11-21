@@ -134,7 +134,7 @@ public class SimpleLookAndFeel
 
 	public Font getPlayerPanelNameFont()
 	{
-		Font playerNameFont = defaultFont.deriveFont(21.0f);
+		Font playerNameFont = defaultFont.deriveFont(25.0f);
 		
 		return playerNameFont;
 	}
@@ -142,5 +142,17 @@ public class SimpleLookAndFeel
 	public Color getPlayerPanelNameColor()
 	{
 		return new Color(235, 235, 125);
+	}
+
+	public Font getPlayerPanelScoreFont()
+	{
+		Font font = defaultFont.deriveFont(42.0f);
+		
+		return font;
+	}
+
+	public Color getPlayerPanelScoreColor()
+	{
+		return Color.white;
 	}
 }
