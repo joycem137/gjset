@@ -155,4 +155,41 @@ public class SimpleLookAndFeel
 	{
 		return Color.white;
 	}
+
+	public Color getOtherPlayerPanelBackgroundColor()
+	{
+		// Return the exact same color as the Local Player Panel.
+		return getPlayerPanelBackgroundColor();
+	}
+
+	public Font getOtherPlayerPanelNameFont()
+	{
+		// Derive the font from the local player font.
+		Font playerFont = getPlayerPanelNameFont();
+		
+		Font font = playerFont.deriveFont(12.0f);
+		
+		return font;
+	}
+
+	public Color getOtherPlayerPanelNameColor()
+	{
+		return new Color(255, 107, 107);
+	}
+
+	public Font getOtherPlayerPanelScoreFont()
+	{
+		// Derive the font from the local player font.
+		Font playerFont = getPlayerPanelScoreFont();
+		
+		Font font = playerFont.deriveFont(30.0f);
+		
+		return font;
+	}
+
+	public Color getOtherPlayerPanelScoreColor()
+	{
+		// This should just be the same color as the local player.
+		return getPlayerPanelScoreColor();
+	}
 }

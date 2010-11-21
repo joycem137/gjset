@@ -4,11 +4,13 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.gui.MainFrame;
+import gjset.gui.OtherPlayerPanel;
 import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.BigButton;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
@@ -17,6 +19,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
@@ -84,6 +87,8 @@ public class PlayGamePage extends Page implements Observer
 		createDeck();
 		createButtons();
 		createPlayerPanel();
+		createOtherPlayerPanels();
+		
 		createKeyboardListener();
 	}
 
@@ -103,6 +108,23 @@ public class PlayGamePage extends Page implements Observer
 		});
 	}
 	
+	/**
+	 * Create the panels that will display the information for remote players.
+	 *
+	 */
+	private void createOtherPlayerPanels()
+	{
+		int INSET = 5;
+		
+		JPanel panel = new OtherPlayerPanel();
+		
+		// locate the panel.		
+		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
+		panel.setLocation(playingFrame.x + INSET, playingFrame.y + INSET);
+		
+		add(panel);
+	}
+
 	/**
 	 * Create the player's information panel.
 	 *
