@@ -100,15 +100,15 @@ public class TestServerGameModel
 	@Test
 	public void testCallSet()
 	{
+		model.addNewPlayer();
 		model.startNewGame();
 		
-		assertEquals(0, model.getSetCallerId());
 		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
 		
 		int playerId = 1;
 		model.callSet(playerId);
 		
-		assertEquals(playerId, model.getSetCallerId());
+		assertEquals(playerId, model.getSetCaller().getId());
 		assertEquals(GameConstants.GAME_STATE_SET_CALLED, model.getGameState());
 	}
 	
