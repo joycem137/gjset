@@ -132,7 +132,7 @@ public class FancyLabel extends JComponent
 		else // Just do left justified for now.
 		{
 			textPosition.x = 0;
-			textPosition.y = 0;
+			textPosition.y = getHeight() / 2 + textHeight / 2 - 2;
 			
 			if(effect == OUTLINE)
 			{

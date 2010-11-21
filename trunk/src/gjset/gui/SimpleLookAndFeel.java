@@ -92,6 +92,16 @@ public class SimpleLookAndFeel
 	{
 		return defaultFont.deriveFont(17.0f);
 	}
+	
+	public Color getDialogInputTextColor()
+	{
+		return new Color(84, 68, 17);
+	}
+
+	public String getDialogTextFieldStyle()
+	{
+		return "window_text";
+	}
 
 	public Color getDialogTitleFG()
 	{
