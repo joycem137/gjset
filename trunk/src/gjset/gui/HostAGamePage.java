@@ -46,7 +46,6 @@ public class HostAGamePage extends DialogPage
 	 */
 	private void createButtons()
 	{
-		Rectangle usableArea = border.getInnerArea();
 		int buttonY = 160;
 		
 		Action goBackAction = new AbstractAction("Return")
@@ -57,12 +56,8 @@ public class HostAGamePage extends DialogPage
 				mainFrame.loadPage(page);
 			}
 		};
+		createButton(goBackAction, 50, buttonY);
 		
-		Button backButton = new Button(goBackAction, lnf.getDialogButtonStyle());
-		
-		backButton.setSize(120, 22);
-		backButton.setLocation(50, buttonY);
-		add(backButton);
 		
 		Action hostAction = new AbstractAction("Host Game")
 		{
@@ -77,11 +72,26 @@ public class HostAGamePage extends DialogPage
 			}
 		};
 		
-		Button hostButton = new Button(hostAction, lnf.getDialogButtonStyle());
+		createButton(hostAction, 240, buttonY);
+	}
+
+	/**
+	 * Create a button on this page with the indicated values.
+	 *
+	 * @param action
+	 * @param x
+	 * @param y
+	 */
+	private void createButton(Action action, int x, int y)
+	{
+		Button button = new Button(action, lnf.getDialogButtonStyle());
 		
-		hostButton.setSize(120, 22);
-		hostButton.setLocation(240, buttonY);
-		add(hostButton);
+		button.setFont(lnf.getDialogButtonFont());
+		button.setForeground(lnf.getDialogButtonTextColor());
+		
+		button.setSize(120, 22);
+		button.setLocation(x, y);
+		add(button);
 	}
 
 	/**
@@ -122,8 +132,8 @@ public class HostAGamePage extends DialogPage
 		field.setLayout(null);
 		field.setFont(lnf.getDialogInputFont());
 
-		field.setLocation(200, frame.y);
-		field.setSize(200, 30);
+		field.setLocation(180, frame.y);
+		field.setSize(230, 30);
 		
 		add(field);
 		
