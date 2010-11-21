@@ -18,10 +18,12 @@ public class BigButton extends JComponent
 	private Action	action;
 	private boolean	pressed;
 	private boolean enabled;
+	private boolean mouseOver;
 	
 	private Image unpressedImage;
 	private Image pressedImage;
 	private Image disabledImage;
+	private Image mouseOverImage;
 
 	public BigButton(Action action, String style)
 	{
@@ -32,8 +34,9 @@ public class BigButton extends JComponent
 		// Get all of our images.
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		unpressedImage = resourceManager.getImage(style + ".png");
-		pressedImage = resourceManager.getImage(style + "_halo.png");
+		pressedImage = resourceManager.getImage(style + "_d.png");
 		disabledImage = resourceManager.getImage(style + "_grey.png");
+		mouseOverImage = resourceManager.getImage(style + "_halo.png");
 		
 		// Add a listener.
 		addActionListener();
@@ -49,6 +52,12 @@ public class BigButton extends JComponent
 	{
 		MouseInputAdapter ma = new MouseInputAdapter()
 		{
+			public void mouseEntered(MouseEvent me)
+			{
+				mouseOver = true;
+				repaint();
+			}
+			
 			public void mousePressed(MouseEvent me)
 			{
 				if(enabled)
@@ -75,6 +84,7 @@ public class BigButton extends JComponent
 			public void mouseExited(MouseEvent me)
 			{
 				// We exited the button.  Do not press it.
+				mouseOver = false;
 				pressed = false;
 				repaint();
 			}
@@ -99,6 +109,10 @@ public class BigButton extends JComponent
 		else if(pressed)
 		{
 			g.drawImage(pressedImage, 0, 0, this);
+		}
+		else if(mouseOver)
+		{
+			g.drawImage(mouseOverImage, 0, 0, this);
 		}
 		else
 		{
