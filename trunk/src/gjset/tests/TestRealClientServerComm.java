@@ -92,32 +92,6 @@ public class TestRealClientServerComm
 	}
 	
 	/**
-	 * Test that the real client communicator gets a player id when connecting to the real server.
-	 */
-	@Test
-	public void testPlayerId()
-	{
-		// Then make sure the client has the right id.
-		assertTrue(controller.getPlayerId() > 0);
-		
-		// Next verify that we get that id when we're receiving messages from this client.
-		DocumentFactory documentFactory = DocumentFactory.getInstance();
-		Element message = documentFactory.createElement("testingsend");
-		client.sendMessage(message);
-		
-		try
-		{
-			Thread.sleep(100);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-			fail("Interuppted sleep");
-		}
-		
-		assertEquals(controller.getPlayerId(), serverHandler.getLastClientId());
-	}
-	
-	/**
 	 * Verify that the client can send messages to the server.
 	 */
 	@Test
