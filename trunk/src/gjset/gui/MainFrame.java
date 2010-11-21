@@ -143,7 +143,7 @@ public class MainFrame extends JFrame
 	 */
 	private void loadFirstPage()
 	{
-		loadPage(new LaunchPage(PLAYING_FIELD_AREA, this));
+		loadPage(new LaunchPage(this));
 	}
 	
 	/*

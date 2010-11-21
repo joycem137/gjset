@@ -1,6 +1,5 @@
 package gjset.server;
 
-import gjset.GameConstants;
 import gjset.server.gui.ServerConsole;
 
 import java.io.IOException;
@@ -57,9 +56,10 @@ public class GameServer
 	/**
 	 * 
 	 * Starts the server and prepares it to start listening for incoming connections.
+	 * @param port 
 	 *
 	 */
-	public GameServer()
+	public GameServer(int port)
 	{
 		//Create a console to post messages to.  This might be the command line or a debug interface or whatever we want.
 		console = ServerConsole.getDefaultConsole();
@@ -71,7 +71,7 @@ public class GameServer
 		try
 		{
 			console.message("Setting up server connection");
-			serverSocket = new ServerSocket(GameConstants.GAME_PORT);
+			serverSocket = new ServerSocket(port);
 		} catch (IOException e)
 		{
 			console.errorMessage("Could not create server.");

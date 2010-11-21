@@ -1,7 +1,9 @@
 package gjset.gui.framework;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -54,6 +56,9 @@ public class Button extends JComponent
 	
 	private boolean	pressed;
 	private Action	action;
+	
+	private String text;
+	private boolean textVisible;
 
 	/**
 	 * Build a button with the indicated action.
@@ -78,8 +83,69 @@ public class Button extends JComponent
 		
 		// Add a listener.
 		addActionListener();
+		
+		// Start with the action's text and text being visible.
+		text = (String)action.getValue(Action.NAME);
+		textVisible = true;
 	}
 	
+	/**
+	 * Indicate whether or not text is visible on the button.
+	 *
+	 * @param value
+	 */
+	public void setTextVisible(boolean value)
+	{
+		textVisible = value;
+	}
+
+	/**
+	 * 
+	 * Paint the button!
+	 *
+	 * @param g
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
+	public void paintComponent(Graphics g)
+	{
+		// Draw the button.
+		if(pressed)
+		{
+			// Draw the edges first.
+			g.drawImage(leftDown, 0, 0, this);
+			g.drawImage(rightDown, getWidth() - rightDown.getWidth(this), 0, this);
+			
+			// Finally, draw the middle.
+			Rectangle areaToPaint = new Rectangle(leftDown.getWidth(this), 0, 
+					getWidth() - leftDown.getWidth(this) - rightDown.getWidth(this), 
+					middleDown.getHeight(this));
+			PaintUtilities.texturePaintHorizontal(this, g, middleDown, areaToPaint);
+		}
+		else
+		{
+			// Draw the edges first.
+			g.drawImage(leftUp, 0, 0, this);
+			g.drawImage(rightUp, getWidth() - rightUp.getWidth(this), 0, this);
+			
+			// Finally, draw the middle.
+			Rectangle areaToPaint = new Rectangle(leftUp.getWidth(this), 0, 
+					getWidth() - leftUp.getWidth(this) - rightUp.getWidth(this), 
+					middleUp.getHeight(this));
+			PaintUtilities.texturePaintHorizontal(this, g, middleUp, areaToPaint);
+		}
+		
+		// Draw the text.
+		if(textVisible)
+		{
+			g.setFont(getFont());
+			Point point = calculateTextPosition(g);
+			
+			g.setColor(getForeground());
+			g.drawString(text, point.x, point.y);
+		}
+		
+	}
+
 	/**
 	 * Adds all of the action listeners to our class.
 	 *
@@ -120,37 +186,21 @@ public class Button extends JComponent
 	}
 	
 	/**
-	 * 
-	 * Paint the button!
+	 * Calculates the starting position of the text, based on the horizontal alignment value
 	 *
-	 * @param g
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 * @return a Point object that represents the location to draw the string on.
 	 */
-	public void paintComponent(Graphics g)
+	private Point calculateTextPosition(Graphics g)
 	{
-		if(pressed)
-		{
-			// Draw the edges first.
-			g.drawImage(leftDown, 0, 0, this);
-			g.drawImage(rightDown, getWidth() - rightDown.getWidth(this), 0, this);
-			
-			// Finally, draw the middle.
-			Rectangle areaToPaint = new Rectangle(leftDown.getWidth(this), 0, 
-					getWidth() - leftDown.getWidth(this) - rightDown.getWidth(this), 
-					middleDown.getHeight(this));
-			PaintUtilities.texturePaintHorizontal(this, g, middleDown, areaToPaint);
-		}
-		else
-		{
-			// Draw the edges first.
-			g.drawImage(leftUp, 0, 0, this);
-			g.drawImage(rightUp, getWidth() - rightUp.getWidth(this), 0, this);
-			
-			// Finally, draw the middle.
-			Rectangle areaToPaint = new Rectangle(leftUp.getWidth(this), 0, 
-					getWidth() - leftUp.getWidth(this) - rightUp.getWidth(this), 
-					middleUp.getHeight(this));
-			PaintUtilities.texturePaintHorizontal(this, g, middleUp, areaToPaint);
-		}
+		FontMetrics metrics = g.getFontMetrics();
+		
+		int textWidth = metrics.stringWidth(text);
+		int textHeight = metrics.getMaxAscent();
+		
+		Point textPosition = new Point();
+		textPosition.x = getWidth() / 2 - textWidth / 2;
+		textPosition.y = getHeight() / 2 + textHeight / 2 - 2;
+		
+		return textPosition;
 	}
 }

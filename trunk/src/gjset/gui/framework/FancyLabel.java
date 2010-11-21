@@ -69,6 +69,16 @@ public class FancyLabel extends JComponent
 	}
 	
 	/**
+	 * Set the text for this label.
+	 *
+	 * @param string
+	 */
+	public void setText(String text)
+	{
+		this.text = text;
+	}
+
+	/**
 	 * 
 	 * Overrides paintComponent method to draw the text with the indicated style. 
 	 *

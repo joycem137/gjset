@@ -53,7 +53,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 * Create a ServerGameController
 	 * 
 	 * This constructor instantiates and initializes all of the game model data.
-	 * @param server 
+	 * @param gamePort 
 	 *
 	 */
 	public ServerGameController(GameServer server)
