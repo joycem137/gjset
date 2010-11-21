@@ -3,7 +3,6 @@ package gjset.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientGUIController;
