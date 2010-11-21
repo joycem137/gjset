@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 
 /**

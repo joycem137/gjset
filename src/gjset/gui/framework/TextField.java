@@ -1,11 +1,9 @@
 package gjset.gui.framework;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JTextField;
@@ -58,24 +56,6 @@ public class TextField extends JTextField
 
 		// Draw the rest.
 		super.paint(g);
-	}
-
-	/**
-	 * Calculates the starting position of the text, based on the horizontal alignment value
-	 *
-	 * @return a Point object that represents the location to draw the string on.
-	 */
-	private Point calculateTextPosition(Graphics g)
-	{
-		FontMetrics metrics = g.getFontMetrics();
-		
-		int textHeight = metrics.getMaxAscent();
-		
-		Point textPosition = new Point();
-		textPosition.x = left.getWidth(this) - 5;
-		textPosition.y = getHeight() / 2 + textHeight / 2 - 2;
-		
-		return textPosition;
 	}
 
 }
