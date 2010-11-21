@@ -96,13 +96,36 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Return the id of the player that called set.
+	 * Return the the player that called set.
 	 *
 	 * @return
 	 */
-	public int getSetCallerId()
+	public Player getSetCaller()
 	{
-		return setCallerId;
+		return players.get(setCallerId - 1);
+	}
+
+	/**
+	 * Return the full list of players.
+	 *
+	 * @return
+	 */
+	public List<Player> getPlayers()
+	{
+		return players;
+	}
+
+	/**
+	 * Create a new player and then return it.
+	 *
+	 * @return
+	 */
+	public Player addNewPlayer()
+	{
+		Player player = new Player(maxId);
+		maxId++;
+		players.add(player);
+		return player;
 	}
 
 	/**
@@ -199,11 +222,17 @@ public class GameModel extends Observable
 		// Start by clearing the set timer.
 		setTimer.cancel();
 		
+		// Get the player object associated with the player that selected these cards.
+		Player setPlayer = getSetCaller();
+		
 		List<Card> selectedCards = cardTable.getSelectedCards();
 		boolean isASet = checkForSet(selectedCards);
 		
 		if(isASet)
 		{
+			// SCORE!
+			setPlayer.addPoints(GameConstants.SET_POINTS);
+			
 			// Check to see if we can draw more cards.
 			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
 			{
@@ -221,12 +250,16 @@ public class GameModel extends Observable
 		}
 		else
 		{
+			// Take away points
+			setPlayer.addPenalty(GameConstants.SET_PENALTY);
+			
 			// De-select the cards.
 			cardTable.unSelectCards();
 		}
 		
 		// For now, we immediately return to the idle state.
 		gameState = GameConstants.GAME_STATE_IDLE;
+		setCallerId = 0;
 		
 		// Check to see if this is the end of the game.
 		checkForEndofGame();
@@ -249,6 +282,12 @@ public class GameModel extends Observable
 		
 		// De-select the cards.
 		cardTable.unSelectCards();
+		
+		// Get the player object associated with the player that selected these cards.
+		Player setPlayer = getSetCaller();
+		
+		// Take away points
+		setPlayer.addPenalty(GameConstants.SET_PENALTY);
 		
 		// Notify observers that the model has changed.
 		setChanged();
@@ -353,28 +392,5 @@ public class GameModel extends Observable
 		}
 		
 		return card3;
-	}
-
-	/**
-	 * Create a new player and then return it.
-	 *
-	 * @return
-	 */
-	public Player addNewPlayer()
-	{
-		Player player = new Player(maxId);
-		maxId++;
-		players.add(player);
-		return player;
-	}
-
-	/**
-	 * Return the full list of players.
-	 *
-	 * @return
-	 */
-	public List<Player> getPlayers()
-	{
-		return players;
 	}
 }

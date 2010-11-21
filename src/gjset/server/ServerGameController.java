@@ -274,7 +274,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			commandResponse = getCommandResponse(true, null);
 		}
 		else if(gameState == GameConstants.GAME_STATE_SET_CALLED
-				&& playerId == model.getSetCallerId())
+				&& playerId == model.getSetCaller().getId())
 		{
 			// Allow the next card to be selected.
 			model.toggleCardSelection(card);
@@ -400,7 +400,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED)
 		{
 			Element setCallerElement = documentFactory.createElement("setcaller");
-			setCallerElement.setText("" + model.getSetCallerId());
+			setCallerElement.setText("" + model.getSetCaller().getId());
 			root.add(setCallerElement);
 		}
 		

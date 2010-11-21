@@ -107,6 +107,12 @@ public class Player
 	public void addPenalty(int x)
 	{
 		penalty += x;
+		
+		// Never allow us to go negative.
+		if(penalty > points)
+		{
+			penalty = points;
+		}
 	}
 
 	public void resetScore()

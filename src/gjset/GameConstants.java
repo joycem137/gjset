@@ -16,4 +16,7 @@ public class GameConstants
 	public static final String COMM_VERSION = "2";
 	
 	public static final int MAX_PLAYERS = 8;
+	
+	public static final int SET_POINTS = 3;
+	public static final int SET_PENALTY = 2;
 }
