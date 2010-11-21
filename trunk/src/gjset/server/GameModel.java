@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
+import org.dom4j.Element;
+
 /**
  * This class stores all of the information used to represent the game.
  * 
@@ -34,6 +36,8 @@ public class GameModel extends Observable
 	
 	private CountdownTimer setTimer;
 	private static final int SET_TIME = 2500;
+
+	private int maxId;
 	
 	public GameModel()
 	{
@@ -46,8 +50,9 @@ public class GameModel extends Observable
 		//Create the card table.
 		cardTable = new CardTable();
 		
-		// Create a default player
+		// Create the player array.
 		players = new Vector<Player>();
+		maxId = 1;
 		
 		// Set the default set caller id
 		setCallerId = 0;
@@ -350,5 +355,28 @@ public class GameModel extends Observable
 		}
 		
 		return card3;
+	}
+
+	/**
+	 * Create a new player and then return it.
+	 *
+	 * @return
+	 */
+	public Player addNewPlayer()
+	{
+		Player player = new Player(maxId);
+		maxId++;
+		players.add(player);
+		return player;
+	}
+
+	/**
+	 * Return the full list of players.
+	 *
+	 * @return
+	 */
+	public List<Player> getPlayers()
+	{
+		return players;
 	}
 }

@@ -58,25 +58,6 @@ public class Player
 		this.id = number;
 		this.name = "Player " + number;
 	}
-		
-	// Create a named player.
-	public Player(String name)
-	{
-		this();
-		
-		// Set the player details.
-		this.name = name;
-	}
-
-	// Create a named, numbered player.
-	public Player(String name, int number)
-	{
-		this();
-		
-		// Set the player details.
-		this.id = number;
-		this.name = name;
-	}
 
 	/**
 	 * Build a player from the indicated player element.
