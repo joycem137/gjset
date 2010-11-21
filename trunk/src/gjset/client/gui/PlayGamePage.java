@@ -139,6 +139,7 @@ public class PlayGamePage extends Page implements Observer
 			
 			add(panel);
 			otherPlayerPanels.add(panel);
+			panel.setVisible(false);
 		}
 	}
 
