@@ -13,7 +13,7 @@ public interface ClientGUIController
 	 *
 	 * @return
 	 */
-	ClientGUIModel getClientGUIModel();
+	ClientGUIModel getModel();
 
 	/**
 	 * Initiates a request to call set from the client machine.
