@@ -6,23 +6,16 @@ import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
 import gjset.client.gui.PlayGamePage;
-import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
-import gjset.gui.framework.FancyLabel;
-import gjset.gui.framework.Page;
 import gjset.server.GameServer;
 import gjset.server.ServerGameController;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 /* 
  *  LEGAL STUFF
@@ -56,11 +49,8 @@ import javax.swing.SwingConstants;
  * This page provides launching points for the other applications that we might run.
  */
 @SuppressWarnings("serial")
-public class LaunchPage extends Page
+public class LaunchPage extends DialogPage
 {
-	private Color	realBackgroundColor;
-	private Border	border;
-	private SimpleLookAndFeel	lnf;
 	private MainFrame	mainFrame;
 
 	/**
@@ -69,20 +59,14 @@ public class LaunchPage extends Page
 	 *
 	 * @param mainFrame - The parent frame of this object.
 	 */
-	public LaunchPage(Rectangle frame, MainFrame mainframe)
+	public LaunchPage(MainFrame mainframe)
 	{
 		super();
 		
 		this.mainFrame = mainframe;
 		
-		lnf = SimpleLookAndFeel.getLookAndFeel();
+		title.setText("New Game");
 		
-		configurePage(frame);
-		
-		realBackgroundColor = lnf.getDialogBackgroundColor();
-		
-		createBorder();
-		createTitle();
 		createButtons();
 	}
 
@@ -99,7 +83,7 @@ public class LaunchPage extends Page
 			public void actionPerformed(ActionEvent e)
 			{
 				// First create the server.
-				GameServer server = new GameServer();
+				GameServer server = new GameServer(GameConstants.GAME_PORT);
 				ServerGameController serverController = new ServerGameController(server);
 				server.listenForClients();
 				
@@ -109,6 +93,7 @@ public class LaunchPage extends Page
 				// Then create the client.
 				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 				ClientGUIController controller = new ConcreteClientGUIController(client);
+				
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
 				
 				// Load the actual page
@@ -131,7 +116,9 @@ public class LaunchPage extends Page
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Load Host a game page.
+				// Switch to the host a game page.
+				HostAGamePage page = new HostAGamePage(mainFrame);
+				mainFrame.loadPage(page);
 			}
 		}, new Rectangle(usableArea.x, 150, usableArea.width, 40));
 	}
@@ -147,6 +134,7 @@ public class LaunchPage extends Page
 		// You may now proceed to add all of the buttons and labels.
 		Button button = new Button(action, lnf.getDialogButtonStyle());
 		
+		button.setTextVisible(false);
 		button.setSize(40, 22);
 		button.setLocation(40, frame.y);
 		add(button);
@@ -158,70 +146,5 @@ public class LaunchPage extends Page
 		label.setSize(frame.width - label.getX(), 40);
 		
 		add(label);
-	}
-
-	/**
-	 * Add a title to the border.
-	 *
-	 */
-	private void createTitle()
-	{
-		FancyLabel title;
-		title = new FancyLabel("New Game", SwingConstants.CENTER);
-		
-		// Design the label.
-		title.setFont(lnf.getDialogTitleFont());
-		title.setFancyEffect(FancyLabel.OUTLINE);
-		title.setForeground(lnf.getDialogTitleFG());
-		title.setBackground(lnf.getDialogTitleBG());
-		
-		// Center the title in the title area of the border.
-		Rectangle titleArea = border.getTitleArea();
-		title.setSize(titleArea.width, titleArea.height);
-		title.setLocation(titleArea.x, titleArea.y);
-		
-		// Add the title to the border.
-		border.add(title);
-	}
-
-	/**
-	 * Create the border around this window.
-	 *
-	 */
-	private void createBorder()
-	{
-		border = new Border(lnf.getBorderStyle(), true);
-		border.setSize(getWidth(), getHeight());
-		add(border);
-	}
-
-	/**
-	 * Sets the basic position and size of the page.
-	 *
-	 * @param frame A Rectangle representing the frame this page sits in.
-	 */
-	private void configurePage(Rectangle frame)
-	{	
-		//Set page information
-		int pageWidth = 435;
-		int pageHeight = 220;
-		
-		setSize(pageWidth, pageHeight);
-		
-		//Center horizontally in the frame
-		int pageX = frame.width / 2 - pageWidth / 2 + frame.x;
-		int pageY = frame.height / 2 - pageHeight / 2;
-		
-		setLocation(pageX, pageY);
-	}
-	
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		
-		//Fill in the background.
-		Rectangle backgroundArea = border.getInnerArea();
-		g.setColor(realBackgroundColor);
-		((Graphics2D) g).fill(backgroundArea);
 	}
 }
