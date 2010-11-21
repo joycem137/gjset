@@ -94,7 +94,7 @@ public class LaunchPage extends Page
 	{	
 		Rectangle usableArea = border.getInnerArea();
 		
-		addButtonAndLabel(new AbstractAction("Play Against the Computer?")
+		addButtonAndLabel(new AbstractAction("Play Alone")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -119,7 +119,7 @@ public class LaunchPage extends Page
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		
-		addButtonAndLabel(new AbstractAction("Join a Game?")
+		addButtonAndLabel(new AbstractAction("Join a Network Game")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -127,7 +127,7 @@ public class LaunchPage extends Page
 			}
 		}, new Rectangle(usableArea.x, 100, usableArea.width, 40));
 		
-		addButtonAndLabel(new AbstractAction("Host a Game?")
+		addButtonAndLabel(new AbstractAction("Host a Network Game")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
