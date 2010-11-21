@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
-import org.dom4j.Element;
-
 /**
  * This class stores all of the information used to represent the game.
  * 
