@@ -2,6 +2,7 @@ package gjset.gui;
 
 import gjset.GameConstants;
 import gjset.gui.framework.Button;
+import gjset.gui.framework.TextField;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -20,8 +21,8 @@ public class HostAGamePage extends DialogPage
 {
 
 	private MainFrame mainFrame;
-	private JTextField nameField;
-	private JTextField portField;
+	private TextField nameField;
+	private TextField portField;
 
 	/**
 	 * Construct the page.
@@ -46,7 +47,9 @@ public class HostAGamePage extends DialogPage
 	 */
 	private void createButtons()
 	{
-		int buttonY = 160;
+		Rectangle usableArea = border.getInnerArea();
+		int buttonY = 155;
+		int horizInset = 50;
 		
 		Action goBackAction = new AbstractAction("Return")
 		{
@@ -56,7 +59,7 @@ public class HostAGamePage extends DialogPage
 				mainFrame.loadPage(page);
 			}
 		};
-		createButton(goBackAction, 50, buttonY);
+		Button backButton = createButton(goBackAction, horizInset, buttonY);
 		
 		
 		Action hostAction = new AbstractAction("Host Game")
@@ -72,7 +75,7 @@ public class HostAGamePage extends DialogPage
 			}
 		};
 		
-		createButton(hostAction, 240, buttonY);
+		createButton(hostAction, usableArea.x + usableArea.width - horizInset - backButton.getWidth() + 10, buttonY);
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class HostAGamePage extends DialogPage
 	 * @param x
 	 * @param y
 	 */
-	private void createButton(Action action, int x, int y)
+	private Button createButton(Action action, int x, int y)
 	{
 		Button button = new Button(action, lnf.getDialogButtonStyle());
 		
@@ -92,6 +95,8 @@ public class HostAGamePage extends DialogPage
 		button.setSize(120, 22);
 		button.setLocation(x, y);
 		add(button);
+		
+		return button;
 	}
 
 	/**
@@ -115,25 +120,25 @@ public class HostAGamePage extends DialogPage
 	 * @param action
 	 * @param string
 	 */
-	private JTextField addInputFieldAndLabel(String labelText, Rectangle frame)
+	private TextField addInputFieldAndLabel(String labelText, Rectangle frame)
 	{
 		// Create the label for the field.
 		JLabel label = new JLabel(labelText);
 		label.setFont(lnf.getDialogFont());
 
-		label.setLocation(frame.x + 15, frame.y - 5);
+		label.setLocation(frame.x + 15, frame.y - 7);
 		label.setSize(frame.width - label.getX(), 40);
 		
 		add(label);
 		
 		// Create the field itself.
-		JTextField field = new JTextField();
+		TextField field = new TextField(lnf.getDialogTextFieldStyle());
 		
-		field.setLayout(null);
 		field.setFont(lnf.getDialogInputFont());
+		field.setForeground(lnf.getDialogInputTextColor());
 
 		field.setLocation(180, frame.y);
-		field.setSize(230, 30);
+		field.setSize(230, 28);
 		
 		add(field);
 		
