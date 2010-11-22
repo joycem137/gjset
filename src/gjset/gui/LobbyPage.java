@@ -52,6 +52,8 @@ public class LobbyPage extends DialogPage implements MessageHandler
 		
 		this.mainFrame = mainFrame;
 		
+		title.setText("Game Lobby");
+		
 		createTextFields();
 		createButtons();
 		
