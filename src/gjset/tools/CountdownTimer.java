@@ -73,8 +73,11 @@ public class CountdownTimer
 	 */
 	public void cancel()
 	{
-		timer.cancel();
-		isRunning = false;
+		if(isRunning)
+		{
+			timer.cancel();
+			isRunning = false;
+		}
 	}
 
 }

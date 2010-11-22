@@ -5,7 +5,6 @@ import gjset.data.Card;
 import gjset.data.Player;
 import gjset.tools.CountdownTimer;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
