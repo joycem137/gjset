@@ -132,13 +132,17 @@ public class TestGUIController
 		// Start by sending the ID to the client.
 		DocumentFactory documentFactory = DocumentFactory.getInstance();
 		Element idMessage = documentFactory.createElement("combocards");
-		Element playerIdNode = documentFactory.createElement("playerid");
-		playerIdNode.setText("1");
+		Element playerIdNode = documentFactory.createElement("newplayer");
+		
+		Player defaultPlayer = new Player(1, "Player");
+		playerIdNode.add(defaultPlayer.getXMLRepresentation());
+		
 		idMessage.add(playerIdNode);
 		client.injectMessage(idMessage);
 		
 		// Verify that the player id got set.
-		assertEquals(1, model.getLocalPlayer());
+		assertEquals(defaultPlayer.getId(), model.getLocalPlayer().getId());
+		assertEquals(defaultPlayer.getName(), model.getLocalPlayer().getName());
 		
 		// Now send a basic update out.
 		Element updateMessage = loadSimpleFullUpdate();
