@@ -18,7 +18,7 @@ import org.dom4j.Element;
  */
 public class GameInitiator implements MessageHandler
 {
-	private ConcreteClientCommunicator client;
+	private ClientCommunicator client;
 	private String username;
 	private ClientGUIController controller;
 	private DocumentFactory documentFactory;
@@ -35,7 +35,7 @@ public class GameInitiator implements MessageHandler
 	 * @param username
 	 * @param gameInitiationHandler
 	 */
-	public GameInitiator(ConcreteClientCommunicator client, String username, GameInitiationHandler gameInitiationHandler)
+	public GameInitiator(ClientCommunicator client, String username, GameInitiationHandler gameInitiationHandler)
 	{
 		this.client = client;
 		this.username = username;
@@ -73,6 +73,23 @@ public class GameInitiator implements MessageHandler
 		
 	}
 	
+	/**
+	 * Cancel all activities.
+	 *
+	 */
+	public void cancelInitiation()
+	{
+		client.removeMessageHandler(this);
+		client.destroy();
+		client = null;
+		
+		if(controller != null)
+		{
+			controller.destroy();
+			controller = null;
+		}
+	}
+
 	/**
 	 * Handle incoming messages from the server.
 	 *
