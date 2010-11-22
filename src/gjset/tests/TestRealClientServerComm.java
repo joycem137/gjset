@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import gjset.GameConstants;
 import gjset.client.ConcreteClientCommunicator;
-import gjset.client.ConcreteClientGUIController;
 import gjset.server.GameServer;
 import gjset.tools.MessageUtils;
 
@@ -26,7 +25,6 @@ public class TestRealClientServerComm
 	private MockServerMessageHandler serverHandler;
 	
 	private ConcreteClientCommunicator client;
-	private ConcreteClientGUIController controller;
 	private GameServer server;
 	
 	/**
@@ -35,15 +33,6 @@ public class TestRealClientServerComm
 	@Before
 	public void setUp()
 	{
-		// Create our basic client.
-		client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
-		
-		// We're going to use the controller *AND* the client.  To see how this works.
-		clientHandler = new MockMessageHandler();
-		client.addMessageHandler(clientHandler);
-		
-		controller = new ConcreteClientGUIController(client, defaultPlayer);
-		
 		// Create the server!
 		server = new GameServer(GameConstants.GAME_PORT);
 		
@@ -52,6 +41,14 @@ public class TestRealClientServerComm
 		
 		// Now connect everybody.
 		server.listenForClients();
+		
+		// Create our basic client.
+		client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
+		
+		// We're going to use the just the client.  To see how this works.
+		clientHandler = new MockMessageHandler();
+		client.addMessageHandler(clientHandler);
+		
 		client.connectToServer();
 		
 		try
@@ -73,7 +70,6 @@ public class TestRealClientServerComm
 		{
 			server.destroy();
 			client.destroy();
-			controller.destroy();
 			
 			server = null;
 			client = null;
