@@ -81,7 +81,8 @@ public class LobbyPage extends DialogPage implements MessageHandler
 		else if(root.element("gameupdate") != null)
 		{
 			// Update all of the text fields with user names.
-			Iterator<Element> iterator = root.element("gameupdate").element("players").elements("player").iterator();
+			List<Element> playerElements = root.element("gameupdate").element("players").elements("player");
+			Iterator<Element> iterator = playerElements.iterator();
 			while(iterator.hasNext())
 			{
 				Element playerElement = iterator.next();
@@ -92,6 +93,12 @@ public class LobbyPage extends DialogPage implements MessageHandler
 				TextField field = textFields.get(id - 1);
 				String username = playerElement.element("name").getText();
 				field.setText(username);
+			}
+			
+			int numPlayers = playerElements.size();
+			for(int i = numPlayers; i < GameConstants.MAX_PLAYERS; i++)
+			{
+				textFields.get(i).setText("");
 			}
 		}
 	}
