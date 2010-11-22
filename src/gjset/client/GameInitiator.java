@@ -1,9 +1,7 @@
 package gjset.client;
 
 import gjset.GameConstants;
-import gjset.client.gui.PlayGamePage;
 import gjset.data.Player;
-import gjset.gui.MainFrame;
 import gjset.tools.MessageHandler;
 
 import org.dom4j.DocumentFactory;
@@ -21,11 +19,12 @@ import org.dom4j.Element;
 public class GameInitiator implements MessageHandler
 {
 	private ConcreteClientCommunicator client;
-	private MainFrame mainFrame;
 	private String username;
 	private ClientGUIController controller;
 	private DocumentFactory documentFactory;
 	private boolean readyToStart;
+	
+	private GameInitiationHandler gameInitiationHandler;
 
 	/**
 	 * Create the game initiator.  This will cause the client to connect to the server.  Once the
@@ -34,13 +33,14 @@ public class GameInitiator implements MessageHandler
 	 *
 	 * @param client
 	 * @param username
-	 * @param mainFrame
+	 * @param gameInitiationHandler
 	 */
-	public GameInitiator(ConcreteClientCommunicator client, String username, MainFrame mainFrame)
+	public GameInitiator(ConcreteClientCommunicator client, String username, GameInitiationHandler gameInitiationHandler)
 	{
 		this.client = client;
-		this.mainFrame = mainFrame;
 		this.username = username;
+		
+		this.gameInitiationHandler = gameInitiationHandler;
 		
 		readyToStart = false;
 		controller = null;
@@ -122,9 +122,7 @@ public class GameInitiator implements MessageHandler
 	{
 		System.out.println("handle game started");
 		
-		// First load the new page. 
-		PlayGamePage page = new PlayGamePage(controller, mainFrame);
-		mainFrame.loadPage(page);
+		gameInitiationHandler.onGameInitiated(controller);
 		
 		// Then destroy myself.
 		destroy();
@@ -202,7 +200,7 @@ public class GameInitiator implements MessageHandler
 	private void destroy()
 	{
 		client.removeMessageHandler(this);
-		mainFrame = null;
+		gameInitiationHandler = null;
 	}
 
 }

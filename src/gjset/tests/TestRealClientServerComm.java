@@ -42,10 +42,10 @@ public class TestRealClientServerComm
 		clientHandler = new MockMessageHandler();
 		client.addMessageHandler(clientHandler);
 		
-		controller = new ConcreteClientGUIController(client);
+		controller = new ConcreteClientGUIController(client, defaultPlayer);
 		
 		// Create the server!
-		server = new GameServer();
+		server = new GameServer(GameConstants.GAME_PORT);
 		
 		serverHandler = new MockServerMessageHandler();
 		server.addMessageHandler(serverHandler);
