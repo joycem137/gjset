@@ -85,13 +85,26 @@ public class GameInitiator implements MessageHandler
 		{
 			handleInitialization(root);
 		}
-		else if (root.element("newplayer") != null)
+		else if (root.element("commandresponse") != null)
 		{
-			handleNewPlayer(root.element("newplayer"));
+			handleCommandResponse(root.element("commandresponse"));
 		}
 		else if(root.element("gameupdate") != null)
 		{
 			handleGameUpdate(root.element("gameupdate"));
+		}
+	}
+
+	/**
+	 * Handle a response to a command.
+	 *
+	 * @param element
+	 */
+	private void handleCommandResponse(Element element)
+	{
+		if(element.element("newplayer") != null)
+		{
+			handleNewPlayer(element.element("newplayer"));
 		}
 	}
 
