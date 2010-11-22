@@ -139,7 +139,8 @@ public class GameServer
 	 */
 	public void receiveMessage(PlayerClientHandler client, Element message)
 	{
-		Iterator<ServerMessageHandler> iterator = handlers.iterator();
+		List<ServerMessageHandler> handlersCopy = new Vector<ServerMessageHandler>(handlers);
+		Iterator<ServerMessageHandler> iterator = handlersCopy.iterator();
 		while(iterator.hasNext())
 		{
 			iterator.next().handleMessage(client, message);
@@ -154,10 +155,11 @@ public class GameServer
 	{
 		console.message("Destroying server");
 		
-		Iterator<PlayerClientHandler> iterator = clients.iterator();
+		List<PlayerClientHandler> clientsCopy = new Vector<PlayerClientHandler>(clients);
+		Iterator<PlayerClientHandler> iterator = clientsCopy.iterator();
 		while(iterator.hasNext())
 		{
-			iterator.next().destroy();	
+			iterator.next().destroy();
 		}
 		
 		clients = null;
