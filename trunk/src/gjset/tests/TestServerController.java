@@ -6,9 +6,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import gjset.GameConstants;
+import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
+import gjset.client.GameInitiationHandler;
 import gjset.client.GameInitiator;
 import gjset.data.CardTableData;
 import gjset.server.GameModel;
@@ -50,16 +52,18 @@ public class TestServerController
 		// Create our basic client.
 		client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 		
-		GameInitiator initiator = new GameInitiator();
-		
-		// We're going to use the controller *AND* the client.  To see how this works.
+		// In order to fully test the server controller, we'll need the entire application created.
 		clientHandler = new MockMessageHandler();
 		client.addMessageHandler(clientHandler);
 		
-		clientController = new ConcreteClientGUIController(client, defaultPlayer);
-		
-		// Now connect everybody.
-		client.connectToServer();
+		new GameInitiator(client, "Player", new GameInitiationHandler()
+		{
+			public void onGameInitiated(ClientGUIController controller)
+			{
+				clientController = (ConcreteClientGUIController) controller;
+			}
+			
+		});
 		
 		try
 		{
