@@ -165,6 +165,7 @@ public class PlayerClientHandler
 	{
 		try
 		{
+			server.removeClient(this);
 			socket.close();
 			listeningThread.interrupt();
 		} catch (IOException e)
