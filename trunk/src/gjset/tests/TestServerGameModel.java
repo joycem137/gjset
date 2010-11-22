@@ -100,7 +100,7 @@ public class TestServerGameModel
 	@Test
 	public void testCallSet()
 	{
-		model.addNewPlayer();
+		model.getAssociatedPlayer("Player");
 		model.startNewGame();
 		
 		assertEquals(GameConstants.GAME_STATE_IDLE, model.getGameState());
@@ -158,21 +158,17 @@ public class TestServerGameModel
 	public void testPlayerManagement()
 	{
 		// First try adding a bunch of new players.
-		Player player1 = model.addNewPlayer();
+		Player player1 = model.getAssociatedPlayer("Test 1");
 		assertNotNull(player1);
-		player1.setName("Test 1");
 		
-		Player player2 = model.addNewPlayer();
+		Player player2 = model.getAssociatedPlayer("Test 2");
 		assertNotNull(player2);
-		player2.setName("Test 2");
 		
-		Player player3 = model.addNewPlayer();
+		Player player3 = model.getAssociatedPlayer("Test 3");
 		assertNotNull(player3);
-		player3.setName("Test 3");
 		
-		Player player4 = model.addNewPlayer();
+		Player player4 = model.getAssociatedPlayer("Test 4");
 		assertNotNull(player4);
-		player4.setName("Test 4");
 		
 		// Check the configuration of one of the players.
 		assertEquals("Test 1", player1.getName());

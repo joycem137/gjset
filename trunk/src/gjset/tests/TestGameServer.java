@@ -32,7 +32,7 @@ public class TestGameServer
 	@Before
 	public void setUp() throws Exception
 	{
-		server = new GameServer();
+		server = new GameServer(GameConstants.GAME_PORT);
 		
 		// Add our mock message handler.
 		handler = new MockServerMessageHandler();

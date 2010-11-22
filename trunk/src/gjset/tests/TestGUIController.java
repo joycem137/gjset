@@ -7,6 +7,7 @@ import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientGUIController;
 import gjset.data.Card;
+import gjset.data.Player;
 
 import java.net.URL;
 
@@ -24,6 +25,7 @@ import org.junit.Test;
 public class TestGUIController
 {
 	private MockClientCommunicator client;
+	private Player defaultPlayer;
 	
 	/**
 	 * This method sets up each test before running it.
@@ -32,6 +34,7 @@ public class TestGUIController
 	public void setUp()
 	{
 		client = new MockClientCommunicator();
+		defaultPlayer = new Player(1, "Player");
 	}
 	
 	/**
@@ -40,7 +43,7 @@ public class TestGUIController
 	@Test
 	public void testInitialSetup()
 	{
-		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIController controller = new ConcreteClientGUIController(client, defaultPlayer);
 		
 		assertNotNull(controller.getModel());
 		assertEquals(controller, client.getHandler());
@@ -54,7 +57,7 @@ public class TestGUIController
 	@Test
 	public void testCallSet()
 	{
-		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIController controller = new ConcreteClientGUIController(client, defaultPlayer);
 		controller.callSet();
 		
 		Element message = client.getLastMessage();
@@ -73,7 +76,7 @@ public class TestGUIController
 	@Test
 	public void drawMoreCards()
 	{
-		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIController controller = new ConcreteClientGUIController(client, defaultPlayer);
 		controller.drawMoreCards();
 		
 		Element message = client.getLastMessage();
@@ -93,7 +96,7 @@ public class TestGUIController
 	public void testSelectCard()
 	{
 		
-		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIController controller = new ConcreteClientGUIController(client, defaultPlayer);
 		
 		// Now send a basic update out to get the controller in a state to handle card selection
 		Element updateMessage = loadSimpleFullUpdate();
@@ -122,7 +125,7 @@ public class TestGUIController
 	@Test
 	public void testUpdateModelFromController()
 	{		
-		ClientGUIController controller = new ConcreteClientGUIController(client);
+		ClientGUIController controller = new ConcreteClientGUIController(client, defaultPlayer);
 		ClientGUIModel model = controller.getModel();
 		TestGUIModel.evaluateInitialModelState(model);
 		

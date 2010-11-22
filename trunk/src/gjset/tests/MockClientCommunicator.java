@@ -10,7 +10,6 @@ import gjset.tools.MessageHandler;
  */
 public class MockClientCommunicator implements ClientCommunicator
 {
-
 	private MessageHandler handler;
 	private Element message;
 
@@ -64,6 +63,16 @@ public class MockClientCommunicator implements ClientCommunicator
 	public void injectMessage(Element updateMessage)
 	{
 		handler.handleMessage(updateMessage);
+	}
+
+	/**
+	 * Remove this object.
+	 *
+	 * @see gjset.client.ClientCommunicator#destroy()
+	 */
+	public void destroy()
+	{
+		// Nothing to do.
 	}
 
 }

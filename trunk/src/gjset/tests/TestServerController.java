@@ -9,6 +9,7 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.ConcreteClientGUIController;
+import gjset.client.GameInitiator;
 import gjset.data.CardTableData;
 import gjset.server.GameModel;
 import gjset.server.GameServer;
@@ -39,7 +40,7 @@ public class TestServerController
 	public void setUp()
 	{
 		// Create the server!
-		server = new GameServer();
+		server = new GameServer(GameConstants.GAME_PORT);
 		
 		serverController = new ServerGameController(server);
 		
@@ -49,11 +50,13 @@ public class TestServerController
 		// Create our basic client.
 		client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 		
+		GameInitiator initiator = new GameInitiator();
+		
 		// We're going to use the controller *AND* the client.  To see how this works.
 		clientHandler = new MockMessageHandler();
 		client.addMessageHandler(clientHandler);
 		
-		clientController = new ConcreteClientGUIController(client);
+		clientController = new ConcreteClientGUIController(client, defaultPlayer);
 		
 		// Now connect everybody.
 		client.connectToServer();
@@ -224,7 +227,7 @@ public class TestServerController
 		GameModel serverModel = serverController.getModel();
 		
 		assertEquals(GameConstants.GAME_STATE_SET_CALLED, serverModel.getGameState());
-		assertEquals(clientController.getPlayerId(), serverModel.getSetCaller().getId());
+		assertEquals(clientController.getModel().getLocalPlayer().getId(), serverModel.getSetCaller().getId());
 		
 		// Verify the changes on the client.
 		ClientGUIModel clientModel = clientController.getModel();
