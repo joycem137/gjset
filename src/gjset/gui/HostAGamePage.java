@@ -4,6 +4,7 @@ import gjset.GameConstants;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.TextField;
 import gjset.server.GameServer;
+import gjset.server.ServerGameController;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -73,6 +74,7 @@ public class HostAGamePage extends DialogPage
 					
 					// Create the game server and tell it to listen for clients.
 					GameServer server = new GameServer(port);
+					new ServerGameController(server);
 					server.listenForClients();
 					
 					// The lobby page will handle logging in and setting up the player information.

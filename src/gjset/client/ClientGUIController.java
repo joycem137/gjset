@@ -40,4 +40,10 @@ public interface ClientGUIController
 	 */
 	void startNewGame();
 
+	/**
+	 * Destroy this controller
+	 *
+	 */
+	void destroy();
+
 }

@@ -18,6 +18,13 @@ public interface ClientCommunicator
 	public abstract void addMessageHandler(MessageHandler gui);
 
 	/**
+	 * Remove the indicated message handler from the message handlers.
+	 *
+	 * @param gameInitiator
+	 */
+	public abstract void removeMessageHandler(MessageHandler handler);
+
+	/**
 	 * Send the indicated message over.
 	 *
 	 * @param root
@@ -25,9 +32,15 @@ public interface ClientCommunicator
 	public abstract void sendMessage(Element messageElement);
 
 	/**
-	 * TODO: Describe method
+	 * Destroy the indicated client.
 	 *
 	 */
 	public abstract void destroy();
+
+	/**
+	 * Instruct the client to connect to the server.
+	 *
+	 */
+	public abstract void connectToServer();
 
 }
