@@ -50,13 +50,13 @@ public class Player
 	}
 
 	// Create a player based on player number.
-	public Player(int number)
+	public Player(int id, String name)
 	{
 		this();
 		
 		// Clear the values for the player.
-		this.id = number;
-		this.name = "Player " + number;
+		this.id = id;
+		this.name = name;
 	}
 
 	/**

@@ -93,18 +93,95 @@ public class PlayerClientHandler
 		
 		// Start listening.
 		listeningThread.start();
+		
+		// Now that we're listening, initialize the other end.
+		sendInitializationMessage();
 	}
 
 	/**
-	 * Send a message to the client indicating our version and its player id.
+	 * Return the id for this player.
+	 *
+	 * @return
+	 */
+	public int getPlayerId()
+	{
+		if(player != null)
+		{
+			return player.getId();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Set the player to associate with this client.
+	 *
+	 * @param player
+	 */
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
+
+	/**
+	 * This command sends the indicated XML to the server, appending the appropriate information.
+	 *
+	 * @param messageElement
+	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
+	 */
+	public void sendMessage(Element messageElement)
+	{
+		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
+		try
+		{
+			writer.write(fullXMLElement);
+			writer.write("\n");
+			writer.flush();
+		} catch (IOException e)
+		{
+			System.err.println("Failed to send message");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * Handle receiving the message.
+	 *
+	 * @param message
+	 */
+	public void receiveMessage(Element message)
+	{
+		server.receiveMessage(this, message);
+	}
+
+	/**
+	 * Shut down this client handler.
+	 *
+	 */
+	public void destroy()
+	{
+		try
+		{
+			socket.close();
+			listeningThread.interrupt();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Send a message to the client indicating our protocol version.
 	 *
 	 */
 	private void sendInitializationMessage()
 	{
 		console.message("Initializing client");
 		
-		Element message = documentFactory.createElement("playerid");
-		message.addText("" + getPlayerId());
+		Element message = documentFactory.createElement("init");
 		
 		sendMessage(message);
 	}
@@ -158,84 +235,6 @@ public class PlayerClientHandler
 		};
 		
 		listeningThread = new Thread(listenForMessage);
-	}
-
-	/**
-	 * Return the id for this player.
-	 *
-	 * @return
-	 */
-	public int getPlayerId()
-	{
-		if(player != null)
-		{
-			return player.getId();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Set the player to associate with this client.
-	 *
-	 * @param player
-	 */
-	public void setPlayer(Player player)
-	{
-		this.player = player;
-		
-		// Now that we're listening, initialize the other end.
-		sendInitializationMessage();
-	}
-
-	/**
-	 * This command sends the indicated XML to the server, appending the appropriate information.
-	 *
-	 * @param messageElement
-	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
-	 */
-	public void sendMessage(Element messageElement)
-	{
-		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
-		try
-		{
-			writer.write(fullXMLElement);
-			writer.write("\n");
-			writer.flush();
-		} catch (IOException e)
-		{
-			System.err.println("Failed to send message");
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 
-	 * Handle receiving the message.
-	 *
-	 * @param message
-	 */
-	public void receiveMessage(Element message)
-	{
-		server.receiveMessage(this, message);
-	}
-
-	/**
-	 * Shut down this client handler.
-	 *
-	 */
-	public void destroy()
-	{
-		try
-		{
-			socket.close();
-			listeningThread.interrupt();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 }

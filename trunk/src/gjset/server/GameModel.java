@@ -116,16 +116,24 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Create a new player and then return it.
+	 * Return the player assosicated with the username, or return a new player.
 	 *
+	 * @param username
 	 * @return
 	 */
-	public Player addNewPlayer()
+	public Player getAssociatedPlayer(String username)
 	{
-		Player player = new Player(maxId);
-		maxId++;
-		players.add(player);
-		return player;
+		Iterator<Player> iterator = players.iterator();
+		while(iterator.hasNext())
+		{
+			Player player = iterator.next();
+			if(player.getName().equals(username))
+			{
+				return player;
+			}
+		}
+		
+		return addNewPlayer(username);
 	}
 
 	/**
@@ -269,6 +277,20 @@ public class GameModel extends Observable
 		notifyObservers();
 		
 		return isASet;
+	}
+
+	/**
+	 * Create a new player and then return it.
+	 * @param username 
+	 *
+	 * @return
+	 */
+	private Player addNewPlayer(String username)
+	{
+		Player player = new Player(maxId, username);
+		maxId++;
+		players.add(player);
+		return player;
 	}
 
 	/**

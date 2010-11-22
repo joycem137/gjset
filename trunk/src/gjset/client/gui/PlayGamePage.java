@@ -295,7 +295,7 @@ public class PlayGamePage extends Page implements Observer
 		while(iterator.hasNext())
 		{
 			Player player = iterator.next();
-			if(player.getId() == model.getPlayerId())
+			if(player.getId() == model.getLocalPlayer().getId())
 			{
 				// Update the player panel.
 				playerPanel.updatePlayerData(player);

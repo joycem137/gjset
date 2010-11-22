@@ -59,7 +59,6 @@ public class JoinAGamePage extends DialogPage
 		};
 		Button backButton = createButton(goBackAction, horizInset, buttonY);
 		
-		
 		Action hostAction = new AbstractAction("Join Game")
 		{
 			public void actionPerformed(ActionEvent e)
@@ -70,6 +69,9 @@ public class JoinAGamePage extends DialogPage
 					String name = nameField.getText();
 					String ip = ipField.getText();
 					int port = Integer.parseInt(portField.getText());
+					
+					LobbyPage page = new LobbyPage(name, ip, port, mainFrame);
+					mainFrame.loadPage(page);
 				}
 			}
 		};

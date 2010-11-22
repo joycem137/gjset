@@ -22,6 +22,7 @@ public class ClientGUIModel extends Observable
 	private int gameState;
 	private int deckSize;
 	private List<Player> players;
+	private Player localPlayer;
 	
 	private CardTableData cardTableData;
 	
@@ -68,13 +69,23 @@ public class ClientGUIModel extends Observable
 	}
 
 	/**
-	 * Return the player Id.
+	 * Return the player
 	 *
 	 * @return
 	 */
-	public int getPlayerId()
+	public Player getLocalPlayer()
 	{
-		return playerId;
+		return localPlayer;
+	}
+
+	/**
+	 * Set the player that represents *this* player.
+	 *
+	 * @param player
+	 */
+	public void setLocalPlayer(Player player)
+	{
+		this.localPlayer = player;
 	}
 
 	/**
@@ -147,7 +158,15 @@ public class ClientGUIModel extends Observable
 		while(iterator.hasNext())
 		{
 			Element playerElement = (Element)iterator.next();
-			players.add(new Player(playerElement));
+			Player newPlayer = new Player(playerElement);
+			
+			players.add(newPlayer);
+			
+			// Don't forget to update the local player.
+			if(newPlayer.getId() == localPlayer.getId())
+			{
+				localPlayer = newPlayer;
+			}
 		}
 		
 		// Get the deck size.
@@ -175,6 +194,17 @@ public class ClientGUIModel extends Observable
 		
 		setChanged();
 		notifyObservers();
+	}
+
+	/**
+	 * Destroy the model
+	 *
+	 */
+	public void destroy()
+	{
+		players = null;
+		localPlayer = null;
+		cardTableData.destroy();
 	}
 
 }

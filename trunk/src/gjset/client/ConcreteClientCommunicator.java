@@ -108,13 +108,25 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	}
 	
 	/**
+	 * Remove the indicated message handler
+	 *
+	 * @param gameInitiator
+	 */
+	public void removeMessageHandler(MessageHandler handler)
+	{
+		handlers.remove(handler);
+	}
+
+	/**
 	 * Receive a message from the server.
 	 *
 	 * @param message
 	 */
 	public void receiveMessage(Element message)
 	{
-		Iterator<MessageHandler> iterator = handlers.iterator();
+		// Copy the list so that we can modify the original in the various handlers.
+		List<MessageHandler> listCopy = new Vector<MessageHandler>(handlers);
+		Iterator<MessageHandler> iterator = listCopy.iterator();
 		while(iterator.hasNext())
 		{
 			iterator.next().handleMessage(message);
@@ -141,6 +153,44 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			
 			// And then start listening
 			listeningThread.start();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This command sends the indicated XML to the server, appending the appropriate information.
+	 *
+	 * @param messageElement
+	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
+	 */
+	@Override
+	public void sendMessage(Element messageElement)
+	{
+		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
+		try
+		{
+			writer.write(fullXMLElement);
+			writer.write("\n");
+			writer.flush();
+		} catch (IOException e)
+		{
+			System.err.println("Failed to send message");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Shut down this client
+	 *
+	 */
+	public void destroy()
+	{
+		try
+		{
+			socket.close();
+			listeningThread.interrupt();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -187,43 +237,5 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		};
 		
 		listeningThread = new Thread(listenForMessage);
-	}
-
-	/**
-	 * This command sends the indicated XML to the server, appending the appropriate information.
-	 *
-	 * @param messageElement
-	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
-	 */
-	@Override
-	public void sendMessage(Element messageElement)
-	{
-		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
-		try
-		{
-			writer.write(fullXMLElement);
-			writer.write("\n");
-			writer.flush();
-		} catch (IOException e)
-		{
-			System.err.println("Failed to send message");
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Shut down this client
-	 *
-	 */
-	public void destroy()
-	{
-		try
-		{
-			socket.close();
-			listeningThread.interrupt();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 }
