@@ -18,7 +18,6 @@ import org.dom4j.Element;
 public class ClientGUIModel extends Observable
 {	
 	private int setCallerId;
-	private int playerId;
 	private int gameState;
 	private int deckSize;
 	private List<Player> players;
@@ -33,7 +32,6 @@ public class ClientGUIModel extends Observable
 		deckSize = 0;
 		
 		setCallerId = -1;
-		playerId = -1;
 		
 		gameState = GameConstants.GAME_STATE_NOT_STARTED;
 	}
@@ -107,7 +105,7 @@ public class ClientGUIModel extends Observable
 	public boolean canSelectCards()
 	{
 		return (gameState == GameConstants.GAME_STATE_IDLE || 
-				( gameState == GameConstants.GAME_STATE_SET_CALLED && setCallerId == playerId )); 
+				( gameState == GameConstants.GAME_STATE_SET_CALLED && setCallerId == localPlayer.getId() )); 
 	}
 
 	/**
@@ -129,17 +127,6 @@ public class ClientGUIModel extends Observable
 	{
 		return gameState == GameConstants.GAME_STATE_IDLE
 			&& deckSize > 0 && cardTableData.getCols() < 7;
-	}
-
-	/**
-	 * 
-	 * Sets the player id to the indicated value.
-	 *
-	 * @param playerId
-	 */
-	public void setPlayerId(int playerId)
-	{
-		this.playerId = playerId;
 	}
 
 	/**

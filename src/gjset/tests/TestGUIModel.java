@@ -64,7 +64,7 @@ public class TestGUIModel
 	public void testBasicModelUpdate()
 	{	
 		ClientGUIModel model = new ClientGUIModel();
-		model.setPlayerId(1);
+		model.setLocalPlayer(new Player(1, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
@@ -106,7 +106,7 @@ public class TestGUIModel
 	public void testCardTable()
 	{
 		ClientGUIModel model = new ClientGUIModel();
-		model.setPlayerId(1);
+		model.setLocalPlayer(new Player(1, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
@@ -144,7 +144,7 @@ public class TestGUIModel
 	public void testPlayerData()
 	{
 		ClientGUIModel model = new ClientGUIModel();
-		model.setPlayerId(2);
+		model.setLocalPlayer(new Player(2, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
