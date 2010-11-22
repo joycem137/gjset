@@ -212,7 +212,7 @@ public class TestServerController
 		
 		try
 		{
-			Thread.sleep(200);
+			Thread.sleep(400);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
