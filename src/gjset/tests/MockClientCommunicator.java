@@ -75,4 +75,25 @@ public class MockClientCommunicator implements ClientCommunicator
 		// Nothing to do.
 	}
 
+	/**
+	 * Removes the indicated message handler.  Nothing to do here.
+	 *
+	 * @param handler
+	 * @see gjset.client.ClientCommunicator#removeMessageHandler(gjset.tools.MessageHandler)
+	 */
+	public void removeMessageHandler(MessageHandler handler)
+	{
+		// Nothing to do.
+	}
+
+	/**
+	 * connect to the serer.
+	 *
+	 * @see gjset.client.ClientCommunicator#connectToServer()
+	 */
+	public void connectToServer()
+	{
+		// Nothing to do.
+	}
+
 }

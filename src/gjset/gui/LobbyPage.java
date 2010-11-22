@@ -118,8 +118,6 @@ public class LobbyPage extends DialogPage implements MessageHandler
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Tear up the server if one exists.
-				
 				// Tear down the client.
 				initiator.cancelInitiation();
 				

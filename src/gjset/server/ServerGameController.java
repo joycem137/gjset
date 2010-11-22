@@ -118,6 +118,10 @@ public class ServerGameController implements ServerMessageHandler, Observer
 				// For now, we'll just automatically start the game.
 				startNewGame();
 			}
+			else if(commandType.equals("dropout"))
+			{
+				handleDropOut(client);
+			}
 		}
 		
 		// See if we need to send a response to the player.
@@ -449,5 +453,29 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		root.add(cardTableElement);
 		
 		return root;
+	}
+
+	/**
+	 * Handle this client dropping out.
+	 *
+	 * @param client
+	 * @return
+	 */
+	private void handleDropOut(PlayerClientHandler client)
+	{
+		if(client.getPlayerId() == 1)
+		{
+			// Shut down the whole bloody server.
+			server.destroy();
+			model.destroy();
+			destroy();
+		}
+		else
+		{
+			model.removePlayer(client.getPlayerId());
+			client.destroy();
+			
+			updateAllPlayers();
+		}
 	}
 }

@@ -30,12 +30,10 @@ public class GameModel extends Observable
 	private int setCallerId;
 	
 	// Right now there's only a single player.
-	private List<Player> players;
+	private Player[] players;
 	
 	private CountdownTimer setTimer;
 	private static final int SET_TIME = 2500;
-
-	private int maxId;
 	
 	public GameModel()
 	{
@@ -49,8 +47,7 @@ public class GameModel extends Observable
 		cardTable = new CardTable();
 		
 		// Create the player array.
-		players = new Vector<Player>();
-		maxId = 1;
+		players = new Player[GameConstants.MAX_PLAYERS];
 		
 		// Set the default set caller id
 		setCallerId = 0;
@@ -102,7 +99,7 @@ public class GameModel extends Observable
 	 */
 	public Player getSetCaller()
 	{
-		return players.get(setCallerId - 1);
+		return players[setCallerId - 1];
 	}
 
 	/**
@@ -112,7 +109,17 @@ public class GameModel extends Observable
 	 */
 	public List<Player> getPlayers()
 	{
-		return players;
+		Vector<Player> playerList = new Vector<Player>();
+		
+		for(int i = 0; i < players.length; i++)
+		{
+			if(players[i] != null)
+			{
+				playerList.add(players[i]);
+			}
+		}
+		
+		return playerList;
 	}
 
 	/**
@@ -125,11 +132,10 @@ public class GameModel extends Observable
 	 */
 	public Player getExistingPlayer(String username)
 	{
-		Iterator<Player> iterator = players.iterator();
-		while(iterator.hasNext())
+		for(int i = 0; i < players.length; i++)
 		{
-			Player player = iterator.next();
-			if(player.getName().equals(username))
+			Player player = players[i];
+			if(player != null && player.getName().equals(username))
 			{
 				return player;
 			}
@@ -146,9 +152,18 @@ public class GameModel extends Observable
 	 */
 	public Player addNewPlayer(String username)
 	{
-		Player player = new Player(maxId, username);
-		maxId++;
-		players.add(player);
+		// Find the first empty slot.
+		int id = 1;
+		Player player = players[id - 1];
+		while(player != null)
+		{
+			id++;
+			player = players[id - 1];
+		}
+		
+		// Then add a new player to that slot.
+		player = new Player(id, username);
+		players[id - 1] = player;
 		return player;
 	}
 
@@ -163,10 +178,13 @@ public class GameModel extends Observable
 		deck.shuffle();
 		
 		// reset the scores
-		Iterator<Player> iterator = players.iterator();
-		while(iterator.hasNext())
+		for(int i = 0; i < players.length; i++)
 		{
-			iterator.next().resetScore();
+			Player player = players[i];
+			if(player != null)
+			{
+				player.resetScore();
+			}
 		}
 		
 		//Clear the card table.
@@ -296,6 +314,16 @@ public class GameModel extends Observable
 	}
 
 	/**
+	 * Remove the player with the indicated id.
+	 *
+	 * @param playerId
+	 */
+	public void removePlayer(int playerId)
+	{
+		players[playerId - 1] = null;
+	}
+
+	/**
 	 * Deal with the fact that no set was called within the alotted time.
 	 *
 	 */
@@ -416,5 +444,16 @@ public class GameModel extends Observable
 		}
 		
 		return card3;
+	}
+
+	/**
+	 * Destroy the model.
+	 *
+	 */
+	public void destroy()
+	{
+		players = null;
+		setTimer.cancel();
+		setTimer = null;
 	}
 }

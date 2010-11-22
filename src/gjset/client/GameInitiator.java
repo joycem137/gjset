@@ -79,6 +79,8 @@ public class GameInitiator implements MessageHandler
 	 */
 	public void cancelInitiation()
 	{
+		sendDropOutMessage();
+		
 		client.removeMessageHandler(this);
 		client.destroy();
 		client = null;
@@ -88,6 +90,18 @@ public class GameInitiator implements MessageHandler
 			controller.destroy();
 			controller = null;
 		}
+	}
+
+	/**
+	 * Send a message to the server indicating a desire to drop out of the game.
+	 *
+	 */
+	private void sendDropOutMessage()
+	{
+		Element commandElement = documentFactory.createElement("command");
+		commandElement.addAttribute("type", "dropout");
+		
+		client.sendMessage(commandElement);
 	}
 
 	/**

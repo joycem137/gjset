@@ -198,6 +198,16 @@ public class GameServer
 		}
 	}
 
+	/**
+	 * Remove this client from the server.
+	 *
+	 * @param playerClientHandler
+	 */
+	public void removeClient(PlayerClientHandler client)
+	{
+		clients.remove(client);
+	}
+
 	/*
 	 * There's been a new client created!  Do something with its resultant socket so that we
 	 * can communicate with that client.
