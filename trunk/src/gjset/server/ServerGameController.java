@@ -111,10 +111,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 				// This is an initialization message.
 				String username = commandElement.element("username").getText();
 				
-				Element newPlayerResponse = bindClient(client, username);
-				
-				client.sendMessage(newPlayerResponse);
-				updateAllPlayers();
+				responseElement = bindClient(client, username);
 			}
 			else if(commandType.equals("startgame"))
 			{
@@ -149,15 +146,45 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 */
 	public Element bindClient(PlayerClientHandler client, String username)
 	{
-		// Create a new player in the model.
-		Player player = model.getAssociatedPlayer(username);
-		client.setPlayer(player);
+		// Verify that we can do this.
+		Player player = model.getExistingPlayer(username);
 		
-		Element newPlayerElement = documentFactory.createElement("newplayer");
-		
-		newPlayerElement.add(player.getXMLRepresentation());
-		
-		return newPlayerElement;
+		if(player == null)
+		{
+			if(model.getPlayers().size() < GameConstants.MAX_PLAYERS)
+			{
+				// Create a new player in the model.
+				player = model.addNewPlayer(username);
+				client.setPlayer(player);
+
+				// Return the player information.
+				Element commandResponse = getCommandResponse(true, null);
+
+				Element newPlayerElement = documentFactory.createElement("newplayer");
+				newPlayerElement.add(player.getXMLRepresentation());
+				
+				commandResponse.add(newPlayerElement);
+				
+				return commandResponse;
+			}
+			else
+			{
+				return getCommandResponse(false, "You've already reached the max players for this server.");
+			}
+			
+		}
+		else
+		{
+			// Return the player information.
+			Element commandResponse = getCommandResponse(true, null);
+
+			Element newPlayerElement = documentFactory.createElement("newplayer");
+			newPlayerElement.add(player.getXMLRepresentation());
+			
+			commandResponse.add(newPlayerElement);
+			
+			return commandResponse;
+		}
 	}
 
 	/**

@@ -116,12 +116,14 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Return the player assosicated with the username, or return a new player.
+	 * Return an existing player associated with the indicated username.
+	 * 
+	 * If none exists, null is returned.
 	 *
 	 * @param username
 	 * @return
 	 */
-	public Player getAssociatedPlayer(String username)
+	public Player getExistingPlayer(String username)
 	{
 		Iterator<Player> iterator = players.iterator();
 		while(iterator.hasNext())
@@ -133,7 +135,21 @@ public class GameModel extends Observable
 			}
 		}
 		
-		return addNewPlayer(username);
+		return null;
+	}
+
+	/**
+	 * Create a new player and then return it.
+	 * @param username 
+	 *
+	 * @return
+	 */
+	public Player addNewPlayer(String username)
+	{
+		Player player = new Player(maxId, username);
+		maxId++;
+		players.add(player);
+		return player;
 	}
 
 	/**
@@ -277,20 +293,6 @@ public class GameModel extends Observable
 		notifyObservers();
 		
 		return isASet;
-	}
-
-	/**
-	 * Create a new player and then return it.
-	 * @param username 
-	 *
-	 * @return
-	 */
-	private Player addNewPlayer(String username)
-	{
-		Player player = new Player(maxId, username);
-		maxId++;
-		players.add(player);
-		return player;
 	}
 
 	/**
