@@ -34,6 +34,8 @@ public class TestServerController
 	
 	private GameServer server;
 	private ServerGameController serverController;
+
+	private GameInitiator initiator;
 	
 	/**
 	 * Sets up the socket server that will be used to communicate with the client communicator.
@@ -56,7 +58,7 @@ public class TestServerController
 		clientHandler = new MockMessageHandler();
 		client.addMessageHandler(clientHandler);
 		
-		new GameInitiator(client, "Player", new GameInitiationHandler()
+		initiator = new GameInitiator(client, "Player", new GameInitiationHandler()
 		{
 			public void onGameInitiated(ClientGUIController controller)
 			{
@@ -84,7 +86,7 @@ public class TestServerController
 		{
 			server.destroy();
 			client.destroy();
-			clientController.destroy();
+			if(clientController != null) clientController.destroy();
 			serverController.destroy();
 			
 			server = null;
@@ -123,7 +125,7 @@ public class TestServerController
 	@Test
 	public void testStartNewGame()
 	{
-		serverController.startNewGame();
+		initiator.indicateReadyToStart();
 		
 		try
 		{
@@ -162,7 +164,7 @@ public class TestServerController
 	@Test
 	public void testDrawingCards()
 	{
-		serverController.startNewGame();
+		initiator.indicateReadyToStart();
 		
 		try
 		{
@@ -206,7 +208,7 @@ public class TestServerController
 	@Test
 	public void testCallSet()
 	{
-		serverController.startNewGame();
+		initiator.indicateReadyToStart();
 		
 		try
 		{
@@ -250,9 +252,8 @@ public class TestServerController
 	@Test
 	public void testCardSelection()
 	{
-		
 		// Start the game.
-		serverController.startNewGame();
+		initiator.indicateReadyToStart();
 		
 		try
 		{
