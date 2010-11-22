@@ -3,6 +3,7 @@ package gjset.gui;
 import gjset.GameConstants;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.TextField;
+import gjset.server.GameServer;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
-
 
 /**
  * This page provides configuration settings for hosting a game.
@@ -70,6 +70,14 @@ public class HostAGamePage extends DialogPage
 				{
 					String name = nameField.getText();
 					int port = Integer.parseInt(portField.getText());
+					
+					// Create the game server and tell it to listen for clients.
+					GameServer server = new GameServer(port);
+					server.listenForClients();
+					
+					// The lobby page will handle logging in and setting up the player information.
+					LobbyPage page = new LobbyPage(name, "127.0.0.1", port, mainFrame);
+					mainFrame.loadPage(page);
 				}
 			}
 		};

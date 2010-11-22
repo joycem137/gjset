@@ -106,8 +106,19 @@ public class ServerGameController implements ServerMessageHandler, Observer
 				Card card = new Card(cardElement);
 				responseElement = toggleSelection(playerId, card);
 			}
-			else if(commandType.equals("newgame"))
+			else if(commandType.equals("joinasplayer"))
 			{
+				// This is an initialization message.
+				String username = commandElement.element("username").getText();
+				
+				Element newPlayerResponse = bindClient(client, username);
+				
+				client.sendMessage(newPlayerResponse);
+				updateAllPlayers();
+			}
+			else if(commandType.equals("startgame"))
+			{
+				// For now, we'll just automatically start the game.
 				startNewGame();
 			}
 		}
@@ -136,15 +147,17 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 * @param client
 	 * @see gjset.server.ServerMessageHandler#handleNewClient(gjset.server.PlayerClientHandler)
 	 */
-	public void handleNewClient(PlayerClientHandler client)
+	public Element bindClient(PlayerClientHandler client, String username)
 	{
 		// Create a new player in the model.
-		Player player = model.addNewPlayer();
+		Player player = model.getAssociatedPlayer(username);
 		client.setPlayer(player);
 		
-		// Update the client.
-		Element gameupdate = buildGameUpdate();
-		client.sendMessage(gameupdate);
+		Element newPlayerElement = documentFactory.createElement("newplayer");
+		
+		newPlayerElement.add(player.getXMLRepresentation());
+		
+		return newPlayerElement;
 	}
 
 	/**

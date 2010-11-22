@@ -24,4 +24,10 @@ public interface ClientCommunicator
 	 */
 	public abstract void sendMessage(Element messageElement);
 
+	/**
+	 * TODO: Describe method
+	 *
+	 */
+	public abstract void destroy();
+
 }

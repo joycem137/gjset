@@ -2,10 +2,8 @@ package gjset.gui;
 
 
 import gjset.GameConstants;
-import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientCommunicator;
-import gjset.client.ConcreteClientGUIController;
-import gjset.client.gui.PlayGamePage;
+import gjset.client.GameInitiator;
 import gjset.gui.framework.Button;
 import gjset.server.GameServer;
 import gjset.server.ServerGameController;
@@ -87,20 +85,14 @@ public class LaunchPage extends DialogPage
 				ServerGameController serverController = new ServerGameController(server);
 				server.listenForClients();
 				
-				// Tell the game to start right away.
-				serverController.startNewGame();
-				
-				// Then create the client.
+				// Set up the communicator to talk to the server through.
 				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
-				ClientGUIController controller = new ConcreteClientGUIController(client);
 				
-				PlayGamePage page = new PlayGamePage(controller, mainFrame);
-				
-				// Load the actual page
-				mainFrame.loadPage(page);
-				
-				// And now connect the client!
-				client.connectToServer();
+				// Request a game to be initiated with the username "Player"
+				GameInitiator initiator = new GameInitiator(client, "Player", mainFrame);
+
+				// Tell the initiator to start the game as soon as everything is ready.
+				initiator.indicateReadyToStart();
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		

@@ -1,6 +1,7 @@
 package gjset.client;
 
 import gjset.data.Card;
+import gjset.data.Player;
 import gjset.tools.MessageHandler;
 
 import org.dom4j.DocumentFactory;
@@ -42,19 +43,18 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	DocumentFactory documentFactory;
 	private ClientGUIModel	model;
 	private ClientCommunicator client;
-
-	private int playerId;
 	
 	/**
-	 * Construct a controller with the indicated model.
+	 * Construct a controller for the indicated player connected to the indicated model.
 	 *
-	 * @param guiModel
+	 * @param client The client for communicating with the server.
+	 * @param localPlayer the Player object that represents the local player.
 	 */
-	public ConcreteClientGUIController(ClientCommunicator client)
+	public ConcreteClientGUIController(ClientCommunicator client, Player localPlayer)
 	{
-		playerId = 0;
 		documentFactory = DocumentFactory.getInstance();
 		model = new ClientGUIModel();
+		model.setLocalPlayer(localPlayer);
 		
 		this.client = client;
 		client.addMessageHandler(this);
@@ -69,16 +69,6 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	public ClientGUIModel getModel()
 	{
 		return model;
-	}
-
-	/**
-	 * Returns the player Id.  (Used for testing only at this time.)
-	 *
-	 * @return
-	 */
-	public int getPlayerId()
-	{
-		return playerId;
 	}
 
 	/**
@@ -143,13 +133,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void handleMessage(Element root)
 	{
-		if(root.element("playerid") != null)
-		{
-			String playerIdString = root.element("playerid").getText();
-			playerId = Integer.parseInt(playerIdString);
-			model.setPlayerId(playerId);
-		}
-		else if (root.element("gameupdate") != null)
+		if (root.element("gameupdate") != null)
 		{
 			Element updateElement = root.element("gameupdate");
 			model.update(updateElement);
@@ -162,13 +146,12 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void destroy()
 	{
-		//model.destroy();
-		//client.destroy();
+		model.destroy();
+		client.destroy();
 		
 		model = null;
 		client = null;
 		documentFactory = null;
-		playerId = 0;
 	}
 
 }

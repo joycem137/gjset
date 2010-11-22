@@ -76,6 +76,18 @@ public class CardTableData
 		parseTable(root);
 	}
 
+	/**
+	 * Destroy this card table.
+	 *
+	 */
+	public void destroy()
+	{
+		cardPositions = null;
+		cardsOnTable = null;
+		selectedCards = null;
+		grid = null;
+	}
+
 	public boolean isHighlighted(Card card)
 	{
 		return selectedCards.contains(card);

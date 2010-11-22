@@ -135,7 +135,7 @@ public class TestGUIController
 		client.injectMessage(idMessage);
 		
 		// Verify that the player id got set.
-		assertEquals(1, model.getPlayerId());
+		assertEquals(1, model.getLocalPlayer());
 		
 		// Now send a basic update out.
 		Element updateMessage = loadSimpleFullUpdate();

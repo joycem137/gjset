@@ -122,25 +122,6 @@ public class GameServer
 	 * can communicate with that client.
 	 */
 	
-	private void handleNewClient(Socket socket)
-	{	
-		// Create the new client handler.
-		PlayerClientHandler client = new PlayerClientHandler(socket, this, console);
-		
-		// Store it.
-		clients.add(client);
-		
-		// Start the client listening.
-		client.startListening();
-		
-		// Inform the message handlers of the new client.
-		Iterator<ServerMessageHandler> iterator = handlers.iterator();
-		while(iterator.hasNext())
-		{
-			iterator.next().handleNewClient(client);
-		}
-	}
-
 	/**
 	 * Return the full list of clients.
 	 *
@@ -215,5 +196,21 @@ public class GameServer
 		{
 			iterator.next().sendMessage(message.createCopy());
 		}
+	}
+
+	/*
+	 * There's been a new client created!  Do something with its resultant socket so that we
+	 * can communicate with that client.
+	 */
+	private void handleNewClient(Socket socket)
+	{	
+		// Create the new client handler.
+		PlayerClientHandler client = new PlayerClientHandler(socket, this, console);
+		
+		// Store it.
+		clients.add(client);
+		
+		// Start the client listening.
+		client.startListening();
 	}
 }
