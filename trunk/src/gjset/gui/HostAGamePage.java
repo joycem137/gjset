@@ -78,7 +78,7 @@ public class HostAGamePage extends DialogPage
 		int buttonY = 170;
 		int horizInset = 50;
 		
-		Action goBackAction = new AbstractAction("Return")
+		Action goBackAction = new AbstractAction("Back")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
