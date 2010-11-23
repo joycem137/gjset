@@ -57,9 +57,7 @@ import javax.swing.SwingConstants;
  */
 @SuppressWarnings("serial")
 public class PlayGamePage extends Page implements Observer
-{
-	private static final int BUTTON_INSET = 200;
-	
+{	
 	private MainFrame	mainFrame;
 	private ClientGUIController controller;
 	private SimpleLookAndFeel lnf;
@@ -88,9 +86,9 @@ public class PlayGamePage extends Page implements Observer
 		configurePage();
 
 		createCardTable();
+		createPlayerPanel();
 		createDeck();
 		createButtons();
-		createPlayerPanel();
 		createOtherPlayerPanels();
 		
 		createKeyboardListener();
@@ -119,8 +117,8 @@ public class PlayGamePage extends Page implements Observer
 		callSetButton.setDisabled(!model.canCallSet());
 		
 		boolean showSetButton = model.getPlayers().size() > 1;
-		callSetButton.setVisible(showSetButton);
-		callSetLabel.setVisible(showSetButton);
+		//callSetButton.setVisible(showSetButton);
+		//callSetLabel.setVisible(showSetButton);
 		
 		// Update the card table
 		cardTablePanel.update(model.getCardTable());
@@ -257,15 +255,26 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createButtons()
 	{
+		Rectangle usableArea = MainFrame.CONTROL_PANEL_AREA;
+		int leftCenter = (playerPanel.getX() - usableArea.x) / 2 + usableArea.x;
+		
+		System.out.println("Left center is " + leftCenter);
+		
 		callSetButton = createButton(new AbstractAction()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
 				controller.callSet();
 			}
-		}, "button_call", BUTTON_INSET, false);
+		}, "button_call", leftCenter);
 
-		callSetLabel = createLabel(callSetButton, "Combo", BUTTON_INSET);
+		callSetLabel = createLabel(callSetButton, "Combo", leftCenter);
+		
+		int rightCenter
+			= (usableArea.x + usableArea.width - playerPanel.getX() - playerPanel.getWidth()) / 2 
+			+ playerPanel.getX() + playerPanel.getWidth() - 15;
+		
+		System.out.println("Right center is " + rightCenter);
 		
 		drawButton = createButton(new AbstractAction("Draw")
 		{
@@ -273,9 +282,9 @@ public class PlayGamePage extends Page implements Observer
 			{
 				controller.drawMoreCards();
 			}
-		}, "button_draw", getWidth() - BUTTON_INSET, true);
+		}, "button_draw", rightCenter);
 	
-		createLabel(drawButton, "Draw", getWidth() - BUTTON_INSET - drawButton.getWidth());
+		createLabel(drawButton, "Draw", rightCenter);
 	}
 	
 	/**
@@ -289,25 +298,21 @@ public class PlayGamePage extends Page implements Observer
 	 * 
 	 * @return
 	 */
-	private BigButton createButton(Action action, String style, int xPos, boolean adjustXPos)
+	private BigButton createButton(Action action, String style, int centerX)
 	{
 		// Add the button
 		BigButton button = new BigButton(action, style);
 		button.setDisabled(true);
 		add(button);
 		
-		// Adjust the x position by the width of the button.
-		if(adjustXPos)
-		{
-			xPos -= button.getWidth();
-		}
+		int xPos = centerX - button.getWidth() / 2;
 		
 		button.setLocation(xPos, 620);
 		
 		return button;
 	}
 	
-	private FancyLabel createLabel(BigButton button, String text, int xPos)
+	private FancyLabel createLabel(BigButton button, String text, int centerX)
 	{
 		FancyLabel label = new FancyLabel(text, SwingConstants.CENTER);
 		label.setFancyEffect(FancyLabel.OUTLINE);
@@ -316,6 +321,9 @@ public class PlayGamePage extends Page implements Observer
 		label.setFont(lnf.getBigButtonFont());
 		
 		label.setSize(button.getWidth(), button.getHeight());
+		
+		int xPos = centerX - label.getWidth() / 2;
+		
 		label.setLocation(xPos, 620 + button.getHeight() - 15);
 		add(label);
 		
