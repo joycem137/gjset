@@ -98,6 +98,37 @@ public class CardPanel extends JComponent
 
 
 	/**
+	 * 
+	 * Paint this component.
+	 *
+	 * @param g
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
+	public void paintComponent(Graphics g)
+	{
+		// Draw the card background and abort early if face down.
+		if(!faceUp || cardData == null)
+		{
+			g.drawImage(cardBack, 0, 0, this);
+			return;
+		}
+		
+		// Draw the card background.
+		g.drawImage(cardImage, 0, 0, this);
+		
+		// Draw the halo if highlighted.
+		if(highlighted)
+		{
+			g.drawImage(cardHalo, 0, 0, this);
+		}
+		
+		// Draw the symbols, centered on the image.
+		Image symbolImage = symbolFactory.getImage(cardData);
+		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
+				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
+	}
+
+	/**
 	 * Adds all of the action listeners to our class.
 	 *
 	 */
@@ -139,36 +170,5 @@ public class CardPanel extends JComponent
 		cardImage = resourceManager.getImage("card.png");
 		cardHalo = resourceManager.getImage("card_halo.png");
 		cardBack = resourceManager.getImage("card_back.png");
-	}
-	
-	/**
-	 * 
-	 * Paint this component.
-	 *
-	 * @param g
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
-	public void paintComponent(Graphics g)
-	{
-		// Draw the card background and abort early if face down.
-		if(!faceUp || cardData == null)
-		{
-			g.drawImage(cardBack, 0, 0, this);
-			return;
-		}
-		
-		// Draw the card background.
-		g.drawImage(cardImage, 0, 0, this);
-		
-		// Draw the halo if highlighted.
-		if(highlighted)
-		{
-			g.drawImage(cardHalo, 0, 0, this);
-		}
-		
-		// Draw the symbols, centered on the image.
-		Image symbolImage = symbolFactory.getImage(cardData);
-		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
-				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
 	}
 }
