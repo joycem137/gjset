@@ -59,7 +59,7 @@ public class GameModel extends Observable
 	private Player[] players;
 	
 	private CountdownTimer setTimer;
-	private static final int SET_TIME = 2500;
+	private static final int SET_TIME = 3500;
 	
 	public GameModel()
 	{
