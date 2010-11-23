@@ -55,6 +55,7 @@ public class Button extends JComponent
 	
 	private boolean	pressed;
 	private Action	action;
+	private boolean mouseDown;
 	
 	private String text;
 	private boolean textVisible;
@@ -69,6 +70,7 @@ public class Button extends JComponent
 	{	
 		this.action = action;
 		pressed = false;
+		mouseDown = false;
 		
 		// Get all of our images.
 		ResourceManager resourceManager = ResourceManager.getInstance();
@@ -156,6 +158,7 @@ public class Button extends JComponent
 			public void mousePressed(MouseEvent me)
 			{
 				// Depress the button.
+				mouseDown = true;
 				pressed = true;
 				repaint();
 			}
@@ -165,6 +168,7 @@ public class Button extends JComponent
 				if(pressed)
 				{
 					// Button released!
+					mouseDown = false;
 					pressed = false;
 					repaint();
 					
@@ -178,6 +182,15 @@ public class Button extends JComponent
 				// We exited the button.  Do not press it.
 				pressed = false;
 				repaint();
+			}
+			
+			public void mouseEntered(MouseEvent me)
+			{
+				if(mouseDown)
+				{
+					pressed = true;
+					repaint();
+				}
 			}
 		};
 		
@@ -199,6 +212,13 @@ public class Button extends JComponent
 		Point textPosition = new Point();
 		textPosition.x = getWidth() / 2 - textWidth / 2;
 		textPosition.y = getHeight() / 2 + textHeight / 2 - 2;
+		
+		// Offset a little if pressed to give buttons that 3D look.
+		if(pressed)
+		{
+			textPosition.x++;
+			textPosition.y++;
+		}
 		
 		return textPosition;
 	}
