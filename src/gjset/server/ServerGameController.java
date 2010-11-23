@@ -93,7 +93,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			String commandType = commandElement.attributeValue("type", "");
 			if(commandType.equals("drawcards"))
 			{
-				responseElement = drawCards();
+				responseElement = requestDrawCards(playerId);
 			}
 			else if(commandType.equals("callset"))
 			{
@@ -237,7 +237,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 *
 	 * @return An XML tag containing the results of the command
 	 */
-	private Element drawCards()
+	private Element requestDrawCards(int playerId)
 	{
 		boolean success = false;
 		String failureReason = null;
@@ -257,8 +257,15 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			}
 			else if (cardTable.getNumCards() < CardTable.CARD_LIMIT)
 			{
-				// We *CAN* draw the cards! YAY!
-				model.drawCards();
+				// We *CAN* draw the cards! YAY!  So 
+				
+				// Register ourself as one of those wishing to draw cards.
+				model.setDesireToDrawCards(playerId, true);
+				
+				if(model.allPlayersWantToDraw())
+				{
+					model.drawCards();
+				}
 				
 				success = true;
 			}

@@ -37,6 +37,9 @@ public class Player
 	private int penalty;
 	private int id;
 	private String name;
+	
+	// Used to indicate whether or not 
+	private boolean wantsToDraw; 
 
 	// Create a basic, blank player.
 	public Player()
@@ -46,9 +49,16 @@ public class Player
 		this.penalty = 0;
 		this.id = 0;
 		this.name = "Player";
+		
+		wantsToDraw = false;
 	}
 
-	// Create a player based on player number.
+	/**
+	 * Create a player based on player number and username.
+	 *
+	 * @param id
+	 * @param name
+	 */
 	public Player(int id, String name)
 	{
 		this();
@@ -86,6 +96,11 @@ public class Player
 	public String getName()
 	{
 		return name;
+	}
+	
+	public boolean getWantsToDraw()
+	{
+		return wantsToDraw;
 	}
 
 	/**
@@ -133,25 +148,10 @@ public class Player
 			name = "Player " + id;
 		}
 	}
-
-	/**
-	 * 
-	 * Build the player using the indicated player element.
-	 *
-	 * @param playerElement
-	 */
-	private void parsePlayer(Element playerElement)
+	
+	public void setWantsToDraw(boolean value)
 	{
-		String idString = playerElement.attributeValue("id", "0");
-		id = Integer.parseInt(idString);
-		
-		String pointsString = playerElement.element("points").getText();
-		points = Integer.parseInt(pointsString);
-		
-		String penaltyString = playerElement.element("penalty").getText();
-		penalty = Integer.parseInt(penaltyString);
-		
-		name = playerElement.element("name").getText();
+		wantsToDraw = value;
 	}
 
 	/**
@@ -179,5 +179,25 @@ public class Player
 		playerElement.add(nameElement);
 		
 		return playerElement;
+	}
+
+	/**
+	 * 
+	 * Build the player using the indicated player element.
+	 *
+	 * @param playerElement
+	 */
+	private void parsePlayer(Element playerElement)
+	{
+		String idString = playerElement.attributeValue("id", "0");
+		id = Integer.parseInt(idString);
+		
+		String pointsString = playerElement.element("points").getText();
+		points = Integer.parseInt(pointsString);
+		
+		String penaltyString = playerElement.element("penalty").getText();
+		penalty = Integer.parseInt(penaltyString);
+		
+		name = playerElement.element("name").getText();
 	}	
 }
