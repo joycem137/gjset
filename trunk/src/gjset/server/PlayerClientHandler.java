@@ -235,7 +235,7 @@ public class PlayerClientHandler
 			}
 		};
 		
-		listeningThread = new Thread(listenForMessage);
+		listeningThread = new Thread(listenForMessage, "Client Handler Thread");
 	}
 
 }

@@ -236,6 +236,6 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			}
 		};
 		
-		listeningThread = new Thread(listenForMessage);
+		listeningThread = new Thread(listenForMessage, "Client Listening Thread");
 	}
 }
