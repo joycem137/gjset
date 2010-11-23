@@ -152,8 +152,18 @@ public class ClientGUIModel extends Observable
 	 */
 	public boolean canDrawCards()
 	{
-		return gameState == GameConstants.GAME_STATE_IDLE
-			&& deckSize > 0 && cardTableData.getCols() < 7;
+		// In general, we can draw if the deck permits us to, and there's room.
+		boolean canDraw = deckSize > 0 && cardTableData.getCols() < 7;
+		
+		// In single player mode, we can draw in either the set state or the idle state.
+		boolean singlePlayerDraw = (players.size() == 1 
+			&& (gameState == GameConstants.GAME_STATE_IDLE
+			 || gameState == GameConstants.GAME_STATE_SET_CALLED));
+		
+		// In multi player mode, we can draw only in the idle state.
+		boolean multiPlayerDraw = gameState == GameConstants.GAME_STATE_IDLE;
+		
+		return canDraw && (multiPlayerDraw || singlePlayerDraw);
 	}
 
 	/**

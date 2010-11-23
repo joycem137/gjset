@@ -299,7 +299,11 @@ public class GameModel extends Observable
 		gameState = GameConstants.GAME_STATE_SET_CALLED;
 		setCallerId = playerId;
 		
-		setTimer.start();
+		// If this isn't a single player game, start a timer.
+		if(getPlayers().size() > 1)
+		{
+			setTimer.start();
+		}
 		
 		// Notify observers that the model has changed.
 		setChanged();

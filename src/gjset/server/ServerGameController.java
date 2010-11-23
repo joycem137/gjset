@@ -244,9 +244,13 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		
 		int gameState = model.getGameState();
 		
-		// If the game is not currently idle, do nothing.
-		if (gameState == GameConstants.GAME_STATE_IDLE)
+		// Only draw cards in single player mode or when the game is idle.
+		if (gameState == GameConstants.GAME_STATE_IDLE
+				|| (model.getPlayers().size() == 1
+				&& gameState == GameConstants.GAME_STATE_SET_CALLED))
 		{
+			model.getCardTable().unSelectCards();
+			
 			Deck deck = model.getDeck();
 			CardTable cardTable = model.getCardTable();
 			
