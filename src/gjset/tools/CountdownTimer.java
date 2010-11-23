@@ -45,7 +45,7 @@ public class CountdownTimer
 		}
 		
 		// Now schedule running this.
-		timer = new Timer();
+		timer = new Timer("Countdown Timer");
 		timer.schedule(new TimerTask()
 		{
 			public void run()

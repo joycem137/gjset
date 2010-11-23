@@ -104,7 +104,7 @@ public class GameServer
 		};
 		
 		// Create the listening thread.
-		listeningThread = new Thread(runServer);
+		listeningThread = new Thread(runServer, "Server thread listening for clients");
 	}
 	
 	/**
