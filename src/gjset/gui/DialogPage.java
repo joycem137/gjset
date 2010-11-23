@@ -3,6 +3,7 @@ package gjset.gui;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
+import gjset.gui.framework.SimpleLookAndFeel;
 
 import java.awt.Color;
 import java.awt.Graphics;

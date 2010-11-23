@@ -2,8 +2,8 @@ package gjset.client.gui;
 
 import gjset.data.Player;
 import gjset.gui.MainFrame;
-import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.ResourceManager;
+import gjset.gui.framework.SimpleLookAndFeel;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
