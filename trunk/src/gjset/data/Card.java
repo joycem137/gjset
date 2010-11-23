@@ -10,8 +10,7 @@ import org.dom4j.tree.DefaultElement;
  *  
  *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
- *  The Set Game, card design, and basic game mechanics of the Set Game are
- *  registered trademarks of Set Enterprises. 
+ *  Set¨ is a registered trademark of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
  *  but the authors of Combo Cards are very grateful for
