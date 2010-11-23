@@ -5,10 +5,10 @@ import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.data.Player;
 import gjset.gui.MainFrame;
-import gjset.gui.SimpleLookAndFeel;
 import gjset.gui.framework.BigButton;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
+import gjset.gui.framework.SimpleLookAndFeel;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;

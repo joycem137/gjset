@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.gui.framework;
 
 import java.awt.Color;
 import java.awt.Font;
