@@ -218,13 +218,13 @@ public class LobbyPage extends DialogPage implements MessageHandler
 			field.setForeground(lnf.getDialogInputTextColor());
 			
 			// Set the size of the field.
-			int fieldWidth = (int) ((usableArea.getWidth() - INSET) / 2 - INSET);
+			int fieldWidth = (int) ((usableArea.getWidth() - 2 * INSET) / 2 - INSET / 2);
 			field.setSize(fieldWidth, 28);
 			
 			int x = usableArea.x + INSET;
 			if( i % 2 == 1 )
 			{
-				x = (usableArea.y + usableArea.width) - INSET - field.getWidth();
+				x = (usableArea.x + usableArea.width) - INSET - field.getWidth();
 			}
 			
 			int y = usableArea.y + (i / 2) * (field.getHeight() + 2) + INSET;
