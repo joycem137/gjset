@@ -117,8 +117,8 @@ public class PlayGamePage extends Page implements Observer
 		callSetButton.setDisabled(!model.canCallSet());
 		
 		boolean showSetButton = model.getPlayers().size() > 1;
-		//callSetButton.setVisible(showSetButton);
-		//callSetLabel.setVisible(showSetButton);
+		callSetButton.setVisible(showSetButton);
+		callSetLabel.setVisible(showSetButton);
 		
 		// Update the card table
 		cardTablePanel.update(model.getCardTable());
