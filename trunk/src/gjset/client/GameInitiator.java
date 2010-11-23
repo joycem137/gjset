@@ -151,8 +151,8 @@ public class GameInitiator implements MessageHandler
 		String gameStateString = updateElement.element("gamestate").getText();
 		int gameState = Integer.parseInt(gameStateString);
 		
-		// See if the game has started.
-		if(gameState != GameConstants.GAME_STATE_NOT_STARTED)
+		// See if the game has started and that we've got our player information.
+		if(gameState != GameConstants.GAME_STATE_NOT_STARTED && controller != null)
 		{
 			handleGameStarted();
 		}
