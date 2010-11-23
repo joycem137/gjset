@@ -233,6 +233,8 @@ public class GameModel extends Observable
 	 */
 	public void drawCards()
 	{
+		resetCardDrawDesires();
+		
 		// Draw 3 new cards to add to the table.
 		cardTable.addCards(deck.drawCards(3));
 	
@@ -248,12 +250,52 @@ public class GameModel extends Observable
 	}
 
 	/**
+	 * Find the player with the indicated id and set their draw cards desire.
+	 *
+	 * @param playerId
+	 * @param value
+	 */
+	public void setDesireToDrawCards(int playerId, boolean value)
+	{
+		for(int i = 0; i < players.length; i++)
+		{
+			if(players[i] != null && players[i].getId() == playerId)
+			{
+				players[i].setWantsToDraw(value);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Hunt through all players to see who wants to draw cards.
+	 * Return true if all players have this desire.
+	 *
+	 * @return
+	 */
+	public boolean allPlayersWantToDraw()
+	{
+		for(int i = 0; i < players.length; i++)
+		{
+			if(players[i] != null && !players[i].getWantsToDraw())
+			{
+				return false;
+			}
+		}
+		
+		// If we made it this far, everyone wants to draw.
+		return true;
+	}
+
+	/**
 	 * Cause the model to engage call set mode for the indicated player.
 	 *
 	 * @param playerId
 	 */
 	public void callSet(int playerId)
 	{
+		resetCardDrawDesires();
+		
 		gameState = GameConstants.GAME_STATE_SET_CALLED;
 		setCallerId = playerId;
 		
@@ -347,6 +389,32 @@ public class GameModel extends Observable
 	public void removePlayer(int playerId)
 	{
 		players[playerId - 1] = null;
+	}
+
+	/**
+	 * Destroy the model.
+	 *
+	 */
+	public void destroy()
+	{
+		players = null;
+		setTimer.cancel();
+		setTimer = null;
+	}
+
+	/**
+	 * Tell all players to stop wanting to draw cards.
+	 *
+	 */
+	private void resetCardDrawDesires()
+	{
+		for(int i = 0; i < players.length; i++)
+		{
+			if(players[i] != null)
+			{
+				players[i].setWantsToDraw(false);
+			}
+		}
 	}
 
 	/**
@@ -474,16 +542,5 @@ public class GameModel extends Observable
 		}
 		
 		return card3;
-	}
-
-	/**
-	 * Destroy the model.
-	 *
-	 */
-	public void destroy()
-	{
-		players = null;
-		setTimer.cancel();
-		setTimer = null;
 	}
 }
