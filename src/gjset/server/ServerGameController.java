@@ -155,7 +155,6 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		
 		if(player == null)
 		{
-			
 			if(model.getGameState() == GameConstants.GAME_STATE_NOT_STARTED 
 					&& model.getPlayers().size() < GameConstants.MAX_PLAYERS)
 			{
@@ -181,6 +180,8 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		}
 		else
 		{
+			client.setPlayer(player);
+			
 			// Return the player information.
 			Element commandResponse = getCommandResponse(true, null);
 
@@ -284,6 +285,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 */
 	private Element callSet(int playerId)
 	{
+		System.out.println("Player " + playerId + " is calling set.");
 		// Verify that we can actually call set.
 		if(model.getGameState() == GameConstants.GAME_STATE_IDLE)
 		{
