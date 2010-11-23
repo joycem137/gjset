@@ -223,6 +223,8 @@ public class PlayerClientHandler
 						// Then go looking for the next message.
 						textReceived = reader.readLine();		
 					}
+					
+					destroy();
 				} catch (IOException e)
 				{
 					System.err.println("IO Exception reading input in client handler. (Possibly because of closed socket.)");
@@ -231,7 +233,7 @@ public class PlayerClientHandler
 				{
 					System.err.println("Document Exception parsing text in client handler.");
 					//e.printStackTrace();
-				}	
+				}
 			}
 		};
 		

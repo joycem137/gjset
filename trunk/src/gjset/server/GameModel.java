@@ -328,21 +328,25 @@ public class GameModel extends Observable
 	 */
 	private void handleSetTimeout()
 	{
-		// Change the game state.
-		gameState = GameConstants.GAME_STATE_IDLE;
-		
-		// De-select the cards.
-		cardTable.unSelectCards();
-		
-		// Get the player object associated with the player that selected these cards.
-		Player setPlayer = getSetCaller();
-		
-		// Take away points
-		setPlayer.addPenalty(GameConstants.SET_PENALTY);
-		
-		// Notify observers that the model has changed.
-		setChanged();
-		notifyObservers(new Boolean(false));
+		// Verify that the model is still in the same state it was.
+		if(gameState == GameConstants.GAME_STATE_SET_CALLED)
+		{
+			// Change the game state.
+			gameState = GameConstants.GAME_STATE_IDLE;
+			
+			// De-select the cards.
+			cardTable.unSelectCards();
+			
+			// Get the player object associated with the player that selected these cards.
+			Player setPlayer = getSetCaller();
+			
+			// Take away points
+			setPlayer.addPenalty(GameConstants.SET_PENALTY);
+			
+			// Notify observers that the model has changed.
+			setChanged();
+			notifyObservers(new Boolean(false));
+		}
 	}
 
 	// This function checks a vector of cards to determine if they are a set.

@@ -133,6 +133,16 @@ public class GameServer
 	}
 
 	/**
+	 * Remove this client from the server.
+	 *
+	 * @param playerClientHandler
+	 */
+	public void removeClient(PlayerClientHandler client)
+	{
+		clients.remove(client);
+	}
+
+	/**
 	 * Send the indicated message to all message handlers attached to the server.
 	 *
 	 * @param current
@@ -145,6 +155,16 @@ public class GameServer
 		{
 			iterator.next().handleMessage(client, message);
 		}
+	}
+
+	/**
+	 * Add a message handler to the server to receive incoming messages.
+	 *
+	 * @param handler
+	 */
+	public void addMessageHandler(ServerMessageHandler handler)
+	{
+		handlers.add(handler);
 	}
 
 	/**
@@ -176,16 +196,6 @@ public class GameServer
 	}
 
 	/**
-	 * Add a message handler to the server to receive incoming messages.
-	 *
-	 * @param handler
-	 */
-	public void addMessageHandler(ServerMessageHandler handler)
-	{
-		handlers.add(handler);
-	}
-
-	/**
 	 * Tell every client to send this message.
 	 *
 	 * @param message
@@ -198,16 +208,6 @@ public class GameServer
 		{
 			iterator.next().sendMessage(message.createCopy());
 		}
-	}
-
-	/**
-	 * Remove this client from the server.
-	 *
-	 * @param playerClientHandler
-	 */
-	public void removeClient(PlayerClientHandler client)
-	{
-		clients.remove(client);
 	}
 
 	/*
