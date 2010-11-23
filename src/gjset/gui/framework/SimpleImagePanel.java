@@ -8,12 +8,11 @@ import javax.swing.JPanel;
 /* 
  *  LEGAL STUFF
  * 
- *  This file is part of Combo Cards!
+ *  This file is part of Combo Cards.
  *  
  *  Combo Cards is Copyright 2008-2010 Artless Entertainment
  *  
- *  The Set Game, card design, and other elements of Set of the Set Game are
- *  registered trademarks of Set Enterprises. 
+ *  Set¨ is a registered trademark of Set Enterprises. 
  *  
  *  This project is in no way affiliated with Set Enterprises, 
  *  but the authors of Combo Cards are very grateful for
