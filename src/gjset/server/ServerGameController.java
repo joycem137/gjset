@@ -155,7 +155,9 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		
 		if(player == null)
 		{
-			if(model.getPlayers().size() < GameConstants.MAX_PLAYERS)
+			
+			if(model.getGameState() == GameConstants.GAME_STATE_NOT_STARTED 
+					&& model.getPlayers().size() < GameConstants.MAX_PLAYERS)
 			{
 				// Create a new player in the model.
 				player = model.addNewPlayer(username);
@@ -173,7 +175,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			}
 			else
 			{
-				return getCommandResponse(false, "You've already reached the max players for this server.");
+				return getCommandResponse(false, "Unable to create a new player at this time.");
 			}
 			
 		}
