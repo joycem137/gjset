@@ -72,6 +72,8 @@ public class PlayGamePage extends Page implements Observer
 	private PlayerPanel playerPanel;
 	private List<OtherPlayerPanel> otherPlayerPanels;
 
+	private FancyLabel callSetLabel;
+
 	public PlayGamePage(ClientGUIController controller, MainFrame mainFrame)
 	{
 		super();
@@ -115,6 +117,10 @@ public class PlayGamePage extends Page implements Observer
 		// Determine if we can call set or draw more cards.
 		drawButton.setDisabled(!model.canDrawCards());
 		callSetButton.setDisabled(!model.canCallSet());
+		
+		boolean showSetButton = model.getPlayers().size() > 1;
+		callSetButton.setVisible(showSetButton);
+		callSetLabel.setVisible(showSetButton);
 		
 		// Update the card table
 		cardTablePanel.update(model.getCardTable());
@@ -251,21 +257,25 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createButtons()
 	{
-		callSetButton = createButtonAndLabel(new AbstractAction("Combo")
+		callSetButton = createButton(new AbstractAction()
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
 				controller.callSet();
 			}
 		}, "button_call", BUTTON_INSET, false);
+
+		callSetLabel = createLabel(callSetButton, "Combo", BUTTON_INSET);
 		
-		drawButton = createButtonAndLabel(new AbstractAction("Draw")
+		drawButton = createButton(new AbstractAction("Draw")
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
 				controller.drawMoreCards();
 			}
-		}, "button_draw", getWidth() - BUTTON_INSET, true); // This call to the call set button width is a bit of a hack.
+		}, "button_draw", getWidth() - BUTTON_INSET, true);
+	
+		createLabel(drawButton, "Draw", getWidth() - BUTTON_INSET - drawButton.getWidth());
 	}
 	
 	/**
@@ -279,7 +289,7 @@ public class PlayGamePage extends Page implements Observer
 	 * 
 	 * @return
 	 */
-	private BigButton createButtonAndLabel(Action action, String style, int xPos, boolean adjustXPos)
+	private BigButton createButton(Action action, String style, int xPos, boolean adjustXPos)
 	{
 		// Add the button
 		BigButton button = new BigButton(action, style);
@@ -294,7 +304,12 @@ public class PlayGamePage extends Page implements Observer
 		
 		button.setLocation(xPos, 620);
 		
-		FancyLabel label = new FancyLabel((String)action.getValue(Action.NAME), SwingConstants.CENTER);
+		return button;
+	}
+	
+	private FancyLabel createLabel(BigButton button, String text, int xPos)
+	{
+		FancyLabel label = new FancyLabel(text, SwingConstants.CENTER);
 		label.setFancyEffect(FancyLabel.OUTLINE);
 		label.setBackground(lnf.getBigButtonLabelBackground());
 		label.setForeground(lnf.getBigButtonLabelForeground());
@@ -304,7 +319,7 @@ public class PlayGamePage extends Page implements Observer
 		label.setLocation(xPos, 620 + button.getHeight() - 15);
 		add(label);
 		
-		return button;
+		return label;
 	}
 
 	/**
