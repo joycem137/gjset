@@ -40,7 +40,7 @@ import org.dom4j.Element;
  */
 public class ConcreteClientGUIController implements ClientGUIController, MessageHandler
 {
-	DocumentFactory documentFactory;
+	private DocumentFactory documentFactory;
 	private ClientGUIModel	model;
 	private ClientCommunicator client;
 	
