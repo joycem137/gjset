@@ -96,6 +96,88 @@ public class PlayGamePage extends Page implements Observer
 	}
 
 	/**
+	 * Check all of the objects in the model to determine whether any have changed.
+	 *
+	 * @param observable
+	 * @param object
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable observable, Object object)
+	{
+		ClientGUIModel model = (ClientGUIModel) observable;
+		
+		// Update the players.
+		updatePlayers(model);
+		
+		// Update the deck
+		int cardsInDeck = model.getCardsInDeck();
+		deckPanel.updateSize(cardsInDeck);
+		
+		// Determine if we can call set or draw more cards.
+		drawButton.setDisabled(!model.canDrawCards());
+		callSetButton.setDisabled(!model.canCallSet());
+		
+		// Update the card table
+		cardTablePanel.update(model.getCardTable());
+		
+		// See if we need to display the game over screen.
+		if(model.getGameState() == GameConstants.GAME_STATE_GAME_OVER)
+		{
+			controller.startNewGame();
+		}
+		
+		repaint();
+	}
+
+	/**
+	 * Update the player panels using the list from the model.
+	 *
+	 * @param players
+	 */
+	private void updatePlayers(ClientGUIModel model)
+	{
+		List<Player> players = model.getPlayers();
+		
+		int otherPlayerPanelIndex = 0;
+		Iterator<Player> iterator = players.iterator();
+		while(iterator.hasNext())
+		{
+			Player player = iterator.next();
+			if(player.getId() == model.getLocalPlayer().getId())
+			{
+				// Update the player panel.
+				playerPanel.updatePlayerData(player);
+			}
+			else
+			{
+				// Update the "other" player panels.
+				OtherPlayerPanel panel = otherPlayerPanels.get(otherPlayerPanelIndex);
+				panel.updatePlayerData(player);
+				panel.setVisible(true);
+				
+				otherPlayerPanelIndex++;
+			}
+		}
+		
+		// Hide all of the remaining other player panels.
+		for(int i = otherPlayerPanelIndex; i < GameConstants.MAX_PLAYERS - 1; i++)
+		{
+			otherPlayerPanels.get(i).setVisible(false);
+		}
+	}
+
+	/**
+	 * Configure the page's basic settings.
+	 *
+	 */
+	private void configurePage()
+	{
+		// We'll want to cover the *entire* screen.
+		setSize(mainFrame.getSize());
+		setLocation(0,0);
+	}
+
+	/**
 	 * Check for incoming keyboard commands.
 	 *
 	 */
@@ -234,87 +316,5 @@ public class PlayGamePage extends Page implements Observer
 	{
 		deckPanel = new DeckPanel();
 		add(deckPanel);
-	}
-
-	/**
-	 * Configure the page's basic settings.
-	 *
-	 */
-	private void configurePage()
-	{
-		// We'll want to cover the *entire* screen.
-		setSize(mainFrame.getSize());
-		setLocation(0,0);
-	}
-	
-	/**
-	 * Check all of the objects in the model to determine whether any have changed.
-	 *
-	 * @param observable
-	 * @param object
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable observable, Object object)
-	{
-		ClientGUIModel model = (ClientGUIModel) observable;
-		
-		// Update the players.
-		updatePlayers(model);
-		
-		// Update the deck
-		int cardsInDeck = model.getCardsInDeck();
-		deckPanel.updateSize(cardsInDeck);
-		
-		// Determine if we can call set or draw more cards.
-		drawButton.setDisabled(!model.canDrawCards());
-		callSetButton.setDisabled(!model.canCallSet());
-		
-		// Update the card table
-		cardTablePanel.update(model.getCardTable());
-		
-		// See if we need to display the game over screen.
-		if(model.getGameState() == GameConstants.GAME_STATE_GAME_OVER)
-		{
-			controller.startNewGame();
-		}
-		
-		repaint();
-	}
-
-	/**
-	 * Update the player panels using the list from the model.
-	 *
-	 * @param players
-	 */
-	private void updatePlayers(ClientGUIModel model)
-	{
-		List<Player> players = model.getPlayers();
-		
-		int otherPlayerPanelIndex = 0;
-		Iterator<Player> iterator = players.iterator();
-		while(iterator.hasNext())
-		{
-			Player player = iterator.next();
-			if(player.getId() == model.getLocalPlayer().getId())
-			{
-				// Update the player panel.
-				playerPanel.updatePlayerData(player);
-			}
-			else
-			{
-				// Update the "other" player panels.
-				OtherPlayerPanel panel = otherPlayerPanels.get(otherPlayerPanelIndex);
-				panel.updatePlayerData(player);
-				panel.setVisible(true);
-				
-				otherPlayerPanelIndex++;
-			}
-		}
-		
-		// Hide all of the remaining other player panels.
-		for(int i = otherPlayerPanelIndex; i < GameConstants.MAX_PLAYERS - 1; i++)
-		{
-			otherPlayerPanels.get(i).setVisible(false);
-		}
 	}
 }

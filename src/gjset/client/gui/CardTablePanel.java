@@ -44,34 +44,6 @@ public class CardTablePanel extends JPanel
 	}
 
 	/**
-	 * Configure the raw settings of the panel.
-	 *
-	 */
-	private void configurePanel()
-	{
-		setLayout(null);
-		setOpaque(false);
-		
-		playingFrame = MainFrame.PLAYING_FIELD_AREA;
-		
-		setLocation(playingFrame.x, playingFrame.y);
-		setSize(playingFrame.width, playingFrame.height);
-	}
-
-	/**
-	 * Add a card pane to store the cards.
-	 *
-	 */
-	private void addCardPane()
-	{
-		// Create the card pane
-		cardPane = new JPanel();
-		cardPane.setLayout(null);
-		cardPane.setOpaque(false);
-		add(cardPane);
-	}
-
-	/**
 	 * 
 	 * This method should be called any time the {@link CardTable} data changes within the {@link ServerGameController}.
 	 * This method will be called any time the highlighting, physical arrangement, or number/composition of
@@ -147,6 +119,34 @@ public class CardTablePanel extends JPanel
 		cardPane.removeAll();
 		cardPane.revalidate();
 		cardPane.repaint();
+	}
+
+	/**
+	 * Configure the raw settings of the panel.
+	 *
+	 */
+	private void configurePanel()
+	{
+		setLayout(null);
+		setOpaque(false);
+		
+		playingFrame = MainFrame.PLAYING_FIELD_AREA;
+		
+		setLocation(playingFrame.x, playingFrame.y);
+		setSize(playingFrame.width, playingFrame.height);
+	}
+
+	/**
+	 * Add a card pane to store the cards.
+	 *
+	 */
+	private void addCardPane()
+	{
+		// Create the card pane
+		cardPane = new JPanel();
+		cardPane.setLayout(null);
+		cardPane.setOpaque(false);
+		add(cardPane);
 	}
 
 }
