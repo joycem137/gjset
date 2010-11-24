@@ -90,7 +90,7 @@ public class LaunchPage extends DialogPage
 				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
 				
 				// Request a game to be initiated with the username "Player"
-				GameInitiator initiator = new GameInitiator(client, "Player", new GameInitiationHandler()
+				GameInitiator initiator = new GameInitiator(client, "Score", new GameInitiationHandler()
 				{
 					public void onGameInitiated(ClientGUIController controller)
 					{
