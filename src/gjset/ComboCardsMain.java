@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class GjSetMain
+public class ComboCardsMain
 {
 	public static void main(String[] args)
 	{
