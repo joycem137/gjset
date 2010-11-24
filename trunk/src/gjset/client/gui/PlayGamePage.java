@@ -3,6 +3,7 @@ package gjset.client.gui;
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
+import gjset.data.Card;
 import gjset.data.Player;
 import gjset.gui.MainFrame;
 import gjset.gui.framework.BigButton;
@@ -21,6 +22,8 @@ import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -91,7 +94,8 @@ public class PlayGamePage extends Page implements Observer
 		createButtons();
 		createOtherPlayerPanels();
 		
-		createKeyboardListener();
+		createActionMap();
+		createKeyMap();
 	}
 
 	/**
@@ -181,19 +185,62 @@ public class PlayGamePage extends Page implements Observer
 	}
 
 	/**
-	 * Check for incoming keyboard commands.
+	 * Create the input map for all of the actions associated with this page.
 	 *
 	 */
-	private void createKeyboardListener()
+	private void createKeyMap()
 	{
-		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "keyCallSet");
-		getActionMap().put("keyCallSet", new AbstractAction()
+		InputMap map = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "keyCallSet");
+		
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "keySelectCard11");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "keySelectCard12");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0), "keySelectCard13");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), "keySelectCard14");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "keySelectCard15");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "keySelectCard16");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_U, 0), "keySelectCard17");
+		
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "keySelectCard21");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "keySelectCard22");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "keySelectCard23");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0), "keySelectCard24");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "keySelectCard25");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "keySelectCard26");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0), "keySelectCard27");
+		
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), "keySelectCard31");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), "keySelectCard32");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "keySelectCard33");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, 0), "keySelectCard34");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_B, 0), "keySelectCard35");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "keySelectCard36");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "keySelectCard37");
+	}
+
+	/**
+	 * Create all of the mappings for the sorts of actions that can be performed on this page.
+	 *
+	 */
+	private void createActionMap()
+	{
+		ActionMap map = getActionMap();
+		
+		map.put("keyCallSet", new AbstractAction()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				controller.callSet();
 			}
 		});
+		
+		for(int r = 1; r <= 3; r++)
+		{
+			for(int c = 1; c <= 7; c++)
+			{
+				map.put("keySelectCard" + r + "" + c, new SelectCardAction(r - 1, c - 1));
+			}
+		}
 	}
 	
 	/**
@@ -338,5 +385,29 @@ public class PlayGamePage extends Page implements Observer
 	{
 		deckPanel = new DeckPanel();
 		add(deckPanel);
+	}
+
+	/**
+	 * A helper class that is used to select cards.
+	 */
+	private class SelectCardAction extends AbstractAction
+	{
+		private int row;
+		private int col;
+	
+		public SelectCardAction(int row, int col)
+		{
+			super();
+			
+			this.row = row;
+			this.col = col;
+		}
+		
+		public void actionPerformed(ActionEvent e)
+		{
+			// Get the indicated card and then tell the controller to select it.
+			Card card = controller.getModel().getCardTable().getCardAt(row, col);
+			controller.selectCard(card);
+		}
 	}
 }
