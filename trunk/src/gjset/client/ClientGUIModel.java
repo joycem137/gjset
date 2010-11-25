@@ -114,6 +114,16 @@ public class ClientGUIModel extends Observable
 	}
 
 	/**
+	 * Return the ID of the set caller.  Will be 0 or -1 if no one has called set.
+	 *
+	 * @return
+	 */
+	public int getSetCaller()
+	{
+		return setCallerId;
+	}
+
+	/**
 	 * Return the array of players.
 	 *
 	 * @return

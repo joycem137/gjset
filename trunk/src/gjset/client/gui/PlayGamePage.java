@@ -70,8 +70,8 @@ public class PlayGamePage extends Page implements Observer
 	private BigButton callSetButton;
 	private BigButton drawButton;
 	private CardTablePanel cardTablePanel;
-	private PlayerPanel playerPanel;
-	private List<OtherPlayerPanel> otherPlayerPanels;
+	private LocalPlayerPanel localPlayerPanel;
+	private List<RemotePlayerPanel> remotePlayerPanels;
 
 	private FancyLabel callSetLabel;
 
@@ -145,7 +145,9 @@ public class PlayGamePage extends Page implements Observer
 	{
 		List<Player> players = model.getPlayers();
 		
-		int otherPlayerPanelIndex = 0;
+		int setCallerId = model.getSetCaller();
+		
+		int remotePlayerPanelIndex = 0;
 		Iterator<Player> iterator = players.iterator();
 		while(iterator.hasNext())
 		{
@@ -153,23 +155,23 @@ public class PlayGamePage extends Page implements Observer
 			if(player.getId() == model.getLocalPlayer().getId())
 			{
 				// Update the player panel.
-				playerPanel.updatePlayerData(player);
+				localPlayerPanel.updatePlayerData(player, setCallerId);
 			}
 			else
 			{
 				// Update the "other" player panels.
-				OtherPlayerPanel panel = otherPlayerPanels.get(otherPlayerPanelIndex);
+				RemotePlayerPanel panel = remotePlayerPanels.get(remotePlayerPanelIndex);
 				panel.updatePlayerData(player);
 				panel.setVisible(true);
 				
-				otherPlayerPanelIndex++;
+				remotePlayerPanelIndex++;
 			}
 		}
 		
-		// Hide all of the remaining other player panels.
-		for(int i = otherPlayerPanelIndex; i < GameConstants.MAX_PLAYERS - 1; i++)
+		// Hide all of the remaining remote player panels.
+		for(int i = remotePlayerPanelIndex; i < GameConstants.MAX_PLAYERS - 1; i++)
 		{
-			otherPlayerPanels.get(i).setVisible(false);
+			remotePlayerPanels.get(i).setVisible(false);
 		}
 	}
 
@@ -252,11 +254,11 @@ public class PlayGamePage extends Page implements Observer
 		int INSET = 5;
 		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
 		
-		otherPlayerPanels = new Vector<OtherPlayerPanel>();
+		remotePlayerPanels = new Vector<RemotePlayerPanel>();
 		
 		for(int i = 0; i < GameConstants.MAX_PLAYERS - 1; i++)
 		{
-			OtherPlayerPanel panel = new OtherPlayerPanel();
+			RemotePlayerPanel panel = new RemotePlayerPanel();
 			
 			int x = playingFrame.x + INSET;
 			
@@ -271,7 +273,7 @@ public class PlayGamePage extends Page implements Observer
 			panel.setLocation(x, y);
 			
 			add(panel);
-			otherPlayerPanels.add(panel);
+			remotePlayerPanels.add(panel);
 			panel.setVisible(false);
 		}
 	}
@@ -282,8 +284,8 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void createPlayerPanel()
 	{
-		playerPanel = new PlayerPanel();
-		add(playerPanel);
+		localPlayerPanel = new LocalPlayerPanel();
+		add(localPlayerPanel);
 	}
 
 	/**
@@ -303,7 +305,7 @@ public class PlayGamePage extends Page implements Observer
 	private void createButtons()
 	{
 		Rectangle usableArea = MainFrame.CONTROL_PANEL_AREA;
-		int leftCenter = (playerPanel.getX() - usableArea.x) / 2 + usableArea.x;
+		int leftCenter = (localPlayerPanel.getX() - usableArea.x) / 2 + usableArea.x;
 		
 		System.out.println("Left center is " + leftCenter);
 		
@@ -318,8 +320,8 @@ public class PlayGamePage extends Page implements Observer
 		callSetLabel = createLabel(callSetButton, "Combo", leftCenter);
 		
 		int rightCenter
-			= (usableArea.x + usableArea.width - playerPanel.getX() - playerPanel.getWidth()) / 2 
-			+ playerPanel.getX() + playerPanel.getWidth() - 15;
+			= (usableArea.x + usableArea.width - localPlayerPanel.getX() - localPlayerPanel.getWidth()) / 2 
+			+ localPlayerPanel.getX() + localPlayerPanel.getWidth() - 15;
 		
 		System.out.println("Right center is " + rightCenter);
 		

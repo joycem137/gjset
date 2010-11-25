@@ -49,6 +49,7 @@ public class SimpleImagePanel extends JPanel
 	public SimpleImagePanel(Image image)
 	{
 		this.image = image;
+		setSize(image.getWidth(this), image.getHeight(this));
 	}
 	
 	/**

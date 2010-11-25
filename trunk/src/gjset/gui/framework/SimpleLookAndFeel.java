@@ -216,4 +216,9 @@ public class SimpleLookAndFeel
 		// This should just be the same color as the local player.
 		return getPlayerPanelScoreColor();
 	}
+
+	public Color getEventBackgroundColor()
+	{
+		return new Color(221, 246, 255);
+	}
 }
