@@ -47,7 +47,7 @@ import javax.swing.SwingConstants;
  * This is the panel along the sides of the screen that show the list of other players joined to this game.
  */
 @SuppressWarnings("serial")
-public class OtherPlayerPanel extends JPanel
+public class RemotePlayerPanel extends JPanel
 {
 	private SimpleLookAndFeel lnf;
 	
@@ -63,7 +63,7 @@ public class OtherPlayerPanel extends JPanel
 	
 	private static final double IMAGE_SCALE = 0.66666666;
 	
-	public OtherPlayerPanel()
+	public RemotePlayerPanel()
 	{
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 

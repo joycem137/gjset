@@ -178,6 +178,10 @@ public class Player
 		nameElement.setText(name);
 		playerElement.add(nameElement);
 		
+		Element wantsToDrawElement = documentFactory.createElement("wanttodraw");
+		wantsToDrawElement.setText("" + wantsToDraw);
+		playerElement.add(wantsToDrawElement);
+		
 		return playerElement;
 	}
 
@@ -199,5 +203,8 @@ public class Player
 		penalty = Integer.parseInt(penaltyString);
 		
 		name = playerElement.element("name").getText();
+		
+		String wantsToDrawString = playerElement.element("wanttodraw").getText();
+		wantsToDraw = Boolean.parseBoolean(wantsToDrawString);
 	}	
 }

@@ -3,10 +3,9 @@ package gjset.client.gui;
 import gjset.data.Player;
 import gjset.gui.MainFrame;
 import gjset.gui.framework.ResourceManager;
+import gjset.gui.framework.SimpleImagePanel;
 import gjset.gui.framework.SimpleLookAndFeel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 
@@ -46,35 +45,44 @@ import javax.swing.SwingConstants;
  * this system's player.
  */
 @SuppressWarnings("serial")
-public class PlayerPanel extends JPanel
+public class LocalPlayerPanel extends JPanel
 {
 	private SimpleLookAndFeel lnf;
-	
-	// Store our default portrait.  In the future, this contain a selectable image.
-	private Image defaultPortraitImage;
 
 	// And store the various items that should be on screen.
 	private JLabel nameLabel;
 	private JLabel scoreLabel;
+	private SimpleImagePanel portraitPanel;
+	
+	
+	// And our two first order objects.
+	private JPanel mainPanel;
+	private EventBubble eventBubble;
 	
 	private static final int HORIZONTAL_INSET = 6;
 	private static final int VERTICAL_INSET = 7;
 	
-	public PlayerPanel()
+	public LocalPlayerPanel()
 	{
 		lnf = SimpleLookAndFeel.getLookAndFeel();
-
-		ResourceManager resourceManager = ResourceManager.getInstance();
 		
-		defaultPortraitImage = resourceManager.getImage("icon_player_default.png");
-		
+		// The order that we have to call this in is interesting, since there's a lot of dependencies here.
+		// Just go with me on this.  I don't like it either.
+		// TODO: Improve all of the dependencies here.
 		configurePanel();
+		
+		createPortrait();
+		createEventBubble();
+		
+		setSizeAndLocation();
 		
 		createPlayerNameLabel();
 		createPlayerScorePanel();
+		
+		add(mainPanel);
 	}
 
-	public void updatePlayerData(Player player)
+	public void updatePlayerData(Player player, int setCallerId)
 	{
 		nameLabel.setText(player.getName());
 		
@@ -88,45 +96,93 @@ public class PlayerPanel extends JPanel
 		}
 		
 		scoreLabel.setText(scoreString);
-	}
-
-	/**
-	 * 
-	 * Paint this object onto the screen.
-	 *
-	 * @param g
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
-	public void paintComponent(Graphics g)
-	{
-		Graphics2D g2 = (Graphics2D)g;
 		
-		// Start by drawing the background.
-		g2.setColor(getBackground());
-		g2.fillRect(0, 0, getWidth(), getHeight());
-		
-		// Then draw the portrait.
-		g.drawImage(defaultPortraitImage, HORIZONTAL_INSET, VERTICAL_INSET, this);
+		// Set up the event bubble.
+		if(player.getWantsToDraw())
+		{
+			eventBubble.setState(EventBubble.STATE_DRAW);
+		}
+		else if(player.getId() == setCallerId)
+		{
+			eventBubble.setState(EventBubble.STATE_CALL);
+		}
+		else
+		{
+			eventBubble.setState(EventBubble.STATE_NONE);
+		}
 	}
-
+	
 	/**
 	 * Configure the basic panel settings.
 	 *
 	 */
 	private void configurePanel()
 	{
+		// First do this for us.
 		setLayout(null);
 		setOpaque(false);
-	
+		
+		// Create the main panel for putting things in.
+		mainPanel = new JPanel();
+		mainPanel.setLayout(null);
+		
+		// And the background.
+		mainPanel.setBackground(lnf.getPlayerPanelBackgroundColor());
+	}
+
+	/**
+	 * Create the main panel upon which most of this stuff will reside.
+	 *
+	 */
+	private void setSizeAndLocation()
+	{
+		// Get the extra allotment for the event bubble
+		int bubbleOffset = eventBubble.getHeight() / 2;
+		
 		// The size comes from Jamie's original specifications.
-		setSize(282, 110);
+		mainPanel.setSize(282, 110);
+		setSize(mainPanel.getWidth(), mainPanel.getHeight() + bubbleOffset);
 		
 		// Center this panel in the control frame.		
 		Rectangle controlFrame = MainFrame.CONTROL_PANEL_AREA;
-		setLocation(controlFrame.x + controlFrame.width / 2 - getWidth() / 2, 
-				controlFrame.y + controlFrame.height / 2 - getHeight() / 2);
 		
-		setBackground(lnf.getPlayerPanelBackgroundColor());
+		int baseX = controlFrame.x + controlFrame.width / 2 - getWidth() / 2;
+		int baseY = controlFrame.y + controlFrame.height / 2 - getHeight() / 2;
+		
+		setLocation(baseX, baseY - bubbleOffset);
+		mainPanel.setLocation(0, bubbleOffset);
+	}
+
+	/**
+	 * Create the event bubble to show on screen.
+	 *
+	 */
+	private void createEventBubble()
+	{
+		eventBubble = new EventBubble(EventBubble.ORIENT_LEFT);
+		
+		// Position the bubble.
+		int x = portraitPanel.getX() + portraitPanel.getWidth() / 2;
+		int y = 15 + portraitPanel.getY() - portraitPanel.getHeight() / 2 + eventBubble.getHeight() / 2;
+		
+		eventBubble.setLocation(x, y);
+		
+		add(eventBubble);
+	}
+
+	/**
+	 * Create the portrait panel
+	 *
+	 */
+	private void createPortrait()
+	{
+		ResourceManager resourceManager = ResourceManager.getInstance();
+		
+		Image defaultPortraitImage = resourceManager.getImage("icon_player_default.png");
+		
+		portraitPanel = new SimpleImagePanel(defaultPortraitImage);
+		portraitPanel.setLocation(HORIZONTAL_INSET, VERTICAL_INSET);
+		mainPanel.add(portraitPanel);
 	}
 
 	/**
@@ -143,12 +199,12 @@ public class PlayerPanel extends JPanel
 		nameLabel.setForeground(lnf.getPlayerPanelNameColor());
 		
 		// Position the label.
-		int rightSideOfPortrait = 2 * HORIZONTAL_INSET + defaultPortraitImage.getWidth(this);
+		int rightSideOfPortrait = 2 * HORIZONTAL_INSET + portraitPanel.getWidth();
 		nameLabel.setLocation(rightSideOfPortrait, 13);
-		nameLabel.setSize(getWidth() - rightSideOfPortrait, 30);
+		nameLabel.setSize(mainPanel.getWidth() - rightSideOfPortrait, 30);
 		
 		// Then finally, add it.
-		add(nameLabel);
+		mainPanel.add(nameLabel);
 	}
 
 	/**
@@ -165,12 +221,12 @@ public class PlayerPanel extends JPanel
 		scoreLabel.setForeground(lnf.getPlayerPanelScoreColor());
 		
 		// Position the label.
-		int rightSideOfPortrait = 2 * HORIZONTAL_INSET + defaultPortraitImage.getWidth(this);
+		int rightSideOfPortrait = 2 * HORIZONTAL_INSET + portraitPanel.getWidth();
 		scoreLabel.setLocation(rightSideOfPortrait, nameLabel.getY() + nameLabel.getHeight() + 4);
-		scoreLabel.setSize(getWidth() - rightSideOfPortrait, 50);
+		scoreLabel.setSize(mainPanel.getWidth() - rightSideOfPortrait, 50);
 		
 		// Then finally add it.
-		add(scoreLabel);
+		mainPanel.add(scoreLabel);
 	}
 	
 }
