@@ -381,9 +381,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	 * @return
 	 */
 	private Element getCommandResponse(boolean success, String reason)
-	{
-		String failureReason = "";
-		
+	{	
 		// Create our response
 		String resultText = "failed";
 		if(success)
@@ -397,7 +395,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		if(reason != null)
 		{
 			Element reasonElement = documentFactory.createElement("reason");
-			reasonElement.setText(failureReason);
+			reasonElement.setText(reason);
 			responseElement.add(reasonElement);
 		}
 		
