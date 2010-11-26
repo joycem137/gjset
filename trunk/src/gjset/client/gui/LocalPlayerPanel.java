@@ -54,16 +54,19 @@ public class LocalPlayerPanel extends JPanel
 	private JLabel scoreLabel;
 	private SimpleImagePanel portraitPanel;
 	
-	
 	// And our two first order objects.
 	private JPanel mainPanel;
 	private EventBubble eventBubble;
+
+	private boolean showBubble;
 	
 	private static final int HORIZONTAL_INSET = 6;
 	private static final int VERTICAL_INSET = 7;
 	
 	public LocalPlayerPanel()
 	{
+		showBubble = false;
+		
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 		
 		// The order that we have to call this in is interesting, since there's a lot of dependencies here.
@@ -98,11 +101,11 @@ public class LocalPlayerPanel extends JPanel
 		scoreLabel.setText(scoreString);
 		
 		// Set up the event bubble.
-		if(player.getWantsToDraw())
+		if(player.getWantsToDraw() && showBubble)
 		{
 			eventBubble.setState(EventBubble.STATE_DRAW);
 		}
-		else if(player.getId() == setCallerId)
+		else if(player.getId() == setCallerId && showBubble)
 		{
 			eventBubble.setState(EventBubble.STATE_CALL);
 		}
@@ -110,6 +113,18 @@ public class LocalPlayerPanel extends JPanel
 		{
 			eventBubble.setState(EventBubble.STATE_NONE);
 		}
+	}
+	
+	/**
+	 * 
+	 * Enable showing and hiding the event bubble.
+	 *
+	 * @param value
+	 */
+	public void setBubbleVisible(boolean value)
+	{
+		this.showBubble = value;
+		eventBubble.setVisible(value);
 	}
 	
 	/**
