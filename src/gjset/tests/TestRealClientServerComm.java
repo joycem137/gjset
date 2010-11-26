@@ -4,6 +4,9 @@ package gjset.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import java.io.IOException;
+
 import gjset.GameConstants;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.server.GameServer;
@@ -76,7 +79,13 @@ public class TestRealClientServerComm
 		clientHandler = new MockMessageHandler();
 		client.addMessageHandler(clientHandler);
 		
-		client.connectToServer();
+		try
+		{
+			client.connectToServer();
+		} catch (IOException e1)
+		{
+			org.junit.Assert.fail("Failed to connect ot server.");
+		}
 		
 		try
 		{

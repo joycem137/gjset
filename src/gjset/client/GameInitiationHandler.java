@@ -33,4 +33,6 @@ package gjset.client;
 public interface GameInitiationHandler
 {
 	public void onGameInitiated(ClientGUIController controller);
+	
+	public void onConnectionFailure(String failureReason);
 }

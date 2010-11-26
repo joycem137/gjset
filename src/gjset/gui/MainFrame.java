@@ -67,6 +67,24 @@ public class MainFrame extends JFrame
 		loadFirstPage();
 	}
 
+	public void loadPage(Page page)
+	{
+		// Destroy the old page, if there was one.
+		if(currentPage != null)
+		{
+			rootPanel.remove(currentPage);
+			currentPage.destroy();
+		}
+		
+		//Load the new page.
+		currentPage = page;
+		rootPanel.add(page);
+		
+		rootPanel.revalidate();
+		page.onShow();
+		repaint();
+	}
+
 	/**
 	 * Performs any tasks associated with setting the OS.
 	 *
@@ -117,23 +135,6 @@ public class MainFrame extends JFrame
 		setVisible(true);
 	}
 	
-	public void loadPage(Page page)
-	{
-		// Destroy the old page, if there was one.
-		if(currentPage != null)
-		{
-			rootPanel.remove(currentPage);
-			currentPage.destroy();
-		}
-		
-		//Load the new page.
-		currentPage = page;
-		rootPanel.add(page);
-		
-		rootPanel.revalidate();
-		repaint();
-	}
-
 	/**
 	 * Loads the first page.
 	 *

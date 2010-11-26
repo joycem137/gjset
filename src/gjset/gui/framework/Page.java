@@ -47,6 +47,13 @@ public abstract class Page extends JPanel
 	}
 	
 	/**
+	 * This method is called when the page is shown.
+	 */
+	public void onShow()
+	{
+	}
+	
+	/**
 	 *
 	 * Called when the page is destroyed to remove any listeners
 	 * it may have created.

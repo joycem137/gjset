@@ -35,4 +35,11 @@ import org.dom4j.Element;
 public interface MessageHandler
 {
 	public void handleMessage(Element message);
+
+	/**
+	 * Handle an error message while connected.
+	 *
+	 * @param e
+	 */
+	public void handleConnectionError(Exception e);
 }

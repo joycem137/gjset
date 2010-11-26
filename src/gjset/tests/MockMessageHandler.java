@@ -59,4 +59,15 @@ public class MockMessageHandler implements MessageHandler
 		return message;
 	}
 
+	/**
+	 * Handle connection errors.
+	 *
+	 * @param e
+	 * @see gjset.tools.MessageHandler#handleConnectionError(java.lang.Exception)
+	 */
+	public void handleConnectionError(Exception e)
+	{
+		//Nothing to do.
+	}
+
 }

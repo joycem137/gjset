@@ -1,5 +1,7 @@
 package gjset.client;
 
+import java.io.IOException;
+
 import gjset.GameConstants;
 import gjset.data.Player;
 import gjset.tools.MessageHandler;
@@ -76,9 +78,23 @@ public class GameInitiator implements MessageHandler
 		
 		// Add ourselves as a message handler.
 		client.addMessageHandler(this);
-		
+	}
+	
+	/**
+	 * 
+	 * Attempt to connect to the client.
+	 *
+	 */
+	public void initiateGame()
+	{
 		// And now connect the client!
-		client.connectToServer();
+		try
+		{
+			client.connectToServer();
+		} catch (IOException e)
+		{
+			gameInitiationHandler.onConnectionFailure("Failed to connect to server");
+		}
 	}
 
 	/**
@@ -120,18 +136,6 @@ public class GameInitiator implements MessageHandler
 	}
 
 	/**
-	 * Send a message to the server indicating a desire to drop out of the game.
-	 *
-	 */
-	private void sendDropOutMessage()
-	{
-		Element commandElement = documentFactory.createElement("command");
-		commandElement.addAttribute("type", "dropout");
-		
-		client.sendMessage(commandElement);
-	}
-
-	/**
 	 * Handle incoming messages from the server.
 	 *
 	 * @param message
@@ -151,6 +155,40 @@ public class GameInitiator implements MessageHandler
 		{
 			handleGameUpdate(root.element("gameupdate"));
 		}
+	}
+
+	/**
+	 * Handle a communication error from the client.
+	 *
+	 * @param e
+	 * @see gjset.tools.MessageHandler#handleConnectionError(java.lang.Exception)
+	 */
+	public void handleConnectionError(Exception e)
+	{
+		
+		gameInitiationHandler.onConnectionFailure(e.getMessage());
+	}
+
+	/**
+	 * Destroy myself.
+	 *
+	 */
+	public void destroy()
+	{
+		client.removeMessageHandler(this);
+		gameInitiationHandler = null;
+	}
+
+	/**
+	 * Send a message to the server indicating a desire to drop out of the game.
+	 *
+	 */
+	private void sendDropOutMessage()
+	{
+		Element commandElement = documentFactory.createElement("command");
+		commandElement.addAttribute("type", "dropout");
+		
+		client.sendMessage(commandElement);
 	}
 
 	/**
@@ -262,16 +300,6 @@ public class GameInitiator implements MessageHandler
 		commandElement.addAttribute("type", "startgame");
 		
 		client.sendMessage(commandElement);
-	}
-
-	/**
-	 * Destroy myself.
-	 *
-	 */
-	private void destroy()
-	{
-		client.removeMessageHandler(this);
-		gameInitiationHandler = null;
 	}
 
 }

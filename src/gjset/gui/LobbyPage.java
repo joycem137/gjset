@@ -56,7 +56,6 @@ import org.dom4j.Element;
 @SuppressWarnings("serial")
 public class LobbyPage extends DialogPage implements MessageHandler
 {
-
 	private MainFrame mainFrame;
 	private ClientCommunicator client;
 	private GameInitiator initiator;
@@ -130,6 +129,34 @@ public class LobbyPage extends DialogPage implements MessageHandler
 		}
 	}
 
+	/**
+	 * Handle an error in communication from the client.
+	 *
+	 * @param e
+	 * @see gjset.tools.MessageHandler#handleConnectionError(java.lang.Exception)
+	 */
+	public void handleConnectionError(Exception e)
+	{
+		// This is being handled through the game initiator.  Don't need to handle it ourselves.
+	}
+	
+	/**
+	 * 
+	 * Indicate that the page is now showing itself.
+	 *
+	 * @see java.awt.Component#show()
+	 */
+	public void onShow()
+	{
+		initiator.initiateGame();
+	}
+
+	/**
+	 * 
+	 * Destroy this page and everything connected with it.
+	 *
+	 * @see gjset.gui.framework.Page#destroy()
+	 */
 	public void destroy()
 	{
 		client.removeMessageHandler(this);
@@ -254,6 +281,14 @@ public class LobbyPage extends DialogPage implements MessageHandler
 			{
 				// Switch to the play game page.
 				PlayGamePage page = new PlayGamePage(controller, mainFrame);
+				mainFrame.loadPage(page);
+			}
+			
+			public void onConnectionFailure(String failureReason)
+			{
+				MessagePage page = new MessagePage(mainFrame, "Connection Failed");
+				page.setMessage(failureReason);
+				page.setDestination(new LaunchPage(mainFrame));
 				mainFrame.loadPage(page);
 			}
 		});

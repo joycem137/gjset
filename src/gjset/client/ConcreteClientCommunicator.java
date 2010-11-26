@@ -136,32 +136,29 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	 * Establishes a connection to the game server using the given hostname and port.
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
+	 * @throws IOException 
 	 */
-	public void connectToServer()
+	public void connectToServer() throws IOException
 	{
 		System.out.println("Starting client");
-		try
-		{
-			socket = new Socket();
-			
-			//Attempt to connect to the server.
-			socket.connect(socketAddress);
-			
-			//Get our I/O streams squared away once we're connected.
-			createIOStreams();
-			
-			// And then start listening
-			listeningThread.start();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		
+		socket = new Socket();
+		
+		//Attempt to connect to the server.
+		socket.connect(socketAddress, 5000);
+		
+		//Get our I/O streams squared away once we're connected.
+		createIOStreams();
+		
+		// And then start listening
+		listeningThread.start();
 	}
 
 	/**
 	 * This command sends the indicated XML to the server, appending the appropriate information.
 	 *
 	 * @param messageElement
+	 * @throws IOException 
 	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
 	 */
 	@Override
@@ -175,8 +172,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			writer.flush();
 		} catch (IOException e)
 		{
-			System.err.println("Failed to send message");
-			e.printStackTrace();
+			handleConnectionError(e);
 		}
 	}
 
@@ -193,6 +189,20 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		} catch (IOException e)
 		{
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Handle an error from the system.
+	 *
+	 * @param e
+	 */
+	private void handleConnectionError(Exception e)
+	{
+		Iterator<MessageHandler> iterator = handlers.iterator();
+		while(iterator.hasNext())
+		{
+			iterator.next().handleConnectionError(e);
 		}
 	}
 
@@ -226,11 +236,11 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 				} catch (IOException e)
 				{
 					System.err.println("IO Exception reading input in client. (Possibly because of closed socket.)");
-					//e.printStackTrace();
+					handleConnectionError(e);
 				} catch (DocumentException e)
 				{
 					System.err.println("Document Exception parsing text in client.");
-					//e.printStackTrace();
+					handleConnectionError(e);
 				}	
 			}
 		};
