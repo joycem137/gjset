@@ -54,12 +54,17 @@ public class GameModel extends Observable
 	// Stores the current state of the game.
 	private int gameState;
 	private int setCallerId;
+	private boolean isLastSetCorrect;
 	
 	// Right now there's only a single player.
 	private Player[] players;
 	
 	private CountdownTimer setTimer;
+	private CountdownTimer displayTimer;
+	
 	private static final int SET_TIME = 3500;
+	private static final int DISPLAY_TIME = 1000;
+	
 	
 	public GameModel()
 	{
@@ -84,6 +89,15 @@ public class GameModel extends Observable
 			public void run()
 			{
 				handleSetTimeout();
+			}
+		});
+		
+		// Create a display timer to resume gameplay after the results of a set are displayed.
+		displayTimer = new CountdownTimer(DISPLAY_TIME, new Runnable()
+		{
+			public void run()
+			{
+				resumeGame();
 			}
 		});
 	}
@@ -126,6 +140,16 @@ public class GameModel extends Observable
 	public Player getSetCaller()
 	{
 		return players[setCallerId - 1];
+	}
+	
+	/**
+	 * Returns whether the last set called was correct.
+	 * 
+	 * @return boolean
+	 */
+	public boolean getLastSetCorrect()
+	{
+		return isLastSetCorrect;
 	}
 
 	/**
@@ -325,13 +349,13 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Resolve the selected cards to determine if they're a set.
-	 * 
-	 * Assumes there are three cards already selected.  If there are not 3 cards there, it will break.
+	 * Resolves the selected cards to determine if they're a set.
 	 *
+	 * @param isTimeout		false if the set timer expired, otherwise true
+	 * 
 	 * @return Return true if this actually was a set.
 	 */
-	public boolean resolveSet()
+	public boolean resolveSet(boolean isWithinTime)
 	{
 		// Start by clearing the set timer.
 		setTimer.cancel();
@@ -340,50 +364,33 @@ public class GameModel extends Observable
 		Player setPlayer = getSetCaller();
 		
 		List<Card> selectedCards = cardTable.getSelectedCards();
-		boolean isASet = checkForSet(selectedCards);
+		isLastSetCorrect = checkForSet(selectedCards);
 		
-		if(isASet)
+		if(isLastSetCorrect)
 		{
 			// SCORE!
 			setPlayer.addPoints(GameConstants.SET_POINTS);
-			
-			// Check to see if we can draw more cards.
-			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
-			{
-				// Draw the new cards and place them on the table.
-				cardTable.replaceCards(selectedCards, deck.drawCards(3));
-			}
-			else
-			{
-				// There are no cards left to draw. Just remove the selected ones.
-				cardTable.removeCards(selectedCards);
-			}
-			
-			// De-select active cards.
-			cardTable.unSelectCards();
 		}
 		else
 		{
 			// Take away points
 			setPlayer.addPenalty(GameConstants.SET_PENALTY);
-			
-			// De-select the cards.
-			cardTable.unSelectCards();
 		}
 		
-		// For now, we immediately return to the idle state.
-		gameState = GameConstants.GAME_STATE_IDLE;
-		setCallerId = 0;
+		// Switch to the "Set Finished" gameState for a few seconds.
+		gameState = GameConstants.GAME_STATE_SET_FINISHED;
 		
-		// Check to see if this is the end of the game.
-		checkForEndofGame();
-		
+		// Start the displayTimer which will switch us back to the Idle gameState.
+		displayTimer.start();
+			
 		// Notify observers that the model has changed.
 		setChanged();
-		notifyObservers();
+		// If time ran out, this is an unsolicited update and we need to process it accordingly.
+		notifyObservers(new Boolean(isWithinTime));
 		
-		return isASet;
-	}
+		return isLastSetCorrect;
+	}	
+
 
 	/**
 	 * Remove the player with the indicated id.
@@ -430,27 +437,64 @@ public class GameModel extends Observable
 		// Verify that the model is still in the same state it was.
 		if(gameState == GameConstants.GAME_STATE_SET_CALLED)
 		{
-			// Change the game state.
-			gameState = GameConstants.GAME_STATE_IDLE;
-			
-			// De-select the cards.
-			cardTable.unSelectCards();
-			
-			// Get the player object associated with the player that selected these cards.
-			Player setPlayer = getSetCaller();
-			
-			// Take away points
-			setPlayer.addPenalty(GameConstants.SET_PENALTY);
-			
-			// Notify observers that the model has changed.
-			setChanged();
-			notifyObservers(new Boolean(false));
+			// Treat the selected cards as an incorrect Set due to time running out.
+			resolveSet(false);
 		}
 	}
 
-	// This function checks a vector of cards to determine if they are a set.
+	/**
+	 * Resume the game from the "Set Finished" game state, removing, drawing, and de-selecting
+	 * cards as necessary.
+	 */
+	private void resumeGame()
+	{
+		// Figure out which cards are selected.
+		List<Card> selectedCards = cardTable.getSelectedCards();
+		
+		// If the set call was successful, remove the Set and replace cards as necessary.
+		if (isLastSetCorrect)
+		{	
+			// Check to see if we can draw more cards.
+			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
+			{
+				// Draw the new cards and place them on the table.
+				cardTable.replaceCards(selectedCards, deck.drawCards(3));
+			}
+			else
+			{
+				// We aren't allowed to draw new cards, so just remove the selected ones.
+				cardTable.removeCards(selectedCards);
+			}
+		}
+		
+		// De-select any cards that are still selected.
+		cardTable.unSelectCards();
+		
+		// For now, we immediately return to the idle state.
+		gameState = GameConstants.GAME_STATE_IDLE;
+		setCallerId = 0;
+		
+		// Check to see if this is the end of the game.
+		checkForEndofGame();
+		
+		// Notify observers that the model has changed.
+		setChanged();
+		// This is an unsolicited update, too.
+		notifyObservers(new Boolean(false));
+	}
+
+	
+	/**
+	 *  This function checks a vector of cards to determine if they are a set.
+	 */
 	private boolean checkForSet(List<Card> cards)
 	{
+		// Make sure there are three cards.  If not, it's obviously not a set.
+		if (cards.size() != 3)
+		{
+			return false;
+		}
+		
 		// Check each property
 		for (int property = 1; property <= 4; property++)
 		{
@@ -483,7 +527,8 @@ public class GameModel extends Observable
 		return true;
 	}
 
-	/*
+	
+	/**
 	 * This method checks to see if the game is over.  
 	 * The game is considered over when the deck is empty and there are no sets on the board.
 	 */
@@ -515,7 +560,7 @@ public class GameModel extends Observable
 		gameState = GameConstants.GAME_STATE_GAME_OVER;
 	}
 
-	/*
+	/**
 	 * This function takes two cards and returns the only possible card that completes the set.
 	 * 
 	 * This method is used to determine if there are any sets on the table.
