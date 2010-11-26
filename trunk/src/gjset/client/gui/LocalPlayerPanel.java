@@ -124,7 +124,6 @@ public class LocalPlayerPanel extends JPanel
 	public void setBubbleVisible(boolean value)
 	{
 		this.showBubble = value;
-		eventBubble.setVisible(value);
 	}
 	
 	/**
