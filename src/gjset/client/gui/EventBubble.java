@@ -71,6 +71,16 @@ public class EventBubble extends JComponent
 	}
 
 	/**
+	 * Return the orientation of the bubble
+	 *
+	 * @return
+	 */
+	public int getOrientation()
+	{
+		return orientation;
+	}
+
+	/**
 	 * Set the orientation of the bubble
 	 *
 	 * @param orientation
@@ -129,15 +139,22 @@ public class EventBubble extends JComponent
 		PaintUtilities.texturePaintVertical(this, g, right, area);
 		
 		// Draw bottom
-		int bottomLeftSide = leftSide;
+		int bottomLeftSide;
+		int bottomRightSide;
 		if(orientation == ORIENT_LEFT)
 		{
 			bottomLeftSide = 0;
+			bottomRightSide = rightSide;
+		}
+		else
+		{
+			bottomLeftSide = leftSide;
+			bottomRightSide = rightSide + leftTail.getWidth(this) - realCornerLR.getWidth(this);
 		}
 		
 		area = new Rectangle( bottomLeftSide + widthLL, 
 				height - bottom.getHeight(this), 
-				rightSide - widthLR - widthLL - bottomLeftSide, 
+				bottomRightSide - widthLR - widthLL - bottomLeftSide, 
 				bottom.getHeight(this));
 		PaintUtilities.texturePaintHorizontal(this, g, bottom, area);
 
@@ -147,7 +164,7 @@ public class EventBubble extends JComponent
 		
 		// Draw the bottom corners
 		g.drawImage(cornerLL, bottomLeftSide, height - heightLL, this);
-		g.drawImage(cornerLR, rightSide - widthLR, height - heightLR, this);
+		g.drawImage(cornerLR, bottomRightSide - widthLR, height - heightLR, this);
 		
 		// Now draw the background color.
 		Rectangle backgroundArea = new Rectangle(leftSide + left.getWidth(this), 

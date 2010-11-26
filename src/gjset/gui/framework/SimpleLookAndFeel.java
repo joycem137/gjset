@@ -180,7 +180,7 @@ public class SimpleLookAndFeel
 		return Color.white;
 	}
 
-	public Color getOtherPlayerPanelBackgroundColor()
+	public Color getRemotePlayerPanelBackgroundColor()
 	{
 		// Return the exact same color as the Local Player Panel.
 		return getPlayerPanelBackgroundColor();

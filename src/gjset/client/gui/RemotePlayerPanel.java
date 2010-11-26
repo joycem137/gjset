@@ -2,10 +2,9 @@ package gjset.client.gui;
 
 import gjset.data.Player;
 import gjset.gui.framework.ResourceManager;
+import gjset.gui.framework.SimpleImagePanel;
 import gjset.gui.framework.SimpleLookAndFeel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
@@ -50,13 +49,19 @@ import javax.swing.SwingConstants;
 public class RemotePlayerPanel extends JPanel
 {
 	private SimpleLookAndFeel lnf;
-	
-	// Store our default portrait.  In the future, this contain a selectable image.
-	private Image defaultPortraitImage;
 
 	// And store the various items that should be on screen.
 	private JLabel nameLabel;
 	private JLabel scoreLabel;
+	private SimpleImagePanel portraitPanel;
+
+	private EventBubble eventBubble;
+	
+	private JPanel mainPanel;
+
+	private int realX;
+
+	private int realY;
 	
 	private static final int HORIZONTAL_INSET = 14;
 	private static final int VERTICAL_INSET = 8;
@@ -66,16 +71,101 @@ public class RemotePlayerPanel extends JPanel
 	public RemotePlayerPanel()
 	{
 		lnf = SimpleLookAndFeel.getLookAndFeel();
-
+		
+		// The order that we have to call this in is interesting, since there's a lot of dependencies here.
+		// Just go with me on this.  I don't like it either.
+		// TODO: Improve all of the dependencies here.
 		configurePanel();
 		
-		getScaledPortraitImage();
+		createPortrait();
+		createEventBubble();
+		
+		setSizeAndLocation();
 		
 		createPlayerNameLabel();
 		createPlayerScorePanel();
+		
+		add(mainPanel);
 	}
 
-	public void updatePlayerData(Player player)
+	/**
+	 * 
+	 * Override the set location method to set it more correctly.
+	 *
+	 * @param x
+	 * @param y
+	 * @see java.awt.Component#setLocation(int, int)
+	 */
+	public void setLocation(int x, int y)
+	{
+		this.realX = x;
+		this.realY = y;
+		
+		// Get the extra allotment for the event bubble
+		int verticalOffset = eventBubble.getHeight() / 2;
+		
+		super.setLocation(x, y - verticalOffset);
+	}
+	
+	/**
+	 * 
+	 * Return the width of the mainPanel
+	 *
+	 * @return
+	 */
+	public int getMainWidth()
+	{
+		return mainPanel.getWidth();
+	}
+	
+	/**
+	 * 
+	 * return the height of the mainPanel.
+	 *
+	 * @return
+	 */
+	public int getMainHeight()
+	{
+		return mainPanel.getHeight();
+	}
+		
+	/**
+	 * Change the orientation of the event bubble.
+	 *
+	 * @param orientation
+	 */
+	public void setOrientation(int orientation)
+	{
+		int x = portraitPanel.getX() + portraitPanel.getWidth() / 2;
+		int y = 5 + portraitPanel.getY() - portraitPanel.getHeight() / 2 + eventBubble.getHeight() / 2;
+		
+		// Get the extra allotment for the event bubble
+		int verticalOffset = eventBubble.getHeight() / 2;
+		int horizontalOffset = eventBubble.getWidth() / 2;
+		
+		eventBubble.setOrientation(orientation);
+		setLocation(realX, realY);
+		
+		if(orientation == EventBubble.ORIENT_LEFT)
+		{
+			eventBubble.setLocation(x, y);
+			mainPanel.setLocation(0, verticalOffset);
+		}
+		else
+		{
+			eventBubble.setLocation(0, y);
+			mainPanel.setLocation(horizontalOffset, verticalOffset);
+		}
+	}
+
+	/**
+	 * 
+	 * Update the information for this player.
+	 *
+	 * @param player
+	 * @param setCallerId
+	 */
+	public void updatePlayerData(Player player, int setCallerId)
 	{
 		nameLabel.setText(player.getName());
 		
@@ -89,32 +179,93 @@ public class RemotePlayerPanel extends JPanel
 		}
 		
 		scoreLabel.setText(scoreString);
+		
+		// Set up the event bubble.
+		if(player.getWantsToDraw())
+		{
+			eventBubble.setState(EventBubble.STATE_DRAW);
+		}
+		else if(player.getId() == setCallerId)
+		{
+			eventBubble.setState(EventBubble.STATE_CALL);
+		}
+		else
+		{
+			eventBubble.setState(EventBubble.STATE_NONE);
+		}
+	}
+	
+	/**
+	 * Configure the basic panel settings.
+	 *
+	 */
+	private void configurePanel()
+	{
+		// First do this for us.
+		setLayout(null);
+		setOpaque(false);
+		
+		// Create the main panel for putting things in.
+		mainPanel = new JPanel();
+		mainPanel.setLayout(null);
+		
+		// And the background.
+		mainPanel.setBackground(lnf.getRemotePlayerPanelBackgroundColor());
 	}
 
 	/**
-	 * 
-	 * Paint this object onto the screen.
+	 * Create the main panel upon which most of this stuff will reside.
 	 *
-	 * @param g
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
-	public void paintComponent(Graphics g)
+	private void setSizeAndLocation()
 	{
-		Graphics2D g2 = (Graphics2D)g;
+		// Get the extra allotment for the event bubble
+		int verticalOffset = eventBubble.getHeight() / 2;
+		int horizontalOffset = eventBubble.getWidth() / 2;
 		
-		// Start by drawing the background.
-		g2.setColor(getBackground());
-		g2.fillRect(0, 0, getWidth(), getHeight());
+		// The size comes from Jamie's original specifications.
+		mainPanel.setSize(92, 127);
+		setSize(mainPanel.getWidth() + horizontalOffset, mainPanel.getHeight() + verticalOffset);
 		
-		// Then draw the portrait.
-		g.drawImage(defaultPortraitImage, HORIZONTAL_INSET, VERTICAL_INSET, this);
+		mainPanel.setLocation(0, verticalOffset);
+	}
+	
+	/**
+	 * Create the event bubble to show on screen.
+	 *
+	 */
+	private void createEventBubble()
+	{
+		eventBubble = new EventBubble(EventBubble.ORIENT_LEFT);
+		
+		// Position the bubble.
+		int x = portraitPanel.getX() + portraitPanel.getWidth() / 2;
+		int y = 5 + portraitPanel.getY() - portraitPanel.getHeight() / 2 + eventBubble.getHeight() / 2;
+		
+		eventBubble.setLocation(x, y);
+		
+		add(eventBubble);
+	}
+
+	/**
+	 * Create the portrait panel
+	 *
+	 */
+	private void createPortrait()
+	{
+		Image defaultPortraitImage = getScaledPortraitImage();
+		
+		portraitPanel = new SimpleImagePanel(defaultPortraitImage);
+		portraitPanel.setLocation(HORIZONTAL_INSET, VERTICAL_INSET);
+		
+		mainPanel.add(portraitPanel);
 	}
 
 	/**
 	 * Create the portrait image, scaling it down to fit on this page.
 	 *
 	 */
-	private void getScaledPortraitImage()
+	private Image getScaledPortraitImage()
 	{
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		
@@ -126,22 +277,7 @@ public class RemotePlayerPanel extends JPanel
 	     ImageFilter replicate = new ReplicateScaleFilter(newWidth, newHeight);
 	     ImageProducer prod = new FilteredImageSource(baseImage.getSource(),replicate);
 	     
-	     defaultPortraitImage = createImage(prod);
-	}
-
-	/**
-	 * Configure the basic panel settings.
-	 *
-	 */
-	private void configurePanel()
-	{
-		setLayout(null);
-		setOpaque(false);
-	
-		// The size comes from Jamie's original specifications.
-		setSize(92, 127);
-		
-		setBackground(lnf.getOtherPlayerPanelBackgroundColor());
+	     return createImage(prod);
 	}
 
 	/**
@@ -158,12 +294,12 @@ public class RemotePlayerPanel extends JPanel
 		nameLabel.setForeground(lnf.getOtherPlayerPanelNameColor());
 		
 		// Position the label.
-		int bottomOfImage = VERTICAL_INSET + defaultPortraitImage.getHeight(this);
+		int bottomOfImage = VERTICAL_INSET + portraitPanel.getHeight();
 		nameLabel.setLocation(0, bottomOfImage + 4);
-		nameLabel.setSize(getWidth(), 15);
+		nameLabel.setSize(mainPanel.getWidth(), 15);
 		
 		// Then finally, add it.
-		add(nameLabel);
+		mainPanel.add(nameLabel);
 	}
 
 	/**
@@ -181,10 +317,10 @@ public class RemotePlayerPanel extends JPanel
 		
 		// Position the label.
 		scoreLabel.setLocation(0, nameLabel.getY() + nameLabel.getHeight() + 1);
-		scoreLabel.setSize(getWidth(), 30);
+		scoreLabel.setSize(mainPanel.getWidth(), 30);
 		
 		// Then finally add it.
-		add(scoreLabel);
+		mainPanel.add(scoreLabel);
 	}
 	
 

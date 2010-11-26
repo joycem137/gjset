@@ -88,11 +88,11 @@ public class PlayGamePage extends Page implements Observer
 		
 		configurePage();
 
+		createRemotePlayerPanels();
 		createCardTable();
 		createPlayerPanel();
 		createDeck();
 		createButtons();
-		createOtherPlayerPanels();
 		
 		createActionMap();
 		createKeyMap();
@@ -161,7 +161,7 @@ public class PlayGamePage extends Page implements Observer
 			{
 				// Update the "other" player panels.
 				RemotePlayerPanel panel = remotePlayerPanels.get(remotePlayerPanelIndex);
-				panel.updatePlayerData(player);
+				panel.updatePlayerData(player, setCallerId);
 				panel.setVisible(true);
 				
 				remotePlayerPanelIndex++;
@@ -249,7 +249,7 @@ public class PlayGamePage extends Page implements Observer
 	 * Create the panels that will display the information for remote players.
 	 *
 	 */
-	private void createOtherPlayerPanels()
+	private void createRemotePlayerPanels()
 	{
 		int INSET = 5;
 		Rectangle playingFrame = MainFrame.PLAYING_FIELD_AREA;
@@ -265,16 +265,22 @@ public class PlayGamePage extends Page implements Observer
 			if( i % 2 == 1 )
 			{
 				x = (playingFrame.y + playingFrame.width) - INSET - panel.getWidth();
+				panel.setOrientation(EventBubble.ORIENT_RIGHT);
 			}
 			
-			int y = playingFrame.y + (i / 2) * (panel.getHeight() + 2) + INSET;
+			int y = playingFrame.y + (i / 2) * (panel.getMainHeight() + 2) + INSET;
 			
 			// locate the panel.
 			panel.setLocation(x, y);
 			
-			add(panel);
 			remotePlayerPanels.add(panel);
 			panel.setVisible(false);
+		}
+		
+		// Add the panels in reverse to allow them to overlap correctly.
+		for(int i = remotePlayerPanels.size() - 1; i >= 0; i--)
+		{
+			add(remotePlayerPanels.get(i));
 		}
 	}
 
