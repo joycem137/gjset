@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -47,6 +49,8 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	private GameModel model;
 	private DocumentFactory documentFactory;
 	private GameServer server;
+	private Queue<ServerMessage> messageQueue;
+	private Thread messageProcessingThread;
 	
 	/**
 	 * Create a ServerGameController
@@ -64,6 +68,18 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		model.addObserver(this);
 		
 		documentFactory = DocumentFactory.getInstance();
+		
+		createMessageQueue();
+	}
+
+	/**
+	 * Return the game model used by this controller. (Currently just used for test purposes.)
+	 *
+	 * @return
+	 */
+	public GameModel getModel()
+	{
+		return model;
 	}
 
 	/**
@@ -80,67 +96,12 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	/**
 	 * Handle a message incoming from the server.
 	 */
-	public void handleMessage(PlayerClientHandler client, Element message)
+	public void handleMessage(PlayerClientHandler client, Element messageElement)
 	{
-		// Start by getting the player id.
-		int playerId = client.getPlayerId();
-		
-		// Now see if this was a command.
-		Element responseElement = null;
-		Element commandElement = message.element("command");
-		if(commandElement != null)
-		{
-			String commandType = commandElement.attributeValue("type", "");
-			if(commandType.equals("drawcards"))
-			{
-				responseElement = requestDrawCards(playerId);
-			}
-			else if(commandType.equals("callset"))
-			{
-				responseElement = callSet(playerId);
-			}
-			else if(commandType.equals("selectcard"))
-			{
-				Element cardElement = commandElement.element("card");
-				Card card = new Card(cardElement);
-				responseElement = toggleSelection(playerId, card);
-			}
-			else if(commandType.equals("joinasplayer"))
-			{
-				// This is an initialization message.
-				String username = commandElement.element("username").getText();
-				
-				responseElement = bindClient(client, username);
-			}
-			else if(commandType.equals("startgame"))
-			{
-				// For now, we'll just automatically start the game.
-				startNewGame();
-			}
-			else if(commandType.equals("dropout"))
-			{
-				handleDropOut(client);
-			}
-		}
-		
-		// See if we need to send a response to the player.
-		if(responseElement != null)
-		{
-			// Add the original command so that the client can cross reference it, if necessary.
-			responseElement.add(commandElement.createCopy());
-			
-			// Send the result back to the player that sent it in.
-			client.sendMessage(responseElement);
-			
-			// Check to see if we need to update all players with new data.
-			String result = responseElement.attributeValue("result", "false");
-			if(result.equals("success"))
-			{
-				updateAllPlayers();
-			}
-		}
+		ServerMessage message = new ServerMessage(client, messageElement);
+		messageQueue.offer(message);
 	}
-
+	
 	/**
 	 * Send a game update to the new client.
 	 *
@@ -220,18 +181,108 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		model = null;
 		server = null;
 		documentFactory = null;
+		messageProcessingThread.interrupt();
 	}
 
 	/**
-	 * Return the game model used by this controller. (Currently just used for test purposes.)
+	 * Create the message queue system.
 	 *
-	 * @return
 	 */
-	public GameModel getModel()
+	private void createMessageQueue()
 	{
-		return model;
+		messageQueue = new ConcurrentLinkedQueue<ServerMessage>();
+		
+		messageProcessingThread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				// Look until the server vanishes.
+				while(server != null)
+				{
+					// Check to see if we can get any messages out of the queue.
+					ServerMessage message = messageQueue.poll();
+					
+					if(message != null)
+					{
+						processMessage(message);
+					}
+					
+					// Yield to the other threads in the system.
+					Thread.yield();
+				}
+			}
+		});
+		
+		messageProcessingThread.start();
 	}
 
+	/**
+	 * 
+	 * process the indicated message from the server.
+	 *
+	 * @param message
+	 */
+	private void processMessage(ServerMessage message)
+	{
+		// Start by getting the player id.
+		int playerId = message.client.getPlayerId();
+		
+		// Now see if this was a command.
+		Element responseElement = null;
+		Element commandElement = message.rootElement.element("command");
+		if(commandElement != null)
+		{
+			String commandType = commandElement.attributeValue("type", "");
+			if(commandType.equals("drawcards"))
+			{
+				responseElement = requestDrawCards(playerId);
+			}
+			else if(commandType.equals("callset"))
+			{
+				responseElement = callSet(playerId);
+			}
+			else if(commandType.equals("selectcard"))
+			{
+				Element cardElement = commandElement.element("card");
+				Card card = new Card(cardElement);
+				responseElement = toggleSelection(playerId, card);
+			}
+			else if(commandType.equals("joinasplayer"))
+			{
+				// This is an initialization message.
+				String username = commandElement.element("username").getText();
+				
+				responseElement = bindClient(message.client, username);
+			}
+			else if(commandType.equals("startgame"))
+			{
+				// For now, we'll just automatically start the game.
+				startNewGame();
+			}
+			else if(commandType.equals("dropout"))
+			{
+				handleDropOut(message.client);
+			}
+		}
+		
+		// See if we need to send a response to the player.
+		if(responseElement != null)
+		{
+			// Add the original command so that the client can cross reference it, if necessary.
+			responseElement.add(commandElement.createCopy());
+			
+			// Send the result back to the player that sent it in.
+			message.client.sendMessage(responseElement);
+			
+			// Check to see if we need to update all players with new data.
+			String result = responseElement.attributeValue("result", "false");
+			if(result.equals("success"))
+			{
+				updateAllPlayers();
+			}
+		}
+	}
+	
 	/**
 	 * Request more cards be drawn from the deck.
 	 *
