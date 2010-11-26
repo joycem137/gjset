@@ -145,6 +145,9 @@ public class PlayGamePage extends Page implements Observer
 	{
 		List<Player> players = model.getPlayers();
 		
+		// Show or hide the local player event bubble.
+		localPlayerPanel.setBubbleVisible(players.size() > 1);
+		
 		int setCallerId = model.getSetCaller();
 		
 		int remotePlayerPanelIndex = 0;
