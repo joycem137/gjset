@@ -91,6 +91,11 @@ public class TestServerController
 			{
 				clientController = (ConcreteClientGUIController) controller;
 			}
+
+			public void onConnectionFailure(String failureReason)
+			{
+				org.junit.Assert.fail("Connection failed");
+			}
 			
 		});
 		

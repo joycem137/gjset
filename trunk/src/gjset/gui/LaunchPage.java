@@ -98,7 +98,19 @@ public class LaunchPage extends DialogPage
 						PlayGamePage page = new PlayGamePage(controller, mainFrame);
 						mainFrame.loadPage(page);
 					}
+
+					public void onConnectionFailure(String failureReason)
+					{
+						MessagePage page = new MessagePage(mainFrame, "Could not start game");
+						page.setMessage(failureReason);
+						page.setDestination(new LaunchPage(mainFrame));
+						mainFrame.loadPage(page);
+						System.exit(-1);
+					}
 				});
+				
+				// Initiate the game.
+				initiator.initiateGame();
 
 				// Tell the initiator to start the game as soon as everything is ready.
 				initiator.indicateReadyToStart();

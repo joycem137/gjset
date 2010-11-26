@@ -140,6 +140,17 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 
 	/**
+	 * Handle a connection error from the client.
+	 *
+	 * @param e
+	 * @see gjset.tools.MessageHandler#handleConnectionError(java.lang.Exception)
+	 */
+	public void handleConnectionError(Exception e)
+	{
+		// Nothing to do at this time.
+	}
+
+	/**
 	 * Destroy this controller.
 	 *
 	 */

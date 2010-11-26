@@ -62,6 +62,11 @@ public class SimpleLookAndFeel
 		
 	}
 	
+	public Font getDialogMessageFont()
+	{
+		return defaultFont.deriveFont(27.0f);
+	}
+	
 	public Font getDialogFont()
 	{
 		return defaultFont;

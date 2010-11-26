@@ -1,5 +1,7 @@
 package gjset.client;
 
+import java.io.IOException;
+
 import gjset.tools.MessageHandler;
 
 import org.dom4j.Element;
@@ -66,8 +68,9 @@ public interface ClientCommunicator
 
 	/**
 	 * Instruct the client to connect to the server.
+	 * @throws IOException 
 	 *
 	 */
-	public abstract void connectToServer();
+	public abstract void connectToServer() throws IOException;
 
 }
