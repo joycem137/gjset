@@ -203,7 +203,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	public void update(Observable modelObservable, Object updateType)
 	{
 		Boolean updateWasSolicited = (Boolean)updateType;
-		
+				
 		// Only update for unsolicited updates.  Solicited updates can fend for themselves.
 		if(updateType != null && !updateWasSolicited.booleanValue())
 		{
@@ -353,7 +353,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			Element messageAddendum = documentFactory.createElement("setresult");
 			
 			// Check if this is a set.
-			boolean setSelected = model.resolveSet();
+			boolean setSelected = model.resolveSet(true);
 			if(setSelected)
 			{
 				// Append a message about the result of the set.
