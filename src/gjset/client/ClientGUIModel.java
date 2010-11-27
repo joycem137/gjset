@@ -44,6 +44,7 @@ import org.dom4j.Element;
  */
 public class ClientGUIModel extends Observable
 {	
+	private boolean setCorrect;
 	private int setCallerId;
 	private int gameState;
 	private int deckSize;
@@ -123,6 +124,16 @@ public class ClientGUIModel extends Observable
 		return setCallerId;
 	}
 
+	/**
+	 * Returns a boolean indicating whether the last set called by a player was correct.
+	 * 
+	 * @return
+	 */
+	public boolean getSetCorrect()
+	{
+		return setCorrect;
+	}
+	
 	/**
 	 * Return the array of players.
 	 *
@@ -208,14 +219,21 @@ public class ClientGUIModel extends Observable
 		deckSize = Integer.parseInt(deckText);
 		
 		// Get the game state
-		String gameStateText = modelElement.element("gamestate").getText();
+		String gameStateText = modelElement.element("gamestate").attributeValue("state", "1");
 		gameState = Integer.parseInt(gameStateText);
 		
 		// Get the id of the player that called set, if appropriate.
-		if(gameState == GameConstants.GAME_STATE_SET_CALLED)
+		if(gameState == GameConstants.GAME_STATE_SET_CALLED ||
+			gameState == GameConstants.GAME_STATE_SET_FINISHED)
 		{
-			String setCallerIdString = modelElement.element("setcaller").getText();
+			String setCallerIdString = modelElement.element("gamestate").element("setcaller").getText();
 			setCallerId = Integer.parseInt(setCallerIdString);
+			
+			if (gameState == GameConstants.GAME_STATE_SET_FINISHED)
+			{
+				String setCorrectString = modelElement.element("gamestate").element("setcorrect").getText();
+				setCorrect = new Boolean(setCorrectString).booleanValue();
+			}
 		}
 		else
 		{

@@ -77,8 +77,10 @@ public class CardTablePanel extends JPanel
 	 * cards on the table changes.
 	 *
 	 * @param cardTable A CardTableData object containing the latest updates on the cards that are on the table.
+	 * @param isSetFinished		boolean determining whether a player just finished selecting a set.
+	 * @param isSetCorrect		boolean determining whether the last set called is correct.
 	 */
-	public void update(CardTableData cardTable)
+	public void update(CardTableData cardTable, boolean isSetFinished, boolean isSetCorrect)
 	{
 		//Get the number of rows and cols from the card table data.
 		int gridRows = cardTable.getRows();
@@ -111,7 +113,15 @@ public class CardTablePanel extends JPanel
 				Card card = cardTable.getCardAt(row, col);
 				cardComponent = new CardPanel(controller, card);
 				cardPane.add(cardComponent);
-				cardComponent.setHighlighted(cardTable.isHighlighted(card));
+				
+				// Determine the kind of highlighting the cards should use based on the game status.
+				int highlightType = CardPanel.NORMAL;
+				if (isSetFinished)
+				{
+					highlightType = (isSetCorrect ? CardPanel.CORRECT_SET : CardPanel.INCORRECT_SET);
+				}
+				
+				cardComponent.setHighlighted(cardTable.isHighlighted(card), highlightType);
 				
 				cardComponent.setLocation(col * (cardComponent.getWidth() + horizontalBuffer), row * (cardComponent.getHeight() + CARD_BUFFER));
 			}
