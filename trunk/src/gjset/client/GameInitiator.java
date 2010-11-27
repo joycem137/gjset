@@ -213,7 +213,7 @@ public class GameInitiator implements MessageHandler
 		System.out.println("Handling gameUpdate");
 		
 		// Get the game state.
-		String gameStateString = updateElement.element("gamestate").getText();
+		String gameStateString = updateElement.element("gamestate").attributeValue("state");
 		int gameState = Integer.parseInt(gameStateString);
 		
 		// See if the game has started and that we've got our player information.

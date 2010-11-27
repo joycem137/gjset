@@ -489,9 +489,27 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		
 		// Move onto the game state.
 		Element gameStateElement = documentFactory.createElement("gamestate");
-		gameStateElement.setText("" + model.getGameState());
-		root.add(gameStateElement);
+		gameStateElement.addAttribute("state", "" + model.getGameState());
 		
+		// Include the set caller if appropriate.
+		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED ||
+			model.getGameState() == GameConstants.GAME_STATE_SET_FINISHED)
+		{
+			Element setCallerElement = documentFactory.createElement("setcaller");
+			setCallerElement.setText("" + model.getSetCaller().getId());
+			gameStateElement.add(setCallerElement);
+			
+			// Also include whether the set was valid or not, if appropriate.
+			if (model.getGameState() == GameConstants.GAME_STATE_SET_FINISHED)
+			{
+				Element setCorrectElement = documentFactory.createElement("setcorrect");
+				setCorrectElement.setText(new Boolean(model.getLastSetCorrect()).toString());
+				gameStateElement.add(setCorrectElement);
+			}
+		}
+		
+		root.add(gameStateElement);
+
 		// Now do the players.
 		Element playersElement = documentFactory.createElement("players");
 		
@@ -502,14 +520,6 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			playersElement.add(player.getXMLRepresentation());
 		}
 		root.add(playersElement);
-		
-		// Include the set caller if appropriate.
-		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED)
-		{
-			Element setCallerElement = documentFactory.createElement("setcaller");
-			setCallerElement.setText("" + model.getSetCaller().getId());
-			root.add(setCallerElement);
-		}
 		
 		// Then the card table.
 		Element cardTableElement = model.getCardTable().getRepresentation();

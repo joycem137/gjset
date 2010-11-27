@@ -351,7 +351,7 @@ public class GameModel extends Observable
 	/**
 	 * Resolves the selected cards to determine if they're a set.
 	 *
-	 * @param isTimeout		false if the set timer expired, otherwise true
+	 * @param isWithinTime	indicates whether the set selection was completed within the time limit
 	 * 
 	 * @return Return true if this actually was a set.
 	 */
@@ -377,7 +377,7 @@ public class GameModel extends Observable
 			setPlayer.addPenalty(GameConstants.SET_PENALTY);
 		}
 		
-		// Switch to the "Set Finished" gameState for a few seconds.
+		// Switch to the "Set Finished" gameState for now.
 		gameState = GameConstants.GAME_STATE_SET_FINISHED;
 		
 		// Start the displayTimer which will switch us back to the Idle gameState.
@@ -437,7 +437,7 @@ public class GameModel extends Observable
 		// Verify that the model is still in the same state it was.
 		if(gameState == GameConstants.GAME_STATE_SET_CALLED)
 		{
-			// Treat the selected cards as an incorrect Set due to time running out.
+			// Resolve the set call so that other players are able to call set.
 			resolveSet(false);
 		}
 	}
@@ -448,39 +448,43 @@ public class GameModel extends Observable
 	 */
 	private void resumeGame()
 	{
-		// Figure out which cards are selected.
-		List<Card> selectedCards = cardTable.getSelectedCards();
-		
-		// If the set call was successful, remove the Set and replace cards as necessary.
-		if (isLastSetCorrect)
-		{	
-			// Check to see if we can draw more cards.
-			if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
-			{
-				// Draw the new cards and place them on the table.
-				cardTable.replaceCards(selectedCards, deck.drawCards(3));
+		// Make sure that the model is still in the "Set Finished" state before making any changes.
+		if (gameState == GameConstants.GAME_STATE_SET_FINISHED)
+		{
+			// Figure out which cards are selected.
+			List<Card> selectedCards = cardTable.getSelectedCards();
+			
+			// If the set call was successful, remove the Set and replace cards as necessary.
+			if (isLastSetCorrect)
+			{	
+				// Check to see if we can draw more cards.
+				if (deck.getRemainingCards() > 0 && cardTable.getNumCards() <= 12)
+				{
+					// Draw the new cards and place them on the table.
+					cardTable.replaceCards(selectedCards, deck.drawCards(3));
+				}
+				else
+				{
+					// We aren't allowed to draw new cards, so just remove the selected ones.
+					cardTable.removeCards(selectedCards);
+				}
 			}
-			else
-			{
-				// We aren't allowed to draw new cards, so just remove the selected ones.
-				cardTable.removeCards(selectedCards);
-			}
+			
+			// De-select any cards that are still selected.
+			cardTable.unSelectCards();
+			
+			// For now, we immediately return to the idle state.
+			gameState = GameConstants.GAME_STATE_IDLE;
+			setCallerId = 0;
+			
+			// Check to see if this is the end of the game.
+			checkForEndofGame();
+			
+			// Notify observers that the model has changed.
+			setChanged();
+			// This is an unsolicited update, too.
+			notifyObservers(new Boolean(false));
 		}
-		
-		// De-select any cards that are still selected.
-		cardTable.unSelectCards();
-		
-		// For now, we immediately return to the idle state.
-		gameState = GameConstants.GAME_STATE_IDLE;
-		setCallerId = 0;
-		
-		// Check to see if this is the end of the game.
-		checkForEndofGame();
-		
-		// Notify observers that the model has changed.
-		setChanged();
-		// This is an unsolicited update, too.
-		notifyObservers(new Boolean(false));
 	}
 
 	

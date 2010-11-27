@@ -125,7 +125,8 @@ public class PlayGamePage extends Page implements Observer
 		callSetLabel.setVisible(showSetButton);
 		
 		// Update the card table
-		cardTablePanel.update(model.getCardTable());
+		boolean isSetFinished = (model.getGameState() == GameConstants.GAME_STATE_SET_FINISHED);
+		cardTablePanel.update(model.getCardTable(), isSetFinished, model.getSetCorrect());
 		
 		// See if we need to display the game over screen.
 		if(model.getGameState() == GameConstants.GAME_STATE_GAME_OVER)

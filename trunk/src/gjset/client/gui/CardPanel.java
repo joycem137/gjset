@@ -47,7 +47,7 @@ public class CardPanel extends JComponent
 {
 	// Store the different images that represent the card itself.
 	private Image cardImage;
-	private Image cardHalo;
+	private Image[] cardHalo;
 	private Image cardBack;
 	
 	// Store the symbol image factory so that we can always request the latest symbol image based on our carddata.
@@ -60,8 +60,15 @@ public class CardPanel extends JComponent
 	private boolean highlighted;
 	private boolean faceUp;
 	
+	// Indicates the type of card highlight to use (normal red border, red X, or green border)
+	private int	highlightType;
+	
 	// Store the current card data on display.
 	private Card cardData;
+	
+	public static final int NORMAL = 0;
+	public static final int CORRECT_SET = 1;
+	public static final int INCORRECT_SET = 2;
 	
 	/**
 	 * 
@@ -79,6 +86,9 @@ public class CardPanel extends JComponent
 		
 		highlighted = false;
 		faceUp = true;
+		highlightType = NORMAL;
+		
+		cardHalo = new Image[3];
 		
 		symbolFactory = SymbolImageFactory.getInstance();
 		
@@ -117,9 +127,10 @@ public class CardPanel extends JComponent
 	 *
 	 * @param value
 	 */
-	public void setHighlighted(boolean value)
+	public void setHighlighted(boolean value, int highlightType)
 	{
 		this.highlighted = value;
+		this.highlightType = highlightType;
 		repaint();
 	}
 
@@ -146,7 +157,7 @@ public class CardPanel extends JComponent
 		// Draw the halo if highlighted.
 		if(highlighted)
 		{
-			g.drawImage(cardHalo, 0, 0, this);
+			g.drawImage(cardHalo[highlightType], 0, 0, this);
 		}
 		
 		// Draw the symbols, centered on the image.
@@ -195,7 +206,11 @@ public class CardPanel extends JComponent
 	{
 		ResourceManager resourceManager = ResourceManager.getInstance();
 		cardImage = resourceManager.getImage("card.png");
-		cardHalo = resourceManager.getImage("card_halo.png");
+		
+		cardHalo[NORMAL] = resourceManager.getImage("card_halo.png");
+		cardHalo[CORRECT_SET] = resourceManager.getImage("card_combo_true.png");
+		cardHalo[INCORRECT_SET] = resourceManager.getImage("card_combo_false.png");
+
 		cardBack = resourceManager.getImage("card_back.png");
 	}
 }
