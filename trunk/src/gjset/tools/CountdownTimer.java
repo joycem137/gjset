@@ -66,10 +66,8 @@ public class CountdownTimer
 	public void start()
 	{
 		// Cancel any existing timer events.
-		if(isRunning)
-		{
-			timer.cancel();
-		}
+		cancel();
+		isRunning = true;
 		
 		// Now schedule running this.
 		timer = new Timer("Countdown Timer");
