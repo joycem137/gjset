@@ -49,11 +49,30 @@ public class FancyLabel extends JComponent
 	private String text;
 	private int horizontalAlignment;
 
-	public FancyLabel(String text, int horizontalAlignment)
+	/**
+	 * Create the fancy label with the indicated text as default.
+	 *
+	 * @param string
+	 */
+	public FancyLabel(String text)
 	{
 		super();
 		
 		this.text = text;
+		this.horizontalAlignment = SwingConstants.LEFT;
+	}
+
+	/**
+	 * 
+	 * Create the fancy label with the indicated text and horizontal alignment.
+	 *
+	 * @param text
+	 * @param horizontalAlignment
+	 */
+	public FancyLabel(String text, int horizontalAlignment)
+	{
+		this(text);
+		
 		this.horizontalAlignment = horizontalAlignment;
 	}
 

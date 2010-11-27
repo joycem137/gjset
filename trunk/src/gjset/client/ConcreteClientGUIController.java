@@ -1,8 +1,12 @@
 package gjset.client;
 
+import gjset.GameConstants;
 import gjset.data.Card;
 import gjset.data.Player;
 import gjset.tools.MessageHandler;
+
+import java.util.Iterator;
+import java.util.Vector;
 
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -35,13 +39,16 @@ import org.dom4j.Element;
  */
 
 /**
- *
+ * This controls the UI on the client side.  It takes messages from the communicator
+ * and uses them to update the ClientGUIModel.  It also receives actions from the GUI
+ * and sends the appropriate commands to the server.
  */
 public class ConcreteClientGUIController implements ClientGUIController, MessageHandler
 {
 	private DocumentFactory documentFactory;
 	private ClientGUIModel	model;
 	private ClientCommunicator client;
+	private Vector<Runnable> gameStartTriggers;
 	
 	/**
 	 * Construct a controller for the indicated player connected to the indicated model.
@@ -54,6 +61,8 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 		documentFactory = DocumentFactory.getInstance();
 		model = new ClientGUIModel();
 		model.setLocalPlayer(localPlayer);
+		
+		gameStartTriggers = new Vector<Runnable>();
 		
 		this.client = client;
 		client.addMessageHandler(this);
@@ -78,7 +87,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	public void startNewGame()
 	{
 		Element root = documentFactory.createElement("command");
-		root.addAttribute("type", "newgame");
+		root.addAttribute("type", "startgame");
 		client.sendMessage(root);
 	}
 
@@ -125,6 +134,19 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 	
 	/**
+	 * Send a message to the server indicating that this player is disconnecting.
+	 *
+	 * @see gjset.client.ClientGUIController#disconnectPlayer()
+	 */
+	public void disconnectPlayer()
+	{
+		Element root = documentFactory.createElement("command");
+		root.addAttribute("type", "dropout");
+		
+		client.sendMessage(root);
+	}
+
+	/**
 	 * 
 	 * Parse an incoming message from the server.
 	 *
@@ -132,10 +154,25 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 */
 	public void handleMessage(Element root)
 	{
-		if (root.element("gameupdate") != null)
+		Element gameUpdateElement = root.element("gameupdate"); 
+		
+		if (gameUpdateElement != null)
 		{
-			Element updateElement = root.element("gameupdate");
-			model.update(updateElement);
+			// Start by triggering any game start events, if appropriate to do so.
+			String gameStateString = gameUpdateElement.element("gamestate").getText();
+			int gameState = Integer.parseInt(gameStateString);
+			
+			int currentGameState = model.getGameState();
+			
+			if(gameState != currentGameState 
+					&& ( currentGameState == GameConstants.GAME_STATE_NOT_STARTED 
+					|| currentGameState == GameConstants.GAME_STATE_GAME_OVER) )
+			{
+				triggerGameStart();
+			}
+			
+			// Update the model.
+			model.update(gameUpdateElement);
 		}
 	}
 
@@ -151,6 +188,17 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	}
 
 	/**
+	 * Add an event to fire when the game starts.
+	 *
+	 * @param runnable
+	 * @see gjset.client.ClientGUIController#addGameStartTrigger(java.lang.Runnable)
+	 */
+	public void addGameStartTrigger(Runnable trigger)
+	{
+		gameStartTriggers.add(trigger);
+	}
+
+	/**
 	 * Destroy this controller.
 	 *
 	 */
@@ -162,6 +210,22 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 		model = null;
 		client = null;
 		documentFactory = null;
+	}
+
+	/**
+	 * Trigger the game start triggers and then quit.
+	 *
+	 */
+	private void triggerGameStart()
+	{
+		Iterator<Runnable> iterator = gameStartTriggers.iterator();
+		while(iterator.hasNext())
+		{
+			iterator.next().run();
+		}
+		
+		// Consume all of the triggers, now that they have been fired.
+		gameStartTriggers.removeAllElements();
 	}
 
 }

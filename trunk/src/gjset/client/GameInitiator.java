@@ -106,7 +106,7 @@ public class GameInitiator implements MessageHandler
 		if(controller != null)
 		{
 			// We've already gotten configured!  Let's start playing!
-			sendNewGameRequest();
+			controller.startNewGame();
 		}
 		else
 		{
@@ -122,7 +122,7 @@ public class GameInitiator implements MessageHandler
 	 */
 	public void cancelInitiation()
 	{
-		sendDropOutMessage();
+		controller.disconnectPlayer();
 		
 		client.removeMessageHandler(this);
 		client.destroy();
@@ -177,18 +177,6 @@ public class GameInitiator implements MessageHandler
 	{
 		client.removeMessageHandler(this);
 		gameInitiationHandler = null;
-	}
-
-	/**
-	 * Send a message to the server indicating a desire to drop out of the game.
-	 *
-	 */
-	private void sendDropOutMessage()
-	{
-		Element commandElement = documentFactory.createElement("command");
-		commandElement.addAttribute("type", "dropout");
-		
-		client.sendMessage(commandElement);
 	}
 
 	/**
@@ -254,7 +242,7 @@ public class GameInitiator implements MessageHandler
 		// If we're good to go, start the game!
 		if(readyToStart)
 		{
-			sendNewGameRequest();
+			controller.startNewGame();
 		}
 	}
 
@@ -286,20 +274,6 @@ public class GameInitiator implements MessageHandler
 			destroy();
 			client.destroy();
 		}
-	}
-
-	/**
-	 * Request that the server start a new game.
-	 *
-	 */
-	private void sendNewGameRequest()
-	{
-		System.out.println("Handling a new game request from the server");
-		
-		Element commandElement = documentFactory.createElement("command");
-		commandElement.addAttribute("type", "startgame");
-		
-		client.sendMessage(commandElement);
 	}
 
 }

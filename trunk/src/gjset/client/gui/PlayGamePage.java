@@ -131,10 +131,32 @@ public class PlayGamePage extends Page implements Observer
 		// See if we need to display the game over screen.
 		if(model.getGameState() == GameConstants.GAME_STATE_GAME_OVER)
 		{
-			controller.startNewGame();
+			ScorePage page = new ScorePage(mainFrame, controller);
+			mainFrame.loadPage(page);
 		}
 		
 		repaint();
+	}
+	
+	/**
+	 * 
+	 * Destroy this page.
+	 *
+	 * @see gjset.gui.framework.Page#destroy()
+	 */
+	public void destroy()
+	{
+		ClientGUIModel model = controller.getModel();
+		model.deleteObserver(this);
+		
+		mainFrame = null;
+		controller = null;
+		lnf = null;
+		deckPanel = null;
+		cardTablePanel = null;
+		localPlayerPanel = null;
+		remotePlayerPanels = null;
+		callSetLabel = null;
 	}
 
 	/**
@@ -317,8 +339,6 @@ public class PlayGamePage extends Page implements Observer
 		Rectangle usableArea = MainFrame.CONTROL_PANEL_AREA;
 		int leftCenter = (localPlayerPanel.getX() - usableArea.x) / 2 + usableArea.x;
 		
-		System.out.println("Left center is " + leftCenter);
-		
 		callSetButton = createButton(new AbstractAction()
 		{
 			public void actionPerformed(ActionEvent evt)
@@ -332,8 +352,6 @@ public class PlayGamePage extends Page implements Observer
 		int rightCenter
 			= (usableArea.x + usableArea.width - localPlayerPanel.getX() - localPlayerPanel.getWidth()) / 2 
 			+ localPlayerPanel.getX() + localPlayerPanel.getWidth() - 15;
-		
-		System.out.println("Right center is " + rightCenter);
 		
 		drawButton = createButton(new AbstractAction("Draw")
 		{

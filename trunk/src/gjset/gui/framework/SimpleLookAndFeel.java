@@ -127,6 +127,21 @@ public class SimpleLookAndFeel
 		return Color.black;
 	}
 
+	public Font getScorePageColumnTitleFont()
+	{
+		return defaultFont.deriveFont(18.0f);
+	}
+
+	public Color getScorePageColumnTitleFG()
+	{
+		return Color.white;
+	}
+
+	public Color getScorePageColumnTitleBG()
+	{
+		return Color.black;
+	}
+
 	public Font getDeckSizeFont()
 	{
 		Font deckFont = defaultFont.deriveFont(35.0f);
