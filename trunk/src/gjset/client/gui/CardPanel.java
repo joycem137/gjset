@@ -154,16 +154,16 @@ public class CardPanel extends JComponent
 		// Draw the card background.
 		g.drawImage(cardImage, 0, 0, this);
 		
+		// Draw the symbols, centered on the image.
+		Image symbolImage = symbolFactory.getImage(cardData);
+		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
+				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
+		
 		// Draw the halo if highlighted.
 		if(highlighted)
 		{
 			g.drawImage(cardHalo[highlightType], 0, 0, this);
 		}
-		
-		// Draw the symbols, centered on the image.
-		Image symbolImage = symbolFactory.getImage(cardData);
-		g.drawImage(symbolImage, cardImage.getWidth(this) / 2 - symbolImage.getWidth(this) / 2,
-				cardImage.getHeight(this) / 2 - symbolImage.getHeight(this) / 2, this);
 	}
 
 	/**
