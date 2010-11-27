@@ -159,7 +159,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 		if (gameUpdateElement != null)
 		{
 			// Start by triggering any game start events, if appropriate to do so.
-			String gameStateString = gameUpdateElement.element("gamestate").getText();
+			String gameStateString = gameUpdateElement.element("gamestate").attributeValue("state", "-1");
 			int gameState = Integer.parseInt(gameStateString);
 			
 			int currentGameState = model.getGameState();
