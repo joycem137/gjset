@@ -258,5 +258,4 @@ public class ClientGUIModel extends Observable
 		localPlayer = null;
 		cardTableData.destroy();
 	}
-
 }

@@ -68,6 +68,19 @@ public interface ClientGUIController
 	void startNewGame();
 
 	/**
+	 * Send a message to the server indicating that this player is to be disconnected.
+	 *
+	 */
+	void disconnectPlayer();
+
+	/**
+	 * Add this to a list of methods that will be called upon game start.
+	 *
+	 * @param runnable
+	 */
+	void addGameStartTrigger(Runnable runnable);
+
+	/**
 	 * Destroy this controller
 	 *
 	 */

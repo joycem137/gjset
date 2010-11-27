@@ -95,8 +95,7 @@ public class GameServer
 						handleNewClient(socket);
 					} catch (IOException e)
 					{
-						console.errorMessage("Error while listening for connection.");
-						e.printStackTrace();
+						console.errorMessage("Error while listening for connection. (Possibly because of shutdown)");
 					}
 				}
 			}

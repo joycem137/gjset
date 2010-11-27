@@ -246,6 +246,16 @@ public class GameModel extends Observable
 		// Set the game active flag to true.
 		gameState = GameConstants.GAME_STATE_IDLE;
 		
+		// Reset the set caller.
+		setCallerId = 0;
+		
+		// Reset the timers.
+		setTimer.cancel();
+		displayTimer.cancel();
+		
+		// Reset the last set flag.
+		isLastSetCorrect = false;
+		
 		// Notify observers that the model has changed.
 		setChanged();
 		notifyObservers();
@@ -411,6 +421,8 @@ public class GameModel extends Observable
 		players = null;
 		setTimer.cancel();
 		setTimer = null;
+		displayTimer.cancel();
+		displayTimer = null;
 	}
 
 	/**
@@ -537,7 +549,7 @@ public class GameModel extends Observable
 	 * The game is considered over when the deck is empty and there are no sets on the board.
 	 */
 	private void checkForEndofGame()
-	{
+	{	
 		// If there are still cards in the deck, the game is not yet over.
 		if (deck.getRemainingCards() > 0) return;
 	

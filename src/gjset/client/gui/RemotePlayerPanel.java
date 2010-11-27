@@ -60,7 +60,6 @@ public class RemotePlayerPanel extends JPanel
 	private JPanel mainPanel;
 
 	private int realX;
-
 	private int realY;
 	
 	private static final int HORIZONTAL_INSET = 14;
