@@ -10,12 +10,12 @@
         <!-- Application Resources -->
         <j2se version="1.5+"
               href="http://java.sun.com/products/autodl/j2se"/>
-        <jar href="http://gjset.googlecode.com/files/Combo%20Cards%200.2.jar" main="true" />
+        <jar href="http://gjset.googlecode.com/files/ComboCards.jar" main="true" />
 
     </resources>
     <application-desc
          name="Combo Cards"
-         main-class="gjset.GjSetMain"
+         main-class="gjset.ComboCardsMain"
          width="1024"
          height="768">
      </application-desc>
