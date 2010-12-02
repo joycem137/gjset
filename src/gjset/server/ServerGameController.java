@@ -460,7 +460,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 	private void updateAllPlayers()
 	{
 		// Start by building the update XML.
-		Element gameUpdate = buildGameUpdate();
+		Element gameUpdate = model.getUpdateRepresentation();
 		
 		List<PlayerClientHandler> clients = server.getClients();
 		Iterator<PlayerClientHandler> iterator = clients.iterator();
@@ -471,61 +471,6 @@ public class ServerGameController implements ServerMessageHandler, Observer
 			client.sendMessage(gameUpdate.createCopy());
 		}
 		
-	}
-
-	/**
-	 * Create the game update to send to the clients.
-	 *
-	 * @return
-	 */
-	private Element buildGameUpdate()
-	{
-		Element root = documentFactory.createElement("gameupdate");
-		
-		// Start with the deck size.
-		Element deckElement = documentFactory.createElement("deck");
-		deckElement.setText("" + model.getDeck().getRemainingCards());
-		root.add(deckElement);
-		
-		// Move onto the game state.
-		Element gameStateElement = documentFactory.createElement("gamestate");
-		gameStateElement.addAttribute("state", "" + model.getGameState());
-		
-		// Include the set caller if appropriate.
-		if(model.getGameState() == GameConstants.GAME_STATE_SET_CALLED ||
-			model.getGameState() == GameConstants.GAME_STATE_SET_FINISHED)
-		{
-			Element setCallerElement = documentFactory.createElement("setcaller");
-			setCallerElement.setText("" + model.getSetCaller().getId());
-			gameStateElement.add(setCallerElement);
-			
-			// Also include whether the set was valid or not, if appropriate.
-			if (model.getGameState() == GameConstants.GAME_STATE_SET_FINISHED)
-			{
-				Element setCorrectElement = documentFactory.createElement("setcorrect");
-				setCorrectElement.setText(new Boolean(model.getLastSetCorrect()).toString());
-				gameStateElement.add(setCorrectElement);
-			}
-		}
-		
-		root.add(gameStateElement);
-
-		// Now do the players.
-		Element playersElement = documentFactory.createElement("players");
-		
-		Iterator<Player> iterator = model.getPlayers().iterator();
-		while(iterator.hasNext())
-		{
-			Player player = iterator.next();
-			playersElement.add(player.getXMLRepresentation());
-		}
-		root.add(playersElement);
-		
-		// Then the card table.
-		Element cardTableElement = model.getCardTable().getRepresentation();
-		root.add(cardTableElement);
-		
-		return root;
 	}
 
 	/**

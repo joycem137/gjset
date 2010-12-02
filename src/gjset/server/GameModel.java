@@ -5,9 +5,13 @@ import gjset.data.Card;
 import gjset.data.Player;
 import gjset.tools.CountdownTimer;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
+
+import org.dom4j.DocumentFactory;
+import org.dom4j.Element;
 
 /* 
  *  LEGAL STUFF
@@ -62,6 +66,8 @@ public class GameModel extends Observable
 	private CountdownTimer setTimer;
 	private CountdownTimer displayTimer;
 	
+	private DocumentFactory documentFactory;
+	
 	private static final int SET_TIME = 3500;
 	private static final int DISPLAY_TIME = 1000;
 	
@@ -100,6 +106,9 @@ public class GameModel extends Observable
 				resumeGame();
 			}
 		});
+		
+		// Get a DocumentFactory for use in creating XML representations of the game model.
+		documentFactory = DocumentFactory.getInstance();
 	}
 
 	/**
@@ -222,7 +231,7 @@ public class GameModel extends Observable
 	 * Start a new game.
 	 *
 	 */
-	public void startNewGame()
+	public synchronized void startNewGame()
 	{
 		// Shuffle the cards
 		deck.shuffle();
@@ -265,7 +274,7 @@ public class GameModel extends Observable
 	 * Draw more cards from the deck and place them on the card table.
 	 *
 	 */
-	public void drawCards()
+	public synchronized void drawCards()
 	{
 		resetCardDrawDesires();
 		
@@ -326,7 +335,7 @@ public class GameModel extends Observable
 	 *
 	 * @param playerId
 	 */
-	public void callSet(int playerId)
+	public synchronized void callSet(int playerId)
 	{
 		resetCardDrawDesires();
 		
@@ -349,7 +358,7 @@ public class GameModel extends Observable
 	 *
 	 * @param card
 	 */
-	public void toggleCardSelection(Card card)
+	public synchronized void toggleCardSelection(Card card)
 	{
 		cardTable.toggleSelection(card);
 		
@@ -365,7 +374,7 @@ public class GameModel extends Observable
 	 * 
 	 * @return Return true if this actually was a set.
 	 */
-	public boolean resolveSet(boolean isWithinTime)
+	public synchronized boolean resolveSet(boolean isWithinTime)
 	{
 		// Start by clearing the set timer.
 		setTimer.cancel();
@@ -401,7 +410,6 @@ public class GameModel extends Observable
 		return isLastSetCorrect;
 	}	
 
-
 	/**
 	 * Remove the player with the indicated id.
 	 *
@@ -413,10 +421,65 @@ public class GameModel extends Observable
 	}
 
 	/**
+	 * Create the XML representation of the GameModel as a game update.
+	 *
+	 * @return
+	 */
+	public synchronized Element getUpdateRepresentation()
+	{
+		Element root = documentFactory.createElement("gameupdate");
+		
+		// Start with the deck size.
+		Element deckElement = documentFactory.createElement("deck");
+		deckElement.setText("" + deck.getRemainingCards());
+		root.add(deckElement);
+		
+		// Move onto the game state.
+		Element gameStateElement = documentFactory.createElement("gamestate");
+		gameStateElement.addAttribute("state", "" + gameState);
+		
+		// Include the set caller if appropriate.
+		if(gameState == GameConstants.GAME_STATE_SET_CALLED ||
+			gameState == GameConstants.GAME_STATE_SET_FINISHED)
+		{
+			Element setCallerElement = documentFactory.createElement("setcaller");
+			setCallerElement.setText("" + getSetCaller().getId());
+			gameStateElement.add(setCallerElement);
+			
+			// Also include whether the set was valid or not, if appropriate.
+			if (gameState == GameConstants.GAME_STATE_SET_FINISHED)
+			{
+				Element setCorrectElement = documentFactory.createElement("setcorrect");
+				setCorrectElement.setText(new Boolean(isLastSetCorrect).toString());
+				gameStateElement.add(setCorrectElement);
+			}
+		}
+		
+		root.add(gameStateElement);
+
+		// Now do the players.
+		Element playersElement = documentFactory.createElement("players");
+		
+		Iterator<Player> iterator = getPlayers().iterator();
+		while(iterator.hasNext())
+		{
+			Player player = iterator.next();
+			playersElement.add(player.getXMLRepresentation());
+		}
+		root.add(playersElement);
+		
+		// Then the card table.
+		Element cardTableElement = cardTable.getRepresentation();
+		root.add(cardTableElement);
+		
+		return root;
+	}
+	
+	/**
 	 * Destroy the model.
 	 *
 	 */
-	public void destroy()
+	public synchronized void destroy()
 	{
 		players = null;
 		setTimer.cancel();
@@ -441,7 +504,7 @@ public class GameModel extends Observable
 	}
 
 	/**
-	 * Deal with the fact that no set was called within the alotted time.
+	 * Deal with the fact that no set was called within the allotted time.
 	 *
 	 */
 	private void handleSetTimeout()
@@ -458,7 +521,7 @@ public class GameModel extends Observable
 	 * Resume the game from the "Set Finished" game state, removing, drawing, and de-selecting
 	 * cards as necessary.
 	 */
-	private void resumeGame()
+	private synchronized void resumeGame()
 	{
 		// Make sure that the model is still in the "Set Finished" state before making any changes.
 		if (gameState == GameConstants.GAME_STATE_SET_FINISHED)
