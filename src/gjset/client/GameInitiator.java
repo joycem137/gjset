@@ -3,7 +3,7 @@ package gjset.client;
 import java.io.IOException;
 
 import gjset.GameConstants;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 import gjset.tools.MessageHandler;
 
 import org.dom4j.DocumentFactory;
@@ -234,7 +234,7 @@ public class GameInitiator implements MessageHandler
 	{
 		System.out.println("Handling a new player");
 		Element playerElement = newPlayerElement.element("player");
-		Player player = new Player(playerElement);
+		PlayerData player = new PlayerData(playerElement);
 		
 		// Then create the controller.
 		controller = new ConcreteClientGUIController(client, player);

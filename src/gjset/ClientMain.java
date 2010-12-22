@@ -1,6 +1,6 @@
 package gjset;
 
-import gjset.gui.MainFrame;
+import gjset.client.gui.MainFrame;
 
 import javax.swing.SwingUtilities;
 
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class ComboCardsMain
+public class ClientMain
 {
 	public static void main(String[] args)
 	{

@@ -1,7 +1,6 @@
 package gjset.client.gui;
 
-import gjset.data.Player;
-import gjset.gui.MainFrame;
+import gjset.data.PlayerData;
 import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;
 import gjset.gui.framework.SimpleLookAndFeel;
@@ -85,7 +84,7 @@ public class LocalPlayerPanel extends JPanel
 		add(mainPanel);
 	}
 
-	public void updatePlayerData(Player player, int setCallerId)
+	public void updatePlayerData(PlayerData player, int setCallerId)
 	{
 		nameLabel.setText(player.getName());
 		

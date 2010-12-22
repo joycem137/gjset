@@ -1,14 +1,17 @@
-package gjset.gui;
+package gjset.client.gui.pages;
 
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.GameInitiationHandler;
 import gjset.client.GameInitiator;
-import gjset.client.gui.PlayGamePage;
+import gjset.client.gui.MainFrame;
+import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.server.GameServer;
-import gjset.server.ServerGameController;
+import gjset.server.ServerController;
+import gjset.server.gui.CommandLineConsole;
+import gjset.server.gui.ServerConsole;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -80,10 +83,11 @@ public class LaunchPage extends DialogPage
 		addButtonAndLabel(new AbstractAction("Play Alone")
 		{
 			public void actionPerformed(ActionEvent e)
-			{
+			{	
 				// First create the server.
-				GameServer server = new GameServer(GameConstants.GAME_PORT);
-				new ServerGameController(server);
+				ServerConsole console = new CommandLineConsole();
+				GameServer server = new GameServer(GameConstants.GAME_PORT, console);
+				new ServerController(server, console);
 				server.listenForClients();
 				
 				// Set up the communicator to talk to the server through.
@@ -117,7 +121,7 @@ public class LaunchPage extends DialogPage
 			}
 		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
 		
-		addButtonAndLabel(new AbstractAction("Join a Network Game")
+		addButtonAndLabel(new AbstractAction("Play Multiplayer on the Internet")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -126,16 +130,6 @@ public class LaunchPage extends DialogPage
 				mainFrame.loadPage(page);
 			}
 		}, new Rectangle(usableArea.x, 100, usableArea.width, 40));
-		
-		addButtonAndLabel(new AbstractAction("Host a Network Game")
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				// Switch to the host a game page.
-				HostAGamePage page = new HostAGamePage(mainFrame);
-				mainFrame.loadPage(page);
-			}
-		}, new Rectangle(usableArea.x, 150, usableArea.width, 40));
 	}
 
 	/**

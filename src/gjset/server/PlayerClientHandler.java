@@ -1,6 +1,6 @@
 package gjset.server;
 
-import gjset.data.Player;
+import gjset.data.PlayerData;
 import gjset.server.gui.ServerConsole;
 import gjset.tools.MessageUtils;
 
@@ -58,7 +58,7 @@ public class PlayerClientHandler
 	private Thread listeningThread;
 	
 	private DocumentFactory documentFactory;
-	private Player player;
+	private PlayerData player;
 
 	public PlayerClientHandler(Socket socket, GameServer server, ServerConsole console)
 	{
@@ -119,7 +119,7 @@ public class PlayerClientHandler
 	 *
 	 * @param player
 	 */
-	public void setPlayer(Player player)
+	public void setPlayer(PlayerData player)
 	{
 		this.player = player;
 	}

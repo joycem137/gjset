@@ -56,12 +56,13 @@ public class GameServer
 	 * 
 	 * Starts the server and prepares it to start listening for incoming connections.
 	 * @param port 
+	 * @param console 
 	 *
 	 */
-	public GameServer(int port)
+	public GameServer(int port, ServerConsole console)
 	{
 		//Create a console to post messages to.  This might be the command line or a debug interface or whatever we want.
-		console = ServerConsole.getDefaultConsole();
+		this.console = console;
 		
 		clients = new Vector<PlayerClientHandler>();
 		handlers = new Vector<ServerMessageHandler>();
@@ -77,32 +78,7 @@ public class GameServer
 			e.printStackTrace();
 		}
 		
-		// Create the server's listening thread:
-		Runnable runServer = new Runnable()
-		{
-			public void run()
-			{
-				while(!serverSocket.isClosed())
-				{
-					try
-					{
-						console.message("Listening for connection.");
-						
-						// Listen for an incoming connection.
-						Socket socket = serverSocket.accept();
-						
-						// When the above command returns, it will have a new client to deal with.  Handle it!
-						handleNewClient(socket);
-					} catch (IOException e)
-					{
-						console.errorMessage("Error while listening for connection. (Possibly because of shutdown)");
-					}
-				}
-			}
-		};
-		
-		// Create the listening thread.
-		listeningThread = new Thread(runServer, "Server thread listening for clients");
+		createListeningThread();
 	}
 	
 	/**
@@ -206,6 +182,40 @@ public class GameServer
 		{
 			iterator.next().sendMessage(message.createCopy());
 		}
+	}
+
+	/**
+	 * Create the thread that will listen for incoming clients.
+	 *
+	 */
+	private void createListeningThread()
+	{
+		// Create the server's listening thread:
+		Runnable runServer = new Runnable()
+		{
+			public void run()
+			{
+				while(!serverSocket.isClosed())
+				{
+					try
+					{
+						console.message("Listening for connection.");
+						
+						// Listen for an incoming connection.
+						Socket socket = serverSocket.accept();
+						
+						// When the above command returns, it will have a new client to deal with.  Handle it!
+						handleNewClient(socket);
+					} catch (IOException e)
+					{
+						console.errorMessage("Error while listening for connection. (Possibly because of shutdown)");
+					}
+				}
+			}
+		};
+		
+		// Create the listening thread.
+		listeningThread = new Thread(runServer, "Server thread listening for clients");
 	}
 
 	/*

@@ -7,7 +7,7 @@ import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
 import gjset.client.ConcreteClientGUIController;
 import gjset.data.Card;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 
 import java.net.URL;
 
@@ -51,7 +51,7 @@ import org.junit.Test;
 public class TestGUIController
 {
 	private MockClientCommunicator client;
-	private Player defaultPlayer;
+	private PlayerData defaultPlayer;
 	
 	/**
 	 * This method sets up each test before running it.
@@ -60,7 +60,7 @@ public class TestGUIController
 	public void setUp()
 	{
 		client = new MockClientCommunicator();
-		defaultPlayer = new Player(1, "Player");
+		defaultPlayer = new PlayerData(1, "Player");
 	}
 	
 	/**
@@ -160,7 +160,7 @@ public class TestGUIController
 		Element idMessage = documentFactory.createElement("combocards");
 		Element playerIdNode = documentFactory.createElement("newplayer");
 		
-		Player defaultPlayer = new Player(1, "Player");
+		PlayerData defaultPlayer = new PlayerData(1, "Player");
 		playerIdNode.add(defaultPlayer.getXMLRepresentation());
 		
 		idMessage.add(playerIdNode);

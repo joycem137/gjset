@@ -1,4 +1,4 @@
-package gjset.gui;
+package gjset.client.gui.pages;
 
 import gjset.GameConstants;
 import gjset.client.ClientCommunicator;
@@ -6,7 +6,8 @@ import gjset.client.ClientGUIController;
 import gjset.client.ConcreteClientCommunicator;
 import gjset.client.GameInitiationHandler;
 import gjset.client.GameInitiator;
-import gjset.client.gui.PlayGamePage;
+import gjset.client.gui.MainFrame;
+import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.TextField;
 import gjset.tools.MessageHandler;

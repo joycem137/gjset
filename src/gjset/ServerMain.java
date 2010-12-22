@@ -1,6 +1,9 @@
-package gjset.server.gui;
+package gjset;
 
+import gjset.server.GameServer;
 import gjset.server.ServerController;
+import gjset.server.gui.CommandLineConsole;
+import gjset.server.gui.ServerConsole;
 
 /* 
  *  LEGAL STUFF
@@ -29,20 +32,29 @@ import gjset.server.ServerController;
  *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class ServerConsole
+public class ServerMain
 {
-	private ServerController controller;
 
-	public abstract void message(String string);
-	public abstract void errorMessage(String string);
-	
 	/**
-	 * Give this console access to the server controller so that this console can affect it.
+	 * Start the server
 	 *
-	 * @param serverController
+	 * @param args
 	 */
-	public void setController(ServerController controller)
+	public static void main(String[] args)
 	{
-		this.controller = controller;
+		ServerConsole console = new CommandLineConsole();
+		
+		
+		int port = Integer.parseInt(args[0]);
+		
+		// Create the game server and tell it to listen for clients.
+		GameServer server = new GameServer(port, console);
+		ServerController serverController = new ServerController(server, console);
+		
+		console.setController(serverController);
+		
+		
+		server.listenForClients();
 	}
+
 }

@@ -1,10 +1,10 @@
-package gjset.gui;
+package gjset.client.gui.pages;
 
 import gjset.GameConstants;
+import gjset.client.gui.MainFrame;
+import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.TextField;
-import gjset.server.GameServer;
-import gjset.server.ServerGameController;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -41,14 +41,14 @@ import javax.swing.JLabel;
  */
 
 /**
- * This page provides configuration settings for hosting a game.
+ * Provides the user with a list of options with which to join a game.
  */
 @SuppressWarnings("serial")
-public class HostAGamePage extends DialogPage
+public class JoinAGamePage extends DialogPage
 {
-
 	private MainFrame mainFrame;
 	private TextField nameField;
+	private TextField ipField;
 	private TextField portField;
 
 	/**
@@ -56,13 +56,13 @@ public class HostAGamePage extends DialogPage
 	 *
 	 * @param mainFrame
 	 */
-	public HostAGamePage(MainFrame mainFrame)
+	public JoinAGamePage(MainFrame mainFrame)
 	{
 		super();
 		
 		this.mainFrame = mainFrame;
 		
-		title.setText("Host A Game");
+		title.setText("Join A Game");
 		
 		createInputFields();
 		createButtons();
@@ -88,8 +88,7 @@ public class HostAGamePage extends DialogPage
 		};
 		Button backButton = createButton(goBackAction, horizInset, buttonY);
 		
-		
-		Action hostAction = new AbstractAction("Host Game")
+		Action hostAction = new AbstractAction("Join Game")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -97,15 +96,10 @@ public class HostAGamePage extends DialogPage
 				if(validFields)
 				{
 					String name = nameField.getText();
+					String ip = ipField.getText();
 					int port = Integer.parseInt(portField.getText());
 					
-					// Create the game server and tell it to listen for clients.
-					GameServer server = new GameServer(port);
-					new ServerGameController(server);
-					server.listenForClients();
-					
-					// The lobby page will handle logging in and setting up the player information.
-					LobbyPage page = new LobbyPage(name, "127.0.0.1", port, mainFrame);
+					LobbyPage page = new LobbyPage(name, ip, port, mainFrame);
 					mainFrame.loadPage(page);
 				}
 			}
@@ -143,11 +137,15 @@ public class HostAGamePage extends DialogPage
 	{
 		Rectangle usableArea = border.getInnerArea();
 		
-		nameField = addInputFieldAndLabel("Player Name:", new Rectangle(usableArea.x, 60, usableArea.width, 40));
-		portField = addInputFieldAndLabel("Server Port:", new Rectangle(usableArea.x, 110, usableArea.width, 40));
+		nameField = addInputFieldAndLabel("Player Name:", new Rectangle(usableArea.x, 50, usableArea.width, 40));
+		ipField = addInputFieldAndLabel("Server Address:", new Rectangle(usableArea.x, 90, usableArea.width, 40));
+		portField = addInputFieldAndLabel("Server Port:", new Rectangle(usableArea.x, 130, usableArea.width, 40));
 		
 		portField.setText("" + GameConstants.GAME_PORT);
-		nameField.setText("Player");
+		
+		int randomNumber = (int) Math.ceil(Math.random() * 1000);
+		
+		nameField.setText("Anonymous " + randomNumber);
 	}
 
 	/**
@@ -173,8 +171,8 @@ public class HostAGamePage extends DialogPage
 		field.setFont(lnf.getDialogInputFont());
 		field.setForeground(lnf.getDialogInputTextColor());
 
-		field.setLocation(180, frame.y);
-		field.setSize(230, 28);
+		field.setLocation(200, frame.y);
+		field.setSize(210, 28);
 		
 		add(field);
 		
@@ -189,12 +187,15 @@ public class HostAGamePage extends DialogPage
 	 */
 	private boolean validateFields()
 	{
-		String nameString = nameField.getText();
-		
 		// Fail on an empty name field.
+		String nameString = nameField.getText();
 		if(nameString == null) return false;
 		
 		String portString = portField.getText();
+		
+		// Fail on empty hostname
+		String ipString = ipField.getText();
+		if(ipString == null) return false;
 		
 		// Fail on empty port field.
 		if(portString == null) return false;

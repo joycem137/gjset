@@ -1,11 +1,16 @@
-package gjset.client.gui;
+package gjset.client.gui.pages;
 
 import gjset.GameConstants;
 import gjset.client.ClientGUIController;
 import gjset.client.ClientGUIModel;
+import gjset.client.gui.CardTablePanel;
+import gjset.client.gui.DeckPanel;
+import gjset.client.gui.EventBubble;
+import gjset.client.gui.LocalPlayerPanel;
+import gjset.client.gui.MainFrame;
+import gjset.client.gui.RemotePlayerPanel;
 import gjset.data.Card;
-import gjset.data.Player;
-import gjset.gui.MainFrame;
+import gjset.data.PlayerData;
 import gjset.gui.framework.BigButton;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;
@@ -166,7 +171,7 @@ public class PlayGamePage extends Page implements Observer
 	 */
 	private void updatePlayers(ClientGUIModel model)
 	{
-		List<Player> players = model.getPlayers();
+		List<PlayerData> players = model.getPlayers();
 		
 		// Show or hide the local player event bubble.
 		localPlayerPanel.setBubbleVisible(players.size() > 1);
@@ -174,10 +179,10 @@ public class PlayGamePage extends Page implements Observer
 		int setCallerId = model.getSetCaller();
 		
 		int remotePlayerPanelIndex = 0;
-		Iterator<Player> iterator = players.iterator();
+		Iterator<PlayerData> iterator = players.iterator();
 		while(iterator.hasNext())
 		{
-			Player player = iterator.next();
+			PlayerData player = iterator.next();
 			if(player.getId() == model.getLocalPlayer().getId())
 			{
 				// Update the player panel.

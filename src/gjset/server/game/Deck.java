@@ -1,4 +1,4 @@
-package gjset.server;
+package gjset.server.game;
 
 /* 
  *  LEGAL STUFF
@@ -28,6 +28,7 @@ package gjset.server;
  */
 
 import gjset.data.Card;
+import gjset.server.ServerController;
 
 import java.util.Vector;
 
@@ -36,7 +37,7 @@ import java.util.Vector;
  * Once the deck is exhausted, it can be reshuffled into a completely new arrangement of cards, without having to create a new deck.
  * 
  * @see Card
- * @see ServerGameController
+ * @see ServerController
  */
 public class Deck
 {
