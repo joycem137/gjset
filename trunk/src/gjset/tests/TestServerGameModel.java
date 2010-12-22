@@ -8,9 +8,9 @@ import static org.junit.Assert.assertTrue;
 import gjset.GameConstants;
 import gjset.data.Card;
 import gjset.data.CardTableData;
-import gjset.data.Player;
-import gjset.server.CardTable;
-import gjset.server.GameModel;
+import gjset.data.PlayerData;
+import gjset.server.game.CardTable;
+import gjset.server.game.GameModel;
 
 import java.util.List;
 
@@ -185,16 +185,16 @@ public class TestServerGameModel
 	public void testPlayerManagement()
 	{
 		// First try adding a bunch of new players.
-		Player player1 = model.addNewPlayer("Test 1");
+		PlayerData player1 = model.addNewPlayer("Test 1");
 		assertNotNull(player1);
 		
-		Player player2 = model.addNewPlayer("Test 2");
+		PlayerData player2 = model.addNewPlayer("Test 2");
 		assertNotNull(player2);
 		
-		Player player3 = model.addNewPlayer("Test 3");
+		PlayerData player3 = model.addNewPlayer("Test 3");
 		assertNotNull(player3);
 		
-		Player player4 = model.addNewPlayer("Test 4");
+		PlayerData player4 = model.addNewPlayer("Test 4");
 		assertNotNull(player4);
 		
 		// Check the configuration of one of the players.
@@ -205,7 +205,7 @@ public class TestServerGameModel
 		assertEquals(0, player1.getScore());
 		
 		// Now get the full list of players from the model.
-		List<Player> players = model.getPlayers();
+		List<PlayerData> players = model.getPlayers();
 		
 		// And test it.
 		assertNotNull(players);

@@ -1,5 +1,9 @@
-package gjset.gui;
+package gjset.client.gui;
 
+import gjset.client.gui.pages.LaunchPage;
+import gjset.gui.GeneralKeyStrokeFactory;
+import gjset.gui.KeyStrokeFactory;
+import gjset.gui.MacKeyStrokeFactory;
 import gjset.gui.framework.Page;
 import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;

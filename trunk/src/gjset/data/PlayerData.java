@@ -30,7 +30,7 @@ import org.dom4j.Element;
  *  along with Combo Cards.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Player
+public class PlayerData
 {
 	// Store the various details of this player.
 	private int	points;
@@ -42,7 +42,7 @@ public class Player
 	private boolean wantsToDraw; 
 
 	// Create a basic, blank player.
-	public Player()
+	public PlayerData()
 	{
 		// Clear the values for the player.
 		this.points = 0;
@@ -59,7 +59,7 @@ public class Player
 	 * @param id
 	 * @param name
 	 */
-	public Player(int id, String name)
+	public PlayerData(int id, String name)
 	{
 		this();
 		
@@ -73,7 +73,7 @@ public class Player
 	 *
 	 * @param playerElement
 	 */
-	public Player(Element element)
+	public PlayerData(Element element)
 	{
 		parsePlayer(element);
 	}

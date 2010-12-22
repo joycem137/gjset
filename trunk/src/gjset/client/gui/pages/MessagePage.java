@@ -1,5 +1,7 @@
-package gjset.gui;
+package gjset.client.gui.pages;
 
+import gjset.client.gui.MainFrame;
+import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.Page;
 

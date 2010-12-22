@@ -1,5 +1,6 @@
 package gjset.gui;
 
+import gjset.client.gui.MainFrame;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.FancyLabel;
 import gjset.gui.framework.Page;

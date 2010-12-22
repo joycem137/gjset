@@ -1,4 +1,4 @@
-package gjset.server;
+package gjset.server.game;
 
 import gjset.data.Card;
 import gjset.data.CardTableData;

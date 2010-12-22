@@ -1,6 +1,6 @@
 package gjset.client.gui;
 
-import gjset.data.Player;
+import gjset.data.PlayerData;
 import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;
 import gjset.gui.framework.SimpleLookAndFeel;
@@ -164,7 +164,7 @@ public class RemotePlayerPanel extends JPanel
 	 * @param player
 	 * @param setCallerId
 	 */
-	public void updatePlayerData(Player player, int setCallerId)
+	public void updatePlayerData(PlayerData player, int setCallerId)
 	{
 		nameLabel.setText(player.getName());
 		

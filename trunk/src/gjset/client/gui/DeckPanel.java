@@ -1,6 +1,5 @@
 package gjset.client.gui;
 
-import gjset.gui.MainFrame;
 import gjset.gui.framework.ResourceManager;
 import gjset.gui.framework.SimpleImagePanel;
 import gjset.gui.framework.SimpleLookAndFeel;

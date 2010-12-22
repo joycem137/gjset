@@ -1,8 +1,8 @@
-package gjset.server;
+package gjset.server.game;
 
 import gjset.GameConstants;
 import gjset.data.Card;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 import gjset.tools.CountdownTimer;
 
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public class GameModel extends Observable
 	private boolean isLastSetCorrect;
 	
 	// Right now there's only a single player.
-	private Player[] players;
+	private PlayerData[] players;
 	
 	private CountdownTimer setTimer;
 	private CountdownTimer displayTimer;
@@ -84,7 +84,7 @@ public class GameModel extends Observable
 		cardTable = new CardTable();
 		
 		// Create the player array.
-		players = new Player[GameConstants.MAX_PLAYERS];
+		players = new PlayerData[GameConstants.MAX_PLAYERS];
 		
 		// Set the default set caller id
 		setCallerId = 0;
@@ -146,7 +146,7 @@ public class GameModel extends Observable
 	 *
 	 * @return
 	 */
-	public Player getSetCaller()
+	public PlayerData getSetCaller()
 	{
 		return players[setCallerId - 1];
 	}
@@ -166,9 +166,9 @@ public class GameModel extends Observable
 	 *
 	 * @return
 	 */
-	public List<Player> getPlayers()
+	public List<PlayerData> getPlayers()
 	{
-		Vector<Player> playerList = new Vector<Player>();
+		Vector<PlayerData> playerList = new Vector<PlayerData>();
 		
 		for(int i = 0; i < players.length; i++)
 		{
@@ -189,11 +189,11 @@ public class GameModel extends Observable
 	 * @param username
 	 * @return
 	 */
-	public Player getExistingPlayer(String username)
+	public PlayerData getExistingPlayer(String username)
 	{
 		for(int i = 0; i < players.length; i++)
 		{
-			Player player = players[i];
+			PlayerData player = players[i];
 			if(player != null && player.getName().equals(username))
 			{
 				return player;
@@ -209,11 +209,11 @@ public class GameModel extends Observable
 	 *
 	 * @return
 	 */
-	public Player addNewPlayer(String username)
+	public PlayerData addNewPlayer(String username)
 	{
 		// Find the first empty slot.
 		int id = 1;
-		Player player = players[id - 1];
+		PlayerData player = players[id - 1];
 		while(player != null)
 		{
 			id++;
@@ -221,7 +221,7 @@ public class GameModel extends Observable
 		}
 		
 		// Then add a new player to that slot.
-		player = new Player(id, username);
+		player = new PlayerData(id, username);
 		players[id - 1] = player;
 		return player;
 	}
@@ -239,7 +239,7 @@ public class GameModel extends Observable
 		// reset the scores
 		for(int i = 0; i < players.length; i++)
 		{
-			Player player = players[i];
+			PlayerData player = players[i];
 			if(player != null)
 			{
 				player.resetScore();
@@ -380,7 +380,7 @@ public class GameModel extends Observable
 		setTimer.cancel();
 		
 		// Get the player object associated with the player that selected these cards.
-		Player setPlayer = getSetCaller();
+		PlayerData setPlayer = getSetCaller();
 		
 		List<Card> selectedCards = cardTable.getSelectedCards();
 		isLastSetCorrect = checkForSet(selectedCards);
@@ -460,10 +460,10 @@ public class GameModel extends Observable
 		// Now do the players.
 		Element playersElement = documentFactory.createElement("players");
 		
-		Iterator<Player> iterator = getPlayers().iterator();
+		Iterator<PlayerData> iterator = getPlayers().iterator();
 		while(iterator.hasNext())
 		{
-			Player player = iterator.next();
+			PlayerData player = iterator.next();
 			playersElement.add(player.getXMLRepresentation());
 		}
 		root.add(playersElement);

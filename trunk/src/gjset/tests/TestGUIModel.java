@@ -11,7 +11,7 @@ import gjset.GameConstants;
 import gjset.client.ClientGUIModel;
 import gjset.data.Card;
 import gjset.data.CardTableData;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 
 import java.net.URL;
 import java.util.List;
@@ -91,7 +91,7 @@ public class TestGUIModel
 	public void testBasicModelUpdate()
 	{	
 		ClientGUIModel model = new ClientGUIModel();
-		model.setLocalPlayer(new Player(1, "Player"));
+		model.setLocalPlayer(new PlayerData(1, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
@@ -133,7 +133,7 @@ public class TestGUIModel
 	public void testCardTable()
 	{
 		ClientGUIModel model = new ClientGUIModel();
-		model.setLocalPlayer(new Player(1, "Player"));
+		model.setLocalPlayer(new PlayerData(1, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
@@ -171,14 +171,14 @@ public class TestGUIModel
 	public void testPlayerData()
 	{
 		ClientGUIModel model = new ClientGUIModel();
-		model.setLocalPlayer(new Player(2, "Player"));
+		model.setLocalPlayer(new PlayerData(2, "Player"));
 		
 		Element gameupdateElement = loadBasicUpdate();
 		
 		model.update(gameupdateElement);
 		
 		// Get the list of players from the model.
-		List<Player> players = model.getPlayers();
+		List<PlayerData> players = model.getPlayers();
 		
 		assertNotNull(players);
 		
@@ -186,14 +186,14 @@ public class TestGUIModel
 		assertEquals(3, players.size());
 		
 		// Then make sure the players are correct.
-		Player player1 = players.get(0);
+		PlayerData player1 = players.get(0);
 		
 		assertEquals("Player 1", player1.getName());
 		assertEquals(12, player1.getPoints());
 		assertEquals(6, player1.getPenalty());
 		assertEquals(6, player1.getScore());
 		
-		Player player3 = players.get(2);
+		PlayerData player3 = players.get(2);
 		
 		assertEquals("Player 3", player3.getName());
 		assertEquals(0, player3.getPoints());

@@ -1,9 +1,8 @@
-package gjset.client.gui;
+package gjset.client.gui.pages;
 
 import gjset.client.ClientGUIController;
-import gjset.data.Player;
-import gjset.gui.LaunchPage;
-import gjset.gui.MainFrame;
+import gjset.client.gui.MainFrame;
+import gjset.data.PlayerData;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.FancyLabel;
@@ -188,11 +187,11 @@ public class ScorePage extends Page
 		
 		// Now add the players.
 		int topY = nameLabel.getY() + nameLabel.getHeight();
-		List<Player> players = controller.getModel().getPlayers();
+		List<PlayerData> players = controller.getModel().getPlayers();
 		for(int i = 0; i < players.size(); i++)
 		{
 			int yPos = topY + i * (28 + BUFFER);
-			Player player = players.get(i);
+			PlayerData player = players.get(i);
 			
 			// Add the name field.
 			TextField nameField = createTextField(player.getName(), nameLabel.getWidth());

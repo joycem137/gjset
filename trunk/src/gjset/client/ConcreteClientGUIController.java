@@ -2,7 +2,7 @@ package gjset.client;
 
 import gjset.GameConstants;
 import gjset.data.Card;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 import gjset.tools.MessageHandler;
 
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public class ConcreteClientGUIController implements ClientGUIController, Message
 	 * @param client The client for communicating with the server.
 	 * @param localPlayer the Player object that represents the local player.
 	 */
-	public ConcreteClientGUIController(ClientCommunicator client, Player localPlayer)
+	public ConcreteClientGUIController(ClientCommunicator client, PlayerData localPlayer)
 	{
 		documentFactory = DocumentFactory.getInstance();
 		model = new ClientGUIModel();

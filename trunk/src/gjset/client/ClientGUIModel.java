@@ -2,7 +2,7 @@ package gjset.client;
 
 import gjset.GameConstants;
 import gjset.data.CardTableData;
-import gjset.data.Player;
+import gjset.data.PlayerData;
 
 import java.util.Iterator;
 import java.util.List;
@@ -48,8 +48,8 @@ public class ClientGUIModel extends Observable
 	private int setCallerId;
 	private int gameState;
 	private int deckSize;
-	private List<Player> players;
-	private Player localPlayer;
+	private List<PlayerData> players;
+	private PlayerData localPlayer;
 	
 	private CardTableData cardTableData;
 	
@@ -99,7 +99,7 @@ public class ClientGUIModel extends Observable
 	 *
 	 * @return
 	 */
-	public Player getLocalPlayer()
+	public PlayerData getLocalPlayer()
 	{
 		return localPlayer;
 	}
@@ -109,7 +109,7 @@ public class ClientGUIModel extends Observable
 	 *
 	 * @param player
 	 */
-	public void setLocalPlayer(Player player)
+	public void setLocalPlayer(PlayerData player)
 	{
 		this.localPlayer = player;
 	}
@@ -139,7 +139,7 @@ public class ClientGUIModel extends Observable
 	 *
 	 * @return
 	 */
-	public List<Player> getPlayers()
+	public List<PlayerData> getPlayers()
 	{
 		return players;
 	}
@@ -197,13 +197,13 @@ public class ClientGUIModel extends Observable
 	public void update(Element modelElement)
 	{
 		// Get the players.
-		players = new Vector<Player>();
+		players = new Vector<PlayerData>();
 		Element playersElement = modelElement.element("players");
 		Iterator iterator = playersElement.elements("player").iterator();
 		while(iterator.hasNext())
 		{
 			Element playerElement = (Element)iterator.next();
-			Player newPlayer = new Player(playerElement);
+			PlayerData newPlayer = new PlayerData(playerElement);
 			
 			players.add(newPlayer);
 			

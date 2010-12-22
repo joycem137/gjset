@@ -13,9 +13,9 @@ import gjset.client.ConcreteClientGUIController;
 import gjset.client.GameInitiationHandler;
 import gjset.client.GameInitiator;
 import gjset.data.CardTableData;
-import gjset.server.GameModel;
 import gjset.server.GameServer;
-import gjset.server.ServerGameController;
+import gjset.server.ServerController;
+import gjset.server.game.GameModel;
 
 import org.dom4j.Element;
 import org.junit.After;
@@ -60,7 +60,7 @@ public class TestServerController
 	private ConcreteClientGUIController clientController;
 	
 	private GameServer server;
-	private ServerGameController serverController;
+	private ServerController serverController;
 
 	private GameInitiator initiator;
 	
@@ -73,7 +73,7 @@ public class TestServerController
 		// Create the server!
 		server = new GameServer(GameConstants.GAME_PORT);
 		
-		serverController = new ServerGameController(server);
+		serverController = new ServerController(server);
 		
 		// Start listening.
 		server.listenForClients();
