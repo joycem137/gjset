@@ -13,13 +13,31 @@
     * *Selected* Username and Password
   # *Selection* Lobby Screen
     * Lobby screen should, minimally, have a list of "tables" that players can sit down at to play
-    * Lobby should also have a chat function to chat with other players in the lobby.
     * Only tables with open seats are seen here.  Other tables are hidden.
   # *Selected* Player selects a table.
     * Information about the table appears, including who is playing, any rules, etc.
     * *Option* Join table
   # *Selected* Join Table -> Table Screen
-    * Table chat
     * *Option* Ready to Play
     * List of players
-  # When all players have selected ready to play, start the game.
+  # *Selected* Ready to play
+    * When all players have done this, the game starts.
+  # *Game Complete* 
+    * Return to the table, not the lobby
+    * Players may start another game.
+
+
+== Other scenarios ==
+
+=== Scenario 1: Disconnection ===
+  # User unintentionally disconnects from an active game.
+  # Table holds a place for the player
+  # User reconnects
+  # User is given the option to reconnect to the game in-progress
+
+== Future Features ==
+  * Lobby and table chat
+  * In game chat
+  * Direct messages
+  * Password protected tables
+  * Email address protected usernames
