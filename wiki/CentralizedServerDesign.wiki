@@ -1,0 +1,25 @@
+= Centralized Server Design =
+
+== Connection Overview ==
+
+  # Application Start
+  # *Selection*: Singleplayer or Multiplayer
+    * *Selected* Multiplayer
+  # *Selection*: New User or Username/password
+    * *Selected* New User
+  # *Data Entry* Username and password
+    * If username is taken, user is prompted to re-enter information.
+  # *Selection*: New User or Username/password
+    * *Selected* Username and Password
+  # *Selection* Lobby Screen
+    * Lobby screen should, minimally, have a list of "tables" that players can sit down at to play
+    * Lobby should also have a chat function to chat with other players in the lobby.
+    * Only tables with open seats are seen here.  Other tables are hidden.
+  # *Selected* Player selects a table.
+    * Information about the table appears, including who is playing, any rules, etc.
+    * *Option* Join table
+  # *Selected* Join Table -> Table Screen
+    * Table chat
+    * *Option* Ready to Play
+    * List of players
+  # When all players have selected ready to play, start the game.
