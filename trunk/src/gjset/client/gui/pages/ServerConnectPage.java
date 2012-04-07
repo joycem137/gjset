@@ -1,9 +1,9 @@
 package gjset.client.gui.pages;
 
-import gjset.GameConstants;
 import gjset.client.gui.MainFrame;
 import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
+import gjset.gui.framework.PasswordField;
 import gjset.gui.framework.TextField;
 
 import java.awt.Rectangle;
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 /* 
  *  LEGAL STUFF
@@ -48,7 +49,7 @@ public class ServerConnectPage extends DialogPage
 {
 	private MainFrame mainFrame;
 	private TextField nameField;
-	private TextField passwordField;
+	private PasswordField passwordField;
 
 	/**
 	 * Construct the page.
@@ -95,7 +96,8 @@ public class ServerConnectPage extends DialogPage
 				if(validFields)
 				{
 					String name = nameField.getText();
-					String password = passwordField.getText();
+					char[] passwordArray = passwordField.getPassword();
+					String password = new String(passwordArray);
 					
 					System.out.println("Received username " + name + " and password " + password);
 				}
@@ -134,17 +136,22 @@ public class ServerConnectPage extends DialogPage
 	{
 		Rectangle usableArea = border.getInnerArea();
 		
-		nameField = addInputFieldAndLabel("Username:", new Rectangle(usableArea.x, 50, usableArea.width, 40));
-		passwordField = addInputFieldAndLabel("Password:", new Rectangle(usableArea.x, 90, usableArea.width, 40));		
+		nameField = new TextField(lnf.getDialogTextFieldStyle());
+		setupField(nameField, "Username:", new Rectangle(usableArea.x, 50, usableArea.width, 40));
+		
+		passwordField = new PasswordField(lnf.getDialogTextFieldStyle());
+		setupField(passwordField, "Password:", new Rectangle(usableArea.x, 90, usableArea.width, 40));
+		passwordField.setEchoChar('*');
+		
 	}
 
 	/**
-	 * Added a button and an associated label.
+	 * Setup the indicated text field with the provided label in front of it.
 	 *
 	 * @param action
 	 * @param string
 	 */
-	private TextField addInputFieldAndLabel(String labelText, Rectangle frame)
+	private void setupField(JTextField field, String labelText, Rectangle frame)
 	{
 		// Create the label for the field.
 		JLabel label = new JLabel(labelText);
@@ -155,9 +162,6 @@ public class ServerConnectPage extends DialogPage
 		
 		add(label);
 		
-		// Create the field itself.
-		TextField field = new TextField(lnf.getDialogTextFieldStyle());
-		
 		field.setFont(lnf.getDialogInputFont());
 		field.setForeground(lnf.getDialogInputTextColor());
 
@@ -165,8 +169,6 @@ public class ServerConnectPage extends DialogPage
 		field.setSize(210, 28);
 		
 		add(field);
-		
-		return field;
 	}
 	
 	/**
