@@ -1,7 +1,13 @@
 package gjset;
 
 import gjset.client.ClientController;
-import gjset.tools.CommandLineParameters;
+import gjset.tools.GlobalProperties;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOError;
+import java.io.IOException;
+import java.util.Properties;
 
 /* 
  *  LEGAL STUFF
@@ -34,10 +40,27 @@ public class ClientMain
 {
 	public static void main(String[] args)
 	{
-		CommandLineParameters.parse(args);
+	    // set up default system properties
+		Properties defaultProps = new Properties();
+		GlobalProperties.loadPropertiesFromFile(defaultProps, "default.properties");
+
+	    // Now get our debug properties, if they exist.
+		Properties debugProps = new Properties(defaultProps);
+		GlobalProperties.loadPropertiesFromFile(debugProps, "debug.properties");
+
+	    // Get any properties set up by the user.
+		Properties userProps = new Properties(debugProps);
+		GlobalProperties.loadPropertiesFromFile(userProps, "user.properties");
 		
-		ClientController controller = new ClientController();
+		// Finally, load any temporary overrides from the commandline.
+		Properties commandLineProps = new Properties(userProps);
+		GlobalProperties.parseCommandLineArgs(args, commandLineProps);
 		
+		// Assign the global properties.
+		GlobalProperties.properties = commandLineProps;
+		
+		// Get this show on the road!
+		ClientController controller = new ClientController();		
 		controller.start();
 	}
 }

@@ -1,5 +1,7 @@
 package gjset.gui.framework;
 
+import gjset.tools.GlobalProperties;
+
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
@@ -43,9 +45,9 @@ public class ResourceManager
 {
 	private static ResourceManager singleton;
 	
-	private static String RESOURCE_DIRECTORY = "resources";
-	
 	private Map<String, Image> map;
+	
+	private String resourcePath;
 	
 	/**
 	 * Returns the resource manager singleton.
@@ -69,6 +71,7 @@ public class ResourceManager
 	private ResourceManager()
 	{
 		map = new HashMap<String, Image>();
+		resourcePath = GlobalProperties.properties.getProperty("path.resources", "resources");
 	}
 	
 	/**
@@ -96,7 +99,7 @@ public class ResourceManager
 	 */
 	private void loadImage(String filename)
 	{
-		String path = "/" + RESOURCE_DIRECTORY + "/" + filename;
+		String path = "/" + resourcePath + "/" + filename;
 		
 		URL imageFile = getClass().getResource(path);
 
