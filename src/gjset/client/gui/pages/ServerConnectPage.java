@@ -5,6 +5,7 @@ import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.PasswordField;
 import gjset.gui.framework.TextField;
+import gjset.tools.CommandLineParameters;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -183,7 +184,7 @@ public class ServerConnectPage extends DialogPage
 		String nameString = nameField.getText();
 		if(nameString == null || nameString == "") return false;
 		
-		String passwordString = passwordField.getText();
+		String passwordString = new String(passwordField.getPassword());
 		if(passwordString == null || passwordString == "") return false;	
 		
 		return true;
