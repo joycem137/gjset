@@ -119,7 +119,7 @@ public class TestServerController
 			server.destroy();
 			client.destroy();
 			if(clientController != null) clientController.destroy();
-			serverController.destroy();
+			serverController.onHide();
 			
 			server = null;
 			client = null;

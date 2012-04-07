@@ -1,9 +1,7 @@
 package gjset;
 
-import gjset.client.gui.MainFrame;
+import gjset.client.ClientController;
 import gjset.tools.CommandLineParameters;
-
-import javax.swing.SwingUtilities;
 
 /* 
  *  LEGAL STUFF
@@ -38,15 +36,8 @@ public class ClientMain
 	{
 		CommandLineParameters.parse(args);
 		
-		System.out.println("Using server hostname: " + CommandLineParameters.get("server") + ":" + CommandLineParameters.get("port"));  
+		ClientController controller = new ClientController();
 		
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				new MainFrame();
-			}
-		});
+		controller.start();
 	}
-
 }

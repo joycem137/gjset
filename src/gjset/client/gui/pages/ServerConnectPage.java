@@ -1,11 +1,10 @@
 package gjset.client.gui.pages;
 
-import gjset.client.gui.MainFrame;
+import gjset.client.ClientController;
 import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
 import gjset.gui.framework.PasswordField;
 import gjset.gui.framework.TextField;
-import gjset.tools.CommandLineParameters;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -48,20 +47,17 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class ServerConnectPage extends DialogPage
 {
-	private MainFrame mainFrame;
 	private TextField nameField;
 	private PasswordField passwordField;
 
 	/**
 	 * Construct the page.
 	 *
-	 * @param mainFrame
+	 * @param controller
 	 */
-	public ServerConnectPage(MainFrame mainFrame)
+	public ServerConnectPage(ClientController controller)
 	{
-		super();
-		
-		this.mainFrame = mainFrame;
+		super(controller);
 		
 		title.setText("Enter username and Password");
 		
@@ -83,8 +79,7 @@ public class ServerConnectPage extends DialogPage
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				LaunchPage page = new LaunchPage(mainFrame);
-				mainFrame.loadPage(page);
+				controller.backAPage();
 			}
 		};
 		Button backButton = createButton(goBackAction, horizInset, buttonY);
@@ -100,7 +95,7 @@ public class ServerConnectPage extends DialogPage
 					char[] passwordArray = passwordField.getPassword();
 					String password = new String(passwordArray);
 					
-					System.out.println("Received username " + name + " and password " + password);
+					controller.attemptLogin(name, password);
 				}
 			}
 		};

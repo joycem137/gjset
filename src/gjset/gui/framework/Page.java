@@ -1,5 +1,7 @@
 package gjset.gui.framework;
 
+import gjset.client.ClientController;
+
 import javax.swing.JPanel;
 
 /* 
@@ -36,10 +38,13 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public abstract class Page extends JPanel
 {
+	protected ClientController controller;
 	
-	public Page()
+	public Page(ClientController controller)
 	{
 		super();
+		
+		this.controller = controller;
 		
 		// Turn off the automatic layout system.
 		setLayout(null);
@@ -59,7 +64,7 @@ public abstract class Page extends JPanel
 	 * it may have created.
 	 *
 	 */
-	public void destroy()
+	public void onHide()
 	{
 	}
 }

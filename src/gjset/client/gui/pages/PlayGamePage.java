@@ -147,9 +147,9 @@ public class PlayGamePage extends Page implements Observer
 	 * 
 	 * Destroy this page.
 	 *
-	 * @see gjset.gui.framework.Page#destroy()
+	 * @see gjset.gui.framework.Page#onHide()
 	 */
-	public void destroy()
+	public void onHide()
 	{
 		ClientGUIModel model = controller.getModel();
 		model.deleteObserver(this);

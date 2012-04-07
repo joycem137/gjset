@@ -1,5 +1,6 @@
 package gjset.gui;
 
+import gjset.client.ClientController;
 import gjset.client.gui.MainFrame;
 import gjset.gui.framework.Border;
 import gjset.gui.framework.FancyLabel;
@@ -56,9 +57,9 @@ public abstract class DialogPage extends Page
 	 * it.
 	 *
 	 */
-	public DialogPage()
+	public DialogPage(ClientController controller)
 	{
-		super();
+		super(controller);
 		
 		lnf = SimpleLookAndFeel.getLookAndFeel();
 		

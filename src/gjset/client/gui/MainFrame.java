@@ -1,6 +1,5 @@
 package gjset.client.gui;
 
-import gjset.client.gui.pages.LaunchPage;
 import gjset.gui.GeneralKeyStrokeFactory;
 import gjset.gui.KeyStrokeFactory;
 import gjset.gui.MacKeyStrokeFactory;
@@ -11,6 +10,7 @@ import gjset.gui.framework.SimpleImagePanel;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.Stack;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -54,6 +54,8 @@ public class MainFrame extends JFrame
 	private KeyStrokeFactory keyStrokeFactory;
 	
 	private JPanel rootPanel;
+	
+	private Stack<Page> pageHistory;
 	private Page currentPage;
 	
 	public static final Rectangle PLAYING_FIELD_AREA = new Rectangle(14, 14, 996, 524);
@@ -63,12 +65,12 @@ public class MainFrame extends JFrame
 	public MainFrame()
 	{
 		super("Combo Cards!");
+		
+		pageHistory = new Stack<Page>();	
 
 		setOSVersion();
 
 		createGUI();
-		
-		loadFirstPage();
 	}
 
 	public void loadPage(Page page)
@@ -76,8 +78,12 @@ public class MainFrame extends JFrame
 		// Destroy the old page, if there was one.
 		if(currentPage != null)
 		{
+			// Push the page onto the stack.
+			pageHistory.push(currentPage);
+			
+			// Now destroy the old page.
 			rootPanel.remove(currentPage);
-			currentPage.destroy();
+			currentPage.onHide();
 		}
 		
 		//Load the new page.
@@ -87,6 +93,17 @@ public class MainFrame extends JFrame
 		rootPanel.revalidate();
 		page.onShow();
 		repaint();
+	}
+
+	/**
+	 * Return to the previous page.
+	 *
+	 */
+	public void backAPage()
+	{
+		if(!pageHistory.empty()) {
+			loadPage(pageHistory.pop());
+		}
 	}
 
 	/**
@@ -138,29 +155,5 @@ public class MainFrame extends JFrame
 		// Finish constructing the window.
 		setVisible(true);
 	}
-	
-	/**
-	 * Loads the first page.
-	 *
-	 */
-	private void loadFirstPage()
-	{
-		loadPage(new LaunchPage(this));
-	}
-	
-	/*
-	 * This is used to show the various areas of the screen for positioning. 
-	 * 
-	public void paint(Graphics g)
-	{
-		Image backgroundImage = ResourceManager.getInstance().getImage("window_main.png");
-		g.drawImage(backgroundImage, 0, 0, this);
-		
-		Graphics2D g2 = (Graphics2D)g;
-		
-		g2.setColor(new Color(255, 0, 0, 120));
-		g2.fill(CONTROL_PANEL_AREA);
-	}
-	*/
 	
 }
