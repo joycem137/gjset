@@ -1,17 +1,8 @@
 package gjset.client.gui.pages;
 
-import gjset.GameConstants;
-import gjset.client.ClientGUIController;
-import gjset.client.ConcreteClientCommunicator;
-import gjset.client.GameInitiationHandler;
-import gjset.client.GameInitiator;
 import gjset.client.gui.MainFrame;
 import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
-import gjset.server.GameServer;
-import gjset.server.ServerController;
-import gjset.server.gui.CommandLineConsole;
-import gjset.server.gui.ServerConsole;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -67,7 +58,7 @@ public class LaunchPage extends DialogPage
 		
 		this.mainFrame = mainframe;
 		
-		title.setText("New Game");
+		title.setText("Main Menu");
 		
 		createButtons();
 	}
@@ -80,56 +71,59 @@ public class LaunchPage extends DialogPage
 	{	
 		Rectangle usableArea = border.getInnerArea();
 		
-		addButtonAndLabel(new AbstractAction("Play Alone")
+		addButtonAndLabel(new AbstractAction("Single Player")
 		{
 			public void actionPerformed(ActionEvent e)
-			{	
+			{
+				// TODO: Fix this. Currently, our server doesn't work, so this won't work.
+				System.out.println("The local game server doesn't currently work.");
+				
 				// First create the server.
-				ServerConsole console = new CommandLineConsole();
-				GameServer server = new GameServer(GameConstants.GAME_PORT, console);
-				new ServerController(server, console);
-				server.listenForClients();
-				
-				// Set up the communicator to talk to the server through.
-				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
-				
-				// Request a game to be initiated with the username "Player"
-				GameInitiator initiator = new GameInitiator(client, "Score", new GameInitiationHandler()
-				{
-					public void onGameInitiated(ClientGUIController controller)
-					{
-						// First load the new page. 
-						PlayGamePage page = new PlayGamePage(controller, mainFrame);
-						mainFrame.loadPage(page);
-					}
-
-					public void onConnectionFailure(String failureReason)
-					{
-						MessagePage page = new MessagePage(mainFrame, "Could not start game");
-						page.setMessage(failureReason);
-						page.setDestination(new LaunchPage(mainFrame));
-						mainFrame.loadPage(page);
-						System.exit(-1);
-					}
-				});
-				
-				// Initiate the game.
-				initiator.initiateGame();
-
-				// Tell the initiator to start the game as soon as everything is ready.
-				initiator.indicateReadyToStart();
+//				ServerConsole console = new CommandLineConsole();
+//				GameServer server = new GameServer(GameConstants.GAME_PORT, console);
+//				new ServerController(server, console);
+//				server.listenForClients();
+//				
+//				// Set up the communicator to talk to the server through.
+//				ConcreteClientCommunicator client = new ConcreteClientCommunicator("127.0.0.1", GameConstants.GAME_PORT);
+//				
+//				// Request a game to be initiated with the username "Player"
+//				GameInitiator initiator = new GameInitiator(client, "Score", new GameInitiationHandler()
+//				{
+//					public void onGameInitiated(ClientGUIController controller)
+//					{
+//						// First load the new page. 
+//						PlayGamePage page = new PlayGamePage(controller, mainFrame);
+//						mainFrame.loadPage(page);
+//					}
+//
+//					public void onConnectionFailure(String failureReason)
+//					{
+//						MessagePage page = new MessagePage(mainFrame, "Could not start game");
+//						page.setMessage(failureReason);
+//						page.setDestination(new LaunchPage(mainFrame));
+//						mainFrame.loadPage(page);
+//						System.exit(-1);
+//					}
+//				});
+//				
+//				// Initiate the game.
+//				initiator.initiateGame();
+//
+//				// Tell the initiator to start the game as soon as everything is ready.
+//				initiator.indicateReadyToStart();
 			}
-		}, new Rectangle(usableArea.x, 50, usableArea.width, 40));
+		}, new Rectangle(usableArea.x, 70, usableArea.width, 40));
 		
-		addButtonAndLabel(new AbstractAction("Play Multiplayer on the Internet")
+		addButtonAndLabel(new AbstractAction("Multiplayer")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				// Switch to the join a game page.
-				JoinAGamePage page = new JoinAGamePage(mainFrame);
+				ServerConnectPage page = new ServerConnectPage(mainFrame);
 				mainFrame.loadPage(page);
 			}
-		}, new Rectangle(usableArea.x, 100, usableArea.width, 40));
+		}, new Rectangle(usableArea.x, 120, usableArea.width, 40));
 	}
 
 	/**
