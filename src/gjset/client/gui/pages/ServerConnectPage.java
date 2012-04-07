@@ -41,28 +41,27 @@ import javax.swing.JLabel;
  */
 
 /**
- * Provides the user with a list of options with which to join a game.
+ * Asks for the username and password of the user to enter into the server.
  */
 @SuppressWarnings("serial")
-public class JoinAGamePage extends DialogPage
+public class ServerConnectPage extends DialogPage
 {
 	private MainFrame mainFrame;
 	private TextField nameField;
-	private TextField ipField;
-	private TextField portField;
+	private TextField passwordField;
 
 	/**
 	 * Construct the page.
 	 *
 	 * @param mainFrame
 	 */
-	public JoinAGamePage(MainFrame mainFrame)
+	public ServerConnectPage(MainFrame mainFrame)
 	{
 		super();
 		
 		this.mainFrame = mainFrame;
 		
-		title.setText("Join A Game");
+		title.setText("Enter username and Password");
 		
 		createInputFields();
 		createButtons();
@@ -88,7 +87,7 @@ public class JoinAGamePage extends DialogPage
 		};
 		Button backButton = createButton(goBackAction, horizInset, buttonY);
 		
-		Action hostAction = new AbstractAction("Join Game")
+		Action hostAction = new AbstractAction("Log In")
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -96,11 +95,9 @@ public class JoinAGamePage extends DialogPage
 				if(validFields)
 				{
 					String name = nameField.getText();
-					String ip = ipField.getText();
-					int port = Integer.parseInt(portField.getText());
+					String password = passwordField.getText();
 					
-					LobbyPage page = new LobbyPage(name, ip, port, mainFrame);
-					mainFrame.loadPage(page);
+					System.out.println("Received username " + name + " and password " + password);
 				}
 			}
 		};
@@ -137,15 +134,8 @@ public class JoinAGamePage extends DialogPage
 	{
 		Rectangle usableArea = border.getInnerArea();
 		
-		nameField = addInputFieldAndLabel("Player Name:", new Rectangle(usableArea.x, 50, usableArea.width, 40));
-		ipField = addInputFieldAndLabel("Server Address:", new Rectangle(usableArea.x, 90, usableArea.width, 40));
-		portField = addInputFieldAndLabel("Server Port:", new Rectangle(usableArea.x, 130, usableArea.width, 40));
-		
-		portField.setText("" + GameConstants.GAME_PORT);
-		
-		int randomNumber = (int) Math.ceil(Math.random() * 1000);
-		
-		nameField.setText("Anonymous " + randomNumber);
+		nameField = addInputFieldAndLabel("Username:", new Rectangle(usableArea.x, 50, usableArea.width, 40));
+		passwordField = addInputFieldAndLabel("Password:", new Rectangle(usableArea.x, 90, usableArea.width, 40));		
 	}
 
 	/**
@@ -189,30 +179,10 @@ public class JoinAGamePage extends DialogPage
 	{
 		// Fail on an empty name field.
 		String nameString = nameField.getText();
-		if(nameString == null) return false;
+		if(nameString == null || nameString == "") return false;
 		
-		String portString = portField.getText();
-		
-		// Fail on empty hostname
-		String ipString = ipField.getText();
-		if(ipString == null) return false;
-		
-		// Fail on empty port field.
-		if(portString == null) return false;
-		
-		int port = 0;
-		try
-		{
-			port = Integer.parseInt(portString);
-		}
-		catch(NumberFormatException nfe)
-		{
-			// Fail on a bad parse.
-			return false;
-		}
-		
-		// Fail on an invalid port;
-		if(port < 0) return false;
+		String passwordString = passwordField.getText();
+		if(passwordString == null || passwordString == "") return false;	
 		
 		return true;
 	}
