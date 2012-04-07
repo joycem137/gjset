@@ -193,9 +193,9 @@ public class GameController implements Observer
 		if(client.getPlayerId() == 1)
 		{
 			// Shut down the whole bloody server.
-			server.destroy();
+			server.onHide();
 			model.destroy();
-			destroy();
+			onHide();
 		}
 		else
 		{

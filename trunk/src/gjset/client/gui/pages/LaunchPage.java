@@ -1,5 +1,6 @@
 package gjset.client.gui.pages;
 
+import gjset.client.ClientController;
 import gjset.client.gui.MainFrame;
 import gjset.gui.DialogPage;
 import gjset.gui.framework.Button;
@@ -44,19 +45,16 @@ import javax.swing.JLabel;
 @SuppressWarnings("serial")
 public class LaunchPage extends DialogPage
 {
-	private MainFrame	mainFrame;
 
 	/**
 	 * This creates a LaunchPage with a link back to the parent {@link MainFrame} that created
 	 * it.
 	 *
-	 * @param mainFrame - The parent frame of this object.
+	 * @param controller - The parent frame of this object.
 	 */
-	public LaunchPage(MainFrame mainframe)
+	public LaunchPage(ClientController controller)
 	{
-		super();
-		
-		this.mainFrame = mainframe;
+		super(controller);
 		
 		title.setText("Main Menu");
 		
@@ -119,9 +117,7 @@ public class LaunchPage extends DialogPage
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// Switch to the join a game page.
-				ServerConnectPage page = new ServerConnectPage(mainFrame);
-				mainFrame.loadPage(page);
+				controller.launchMultiplayerGame();
 			}
 		}, new Rectangle(usableArea.x, 120, usableArea.width, 40));
 	}

@@ -485,7 +485,7 @@ public class ServerGameController implements ServerMessageHandler, Observer
 		{
 			// Shut down the whole bloody server.
 			server.destroy();
-			model.destroy();
+			model.onHide();
 			destroy();
 		}
 		else

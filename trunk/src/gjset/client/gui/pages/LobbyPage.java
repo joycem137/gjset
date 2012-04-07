@@ -156,9 +156,9 @@ public class LobbyPage extends DialogPage implements MessageHandler
 	 * 
 	 * Destroy this page and everything connected with it.
 	 *
-	 * @see gjset.gui.framework.Page#destroy()
+	 * @see gjset.gui.framework.Page#onHide()
 	 */
-	public void destroy()
+	public void onHide()
 	{
 		client.removeMessageHandler(this);
 		
