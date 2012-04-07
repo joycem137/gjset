@@ -1,6 +1,7 @@
 package gjset;
 
 import gjset.client.gui.MainFrame;
+import gjset.tools.CommandLineParameters;
 
 import javax.swing.SwingUtilities;
 
@@ -35,6 +36,10 @@ public class ClientMain
 {
 	public static void main(String[] args)
 	{
+		CommandLineParameters.parse(args);
+		
+		System.out.println("Using server hostname: " + CommandLineParameters.get("server") + ":" + CommandLineParameters.get("port"));  
+		
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
