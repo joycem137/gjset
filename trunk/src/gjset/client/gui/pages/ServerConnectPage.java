@@ -73,24 +73,28 @@ public class ServerConnectPage extends DialogPage
 	{
 		Rectangle usableArea = border.getInnerArea();
 		int buttonY = 170;
-		int horizInset = 50;
+		int horizInset = 10;
+		int border = 10;
 		
-		Action goBackAction = new AbstractAction("Back")
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		Action goBackAction = new AbstractAction("Back") {
+			public void actionPerformed(ActionEvent e) {
 				controller.backAPage();
 			}
 		};
-		Button backButton = createButton(goBackAction, horizInset, buttonY);
+		Button backButton = createButton(goBackAction, usableArea.x + horizInset, buttonY);
 		
-		Action hostAction = new AbstractAction("Log In")
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		Action newUserAction = new AbstractAction("Create Account") {
+			public void actionPerformed(ActionEvent e) {
+				controller.createAccount();
+			}
+		};
+		
+		Button newUserButton = createButton(newUserAction, backButton.getX() + backButton.getWidth() + border, buttonY);
+		
+		Action loginAction = new AbstractAction("Log In") {
+			public void actionPerformed(ActionEvent e) {
 				boolean validFields = validateFields();
-				if(validFields)
-				{
+				if(validFields) {
 					String name = nameField.getText();
 					char[] passwordArray = passwordField.getPassword();
 					String password = new String(passwordArray);
@@ -100,7 +104,7 @@ public class ServerConnectPage extends DialogPage
 			}
 		};
 		
-		createButton(hostAction, usableArea.x + usableArea.width - horizInset - backButton.getWidth() + 10, buttonY);
+		createButton(loginAction, newUserButton.getX() + newUserButton.getWidth() + border, buttonY);
 	}
 
 	/**
@@ -184,5 +188,4 @@ public class ServerConnectPage extends DialogPage
 		
 		return true;
 	}
-	
 }

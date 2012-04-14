@@ -43,6 +43,9 @@ public class ClientController
 	private LaunchPage launchPage;
 	private ServerConnectPage userLoginPage;
 	
+	private ConcreteClientCommunicator communicator;
+	private ConnectionInitializer connectionInitializer;
+	
 	public ClientController() {	
 		mainFrame = new MainFrame();
 		
@@ -77,6 +80,10 @@ public class ClientController
 	 */
 	public void launchMultiplayerGame()
 	{
+		communicator = new ConcreteClientCommunicator();
+		connectionInitializer = new ConnectionInitializer(communicator);
+		connectionInitializer.connectToServer();
+		
 		// Switch to the join a game page.
 		mainFrame.loadPage(userLoginPage);
 	}
@@ -89,7 +96,17 @@ public class ClientController
 	 */
 	public void attemptLogin(String name, String password)
 	{
-		System.out.println("Received username " + name + " and password " + password);
+		connectionInitializer.authenticateUser(name, password);
+		
+		// TODO: Go to a connecting... page.
+	}
+
+	/**
+	 * Create a new user account
+	 *
+	 */
+	public void createAccount() {
+		// TODO: Go to a page to select a username and password.		
 	}
 
 	/**
