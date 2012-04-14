@@ -1,5 +1,6 @@
 package gjset.client;
 
+import gjset.tools.GlobalProperties;
 import gjset.tools.MessageHandler;
 import gjset.tools.MessageUtils;
 
@@ -17,7 +18,6 @@ import java.util.Vector;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
@@ -78,18 +78,15 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 
 	private SAXReader XMLreader;
 
+	private int connectionTimeout;
+
 	/**
 	 * Blank constructor to assert that nothing is done on object instantiation.
 	 *
-	 * @param hostname A {@link String} containing the IP Address or hostname of the server.
-	 * @param port An <code>int</code> containing the port number of the server to connect to.
 	 */
-	public ConcreteClientCommunicator(String hostname, int port)
+	public ConcreteClientCommunicator()
 	{
-		//Create our address to connect to.
-		socketAddress = new InetSocketAddress(hostname, port);
-		
-		DocumentFactory.getInstance();
+		connectionTimeout = Integer.parseInt(GlobalProperties.properties.getProperty("server.timeout.connect", "5000"));
 		
 		handlers = new Vector<MessageHandler>();
 	}
@@ -138,14 +135,17 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
 	 * @throws IOException 
 	 */
-	public void connectToServer() throws IOException
+	public void connectToServer(String serverAddress, int port) throws IOException
 	{
-		System.out.println("Starting client");
+		System.out.println("Connecting to server " + serverAddress + ":" + port);
+		
+		//Create our address to connect to.
+		socketAddress = new InetSocketAddress(serverAddress, port);
 		
 		socket = new Socket();
 		
 		//Attempt to connect to the server.
-		socket.connect(socketAddress, 5000);
+		socket.connect(socketAddress, connectionTimeout);
 		
 		//Get our I/O streams squared away once we're connected.
 		createIOStreams();

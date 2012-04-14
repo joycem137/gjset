@@ -71,6 +71,6 @@ public interface ClientCommunicator
 	 * @throws IOException 
 	 *
 	 */
-	public abstract void connectToServer() throws IOException;
+	public abstract void connectToServer(String server, int port) throws IOException;
 
 }
