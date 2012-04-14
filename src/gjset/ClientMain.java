@@ -3,10 +3,6 @@ package gjset;
 import gjset.client.ClientController;
 import gjset.tools.GlobalProperties;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Properties;
 
 /* 
