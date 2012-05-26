@@ -1,5 +1,6 @@
 package gjset.client;
 
+import gjset.client.exceptions.FailedConnectionException;
 import gjset.tools.GlobalProperties;
 import gjset.tools.MessageHandler;
 import gjset.tools.MessageUtils;
@@ -12,8 +13,10 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import org.dom4j.Document;
@@ -79,18 +82,33 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	private SAXReader XMLreader;
 
 	private int connectionTimeout;
+	private int connectionAttempts;
+	private int maxRetries;
+
+	private Thread connectionThread;
+
+	private String serverAddress;
+
+	private int port;
 
 	/**
 	 * Blank constructor to assert that nothing is done on object instantiation.
 	 *
 	 */
 	public ConcreteClientCommunicator()
-	{
-		connectionTimeout = Integer.parseInt(GlobalProperties.properties.getProperty("server.timeout.connect", "5000"));
+	{		
+		// Extract properties from the properties table.
+		Properties props = GlobalProperties.properties;
+		
+		connectionTimeout = Integer.parseInt(props.getProperty("server.timeout.connect", "5000"));		
+		maxRetries = Integer.parseInt(props.getProperty("communications.maxReconnectAttempts", "5"));
 		
 		handlers = new Vector<MessageHandler>();
-	}
-	
+		
+		createListeningThread();
+		createConnectionThread();
+	}	
+
 	/**
 	 * Adds a message handler to the communicator.
 	 *
@@ -133,25 +151,18 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	 * Establishes a connection to the game server using the given hostname and port.
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
-	 * @throws IOException 
 	 */
-	public void connectToServer(String serverAddress, int port) throws IOException
+	public void connectToServer(String serverAddress, int port)
 	{
-		System.out.println("Connecting to server " + serverAddress + ":" + port);
+		if(connectionThread.isAlive() || listeningThread.isAlive()) {
+			System.out.println("Already attempting to connect to server.");
+			return;
+		}
 		
-		//Create our address to connect to.
-		socketAddress = new InetSocketAddress(serverAddress, port);
+		this.serverAddress = serverAddress;
+		this.port = port;
 		
-		socket = new Socket();
-		
-		//Attempt to connect to the server.
-		socket.connect(socketAddress, connectionTimeout);
-		
-		//Get our I/O streams squared away once we're connected.
-		createIOStreams();
-		
-		// And then start listening
-		listeningThread.start();
+		connectionThread.start();
 	}
 
 	/**
@@ -186,9 +197,72 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		{
 			socket.close();
 			listeningThread.interrupt();
+			connectionThread.interrupt();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Private method that attempts to establish a connection on the socket.
+	 * 
+	 * This assumes that the socket has already been created and initialized.
+	 *
+	 */
+	private void tryToConnect() {
+		connectionAttempts++;
+		
+		System.out.println("Making connection attempt # " + connectionAttempts);
+		
+		//Attempt to connect to the server.
+		try{			
+			socket = new Socket();
+			socket.connect(socketAddress, connectionTimeout);
+		} catch(SocketTimeoutException ste) {
+			System.err.println("Failed to connect to server in time.");
+			ste.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();			
+		} finally {
+			// Based on the state of the socket, decide what to do.
+			if(socket.isConnected()) {
+				// Hooray! We're conencted!
+				handleSuccessfulConnection();
+			} else if (connectionAttempts <= maxRetries) {
+				// Boo. Something went wrong.  Try again.
+				tryToConnect();
+			} else {
+				// Boooooo. Something is really wrong. We're not going to connect.
+				System.err.println("Connection failed.");
+				
+				handleConnectionError(new FailedConnectionException());				
+			}
+		}
+	}
+
+
+	/**
+	 * This method is called when we have a successful connection.
+	 *
+	 */
+	private void handleSuccessfulConnection() {
+
+		System.out.println("Connection successful");
+		
+		//Get our I/O streams squared away once we're connected.
+		try {
+			createIOStreams();
+		} catch (IOException e) {
+			System.err.println("Something crazy happened. I thought we were connected, but we weren't. Oh well.");
+			e.printStackTrace();
+			handleConnectionError(new FailedConnectionException());
+		}
+		
+		// If we successfully connected, start the listening thread.
+		if(reader != null) {
+			listeningThread.start();
+			connectionThread = null;
 		}
 	}
 
@@ -213,7 +287,13 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		
 		XMLreader = new SAXReader();
-		
+	}
+	
+	/**
+	 * Creates the thread the listens to the socket.
+	 *
+	 */
+	private void createListeningThread() {		
 		Runnable listenForMessage = new Runnable()
 		{
 			public void run()
@@ -227,7 +307,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 						InputStream stringInput = new ByteArrayInputStream(textReceived.getBytes());
 						Document document = XMLreader.read(stringInput);
 						
-						// Now receive teh message.
+						// Now receive the message.
 						receiveMessage(document.getRootElement());
 						
 						// Then go looking for the next message.
@@ -243,8 +323,29 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 					handleConnectionError(e);
 				}	
 			}
+		};		
+
+		listeningThread = new Thread(listenForMessage, "Client Listening Thread");
+	}
+
+	/**
+	 * Create the thread the connects to the server.
+	 *
+	 */
+	private void createConnectionThread() {		
+		Runnable beginConnecting = new Runnable() {
+			public void run() {
+				System.out.println("Initializing socket to connect to " + serverAddress + ":" + port);
+				
+				//Create our address to connect to.
+				socketAddress = new InetSocketAddress(serverAddress, port);
+				
+				connectionAttempts = 0;
+				
+				tryToConnect();
+			}
 		};
 		
-		listeningThread = new Thread(listenForMessage, "Client Listening Thread");
+		connectionThread = new Thread(beginConnecting, "Client Connection Thread");
 	}
 }
