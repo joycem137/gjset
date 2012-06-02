@@ -55,22 +55,22 @@ import org.dom4j.io.XMLWriter;
 /**
  * This class handles all communication between the client and the server.
  * <P>
- * When the {@link #connectToServer} method is called, this class opens a TCP/IP connection to a TCP/IP server hosting the game engine.
- * Subsequent UI actions on the part of the user will be transmitted to the engine through this class.
+ * When the {@link #connectToServer} method is called, this class opens a TCP/IP connection to a TCP/IP server hosting the game engine. Subsequent UI actions on
+ * the part of the user will be transmitted to the engine through this class.
  * <P>
- * This class also provides support for handling incoming messages from the engine to the UI, forwarding all incoming messages to the
- * linked {@link ClientGUIController} object.
+ * This class also provides support for handling incoming messages from the engine to the UI, forwarding all incoming messages to the linked
+ * {@link ClientGUIController} object.
  * 
  */
 public class ConcreteClientCommunicator implements ClientCommunicator
 {
-	//Stores all message handlers.
+	// Stores all message handlers.
 	private List<MessageHandler> handlers;
-	
-	//Stores the socket to connect to the server.
-	private Socket	socket;
-	
-	//Tools to read/write to the socket's I/O stream
+
+	// Stores the socket to connect to the server.
+	private Socket socket;
+
+	// Tools to read/write to the socket's I/O stream
 	private XMLWriter writer;
 	private BufferedReader reader;
 
@@ -93,55 +93,51 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 
 	/**
 	 * Blank constructor to assert that nothing is done on object instantiation.
-	 *
+	 * 
 	 */
-	public ConcreteClientCommunicator()
-	{		
+	public ConcreteClientCommunicator() {
 		// Extract properties from the properties table.
 		Properties props = GlobalProperties.properties;
-		
-		connectionTimeout = Integer.parseInt(props.getProperty("server.timeout.connect", "5000"));		
+
+		connectionTimeout = Integer.parseInt(props.getProperty("server.timeout.connect", "5000"));
 		maxRetries = Integer.parseInt(props.getProperty("server.reconnects.max", "5"));
-		
+
 		handlers = new Vector<MessageHandler>();
-		
+
 		createListeningThread();
 		createConnectionThread();
-	}	
+	}
 
 	/**
 	 * Adds a message handler to the communicator.
-	 *
+	 * 
 	 * @param handler
 	 * @see gjset.client.ClientCommunicator#addMessageHandler(gjset.client.ClientGUIController)
 	 */
 	@Override
-	public void addMessageHandler(MessageHandler handler)
-	{
+	public void addMessageHandler(MessageHandler handler) {
 		handlers.add(handler);
 	}
-	
+
 	/**
 	 * Remove the indicated message handler
-	 *
+	 * 
 	 * @param gameInitiator
 	 */
-	public void removeMessageHandler(MessageHandler handler)
-	{
+	public void removeMessageHandler(MessageHandler handler) {
 		handlers.remove(handler);
 	}
 
 	/**
 	 * Receive a message from the server.
-	 *
+	 * 
 	 * @param message
 	 */
-	public void receiveMessage(Element message)
-	{
+	public void receiveMessage(Element message) {
 		// Copy the list so that we can modify the original in the various handlers.
 		List<MessageHandler> listCopy = new Vector<MessageHandler>(handlers);
 		Iterator<MessageHandler> iterator = listCopy.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			iterator.next().handleMessage(message);
 		}
 	}
@@ -151,54 +147,47 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	 * <P>
 	 * This method also kicks off a new listening thread to read incoming messages from the game server.
 	 */
-	public void connectToServer(String serverAddress, int port)
-	{
-		if(connectionThread.isAlive() || listeningThread.isAlive()) {
+	public void connectToServer(String serverAddress, int port) {
+		if (connectionThread.isAlive() || listeningThread.isAlive()) {
 			System.out.println("Already attempting to connect to server.");
 			return;
 		}
-		
+
 		this.serverAddress = serverAddress;
 		this.port = port;
-		
+
 		connectionThread.start();
 	}
 
 	/**
 	 * This command sends the indicated XML to the server, appending the appropriate information.
-	 *
+	 * 
 	 * @param messageElement
-	 * @throws IOException 
+	 * @throws IOException
 	 * @see gjset.client.ClientCommunicator#sendMessage(org.dom4j.tree.DefaultElement)
 	 */
 	@Override
-	public void sendMessage(Element messageElement)
-	{
+	public void sendMessage(Element messageElement) {
 		Element fullXMLElement = MessageUtils.wrapMessage(messageElement);
-		try
-		{
+		try {
 			writer.write(fullXMLElement);
 			writer.write("\n");
 			writer.flush();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			handleConnectionError(e);
 		}
 	}
 
 	/**
 	 * Shut down this client
-	 *
+	 * 
 	 */
-	public void destroy()
-	{
-		try
-		{
+	public void destroy() {
+		try {
 			socket.close();
 			listeningThread.interrupt();
 			connectionThread.interrupt();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -207,49 +196,50 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	 * Private method that attempts to establish a connection on the socket.
 	 * 
 	 * This assumes that the socket has already been created and initialized.
-	 *
+	 * 
 	 */
 	private void tryToConnect() {
 		connectionAttempts++;
-		
+
 		System.out.println("Making connection attempt # " + connectionAttempts + " of " + (maxRetries + 1));
-		
-		//Attempt to connect to the server.
-		try{			
+
+		// Attempt to connect to the server.
+		try {
 			socket = new Socket();
 			socket.connect(socketAddress, connectionTimeout);
-		} catch(SocketTimeoutException ste) {
+		} catch (SocketTimeoutException ste) {
 			System.err.println("Failed to connect to server in time.");
 			ste.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();			
+			e.printStackTrace();
 		} finally {
 			// Based on the state of the socket, decide what to do.
-			if(socket.isConnected()) {
+			if (socket.isConnected()) {
 				// Hooray! We're conencted!
 				handleSuccessfulConnection();
-			} else if (connectionAttempts <= maxRetries) {
-				// Boo. Something went wrong.  Try again.
+			}
+			else if (connectionAttempts <= maxRetries) {
+				// Boo. Something went wrong. Try again.
 				tryToConnect();
-			} else {
+			}
+			else {
 				// Boooooo. Something is really wrong. We're not going to connect.
 				System.err.println("Connection failed.");
-				
-				handleConnectionError(new FailedConnectionException());				
+
+				handleConnectionError(new FailedConnectionException());
 			}
 		}
 	}
 
-
 	/**
 	 * This method is called when we have a successful connection.
-	 *
+	 * 
 	 */
 	private void handleSuccessfulConnection() {
 
 		System.out.println("Connection successful");
-		
-		//Get our I/O streams squared away once we're connected.
+
+		// Get our I/O streams squared away once we're connected.
 		try {
 			createIOStreams();
 		} catch (IOException e) {
@@ -257,9 +247,9 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 			e.printStackTrace();
 			handleConnectionError(new FailedConnectionException());
 		}
-		
+
 		// If we successfully connected, start the listening thread.
-		if(reader != null) {
+		if (reader != null) {
 			listeningThread.start();
 			connectionThread = null;
 		}
@@ -267,84 +257,75 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 
 	/**
 	 * Handle an error from the system.
-	 *
+	 * 
 	 * @param e
 	 */
-	private void handleConnectionError(Exception e)
-	{
+	private void handleConnectionError(Exception e) {
 		Iterator<MessageHandler> iterator = handlers.iterator();
-		while(iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			iterator.next().handleConnectionError(e);
 		}
 	}
 
-	//Used to create the Input/Output stream handling tools for a newly created socket.
-	private void createIOStreams() throws IOException
-	{
+	// Used to create the Input/Output stream handling tools for a newly created socket.
+	private void createIOStreams() throws IOException {
 		writer = new XMLWriter(socket.getOutputStream());
 		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		
+
 		XMLreader = new SAXReader();
 	}
-	
+
 	/**
 	 * Creates the thread the listens to the socket.
-	 *
+	 * 
 	 */
-	private void createListeningThread() {		
-		Runnable listenForMessage = new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
+	private void createListeningThread() {
+		Runnable listenForMessage = new Runnable() {
+			public void run() {
+				try {
 					String textReceived = reader.readLine();
-					while(socket.isConnected() && textReceived != null)
-					{
+					while (socket.isConnected() && textReceived != null) {
 						// Create an input stream to allow the XML parser to read from the string.
 						InputStream stringInput = new ByteArrayInputStream(textReceived.getBytes());
 						Document document = XMLreader.read(stringInput);
-						
+
 						// Now receive the message.
 						receiveMessage(document.getRootElement());
-						
+
 						// Then go looking for the next message.
-						textReceived = reader.readLine();		
+						textReceived = reader.readLine();
 					}
-				} catch (IOException e)
-				{
+				} catch (IOException e) {
 					System.err.println("IO Exception reading input in client. (Possibly because of closed socket.)");
 					handleConnectionError(e);
-				} catch (DocumentException e)
-				{
+				} catch (DocumentException e) {
 					System.err.println("Document Exception parsing text in client.");
 					handleConnectionError(e);
-				}	
+				}
 			}
-		};		
+		};
 
 		listeningThread = new Thread(listenForMessage, "Client Listening Thread");
 	}
 
 	/**
 	 * Create the thread the connects to the server.
-	 *
+	 * 
 	 */
-	private void createConnectionThread() {		
+	private void createConnectionThread() {
 		Runnable beginConnecting = new Runnable() {
 			public void run() {
 				System.out.println("Initializing socket to connect to " + serverAddress + ":" + port);
-				
-				//Create our address to connect to.
+
+				// Create our address to connect to.
 				socketAddress = new InetSocketAddress(serverAddress, port);
-				
+
 				connectionAttempts = 0;
-				
+
 				tryToConnect();
 			}
 		};
-		
+
 		connectionThread = new Thread(beginConnecting, "Client Connection Thread");
 	}
 }
