@@ -101,7 +101,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		Properties props = GlobalProperties.properties;
 		
 		connectionTimeout = Integer.parseInt(props.getProperty("server.timeout.connect", "5000"));		
-		maxRetries = Integer.parseInt(props.getProperty("communications.maxReconnectAttempts", "5"));
+		maxRetries = Integer.parseInt(props.getProperty("server.reconnects.max", "5"));
 		
 		handlers = new Vector<MessageHandler>();
 		
@@ -141,8 +141,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 		// Copy the list so that we can modify the original in the various handlers.
 		List<MessageHandler> listCopy = new Vector<MessageHandler>(handlers);
 		Iterator<MessageHandler> iterator = listCopy.iterator();
-		while(iterator.hasNext())
-		{
+		while(iterator.hasNext()) {
 			iterator.next().handleMessage(message);
 		}
 	}
@@ -213,7 +212,7 @@ public class ConcreteClientCommunicator implements ClientCommunicator
 	private void tryToConnect() {
 		connectionAttempts++;
 		
-		System.out.println("Making connection attempt # " + connectionAttempts);
+		System.out.println("Making connection attempt # " + connectionAttempts + " of " + (maxRetries + 1));
 		
 		//Attempt to connect to the server.
 		try{			
